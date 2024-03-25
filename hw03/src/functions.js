@@ -15,14 +15,18 @@ export async function GetNewToken() {
   }
 }
 
-export const GetNewQuestionSet = async (token) => {
+export const GetNewQuestionSet = async (token, difficulty) => {
   if (token === "") {
     throw new Error("Token is empty");
   }
 
+  console.log("difficulty: " + difficulty);
+  if (difficulty === undefined) {
+    difficulty = "easy";
+  }
+
   const response = await fetch(
-    "https://opentdb.com/api.php?amount=3&category=9&difficulty=easy&type=multiple&encode=url3986&token=" +
-      token,
+    `https://opentdb.com/api.php?amount=3&category=9&difficulty=${difficulty}&type=multiple&encode=url3986&token=${token}`,
   );
   const data = await response.json();
   console.log(data);

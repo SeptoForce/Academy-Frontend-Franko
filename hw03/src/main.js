@@ -134,8 +134,17 @@ const ContinueGame = async () => {
     ContinueGame();
   }
   UpdateQuestionMarkers(currentQuestion);
-  if (questionSet.length === 0) {
-    questionSet = await GetNewQuestionSet(token);
+  if (questionSet.length === 0 || currentQuestion % 5 === 1) {
+    console.log("Getting new question set", currentQuestion);
+    if (currentQuestion >= 0 && currentQuestion <= 5) {
+      questionSet = await GetNewQuestionSet(token, "easy");
+    } else if (currentQuestion >= 6 && currentQuestion <= 10) {
+      questionSet = await GetNewQuestionSet(token, "medium");
+    } else if (currentQuestion >= 11 && currentQuestion <= 15) {
+      questionSet = await GetNewQuestionSet(token, "hard");
+    } else {
+      throw new Error("Invalid question number: " + currentQuestion);
+    }
   }
   currentQuestionObject = questionSet.pop();
   populateElements(currentQuestionObject);
@@ -170,6 +179,5 @@ let token = "";
 token = await GetNewToken();
 
 let questionSet = [];
-questionSet = await GetNewQuestionSet(token);
 
 ContinueGame();

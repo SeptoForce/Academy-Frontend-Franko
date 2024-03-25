@@ -2,6 +2,7 @@ import { GetNewQuestionSet, GetNewToken } from "./functions.js";
 
 const textQuestion = document.getElementById("question-text");
 const footer = document.getElementById("footer");
+const fiftyFifty = document.getElementById("fifty-fifty");
 const answerButtons = [];
 for (let i = 1; i < 5; i++) {
   answerButtons.push(document.getElementById(`answer-${i}`));
@@ -37,6 +38,8 @@ const populateElements = (questionObject) => {
   )}`;
 
   answerButtons.forEach((button) => {
+    button.disabled = false;
+
     button.classList.remove(
       classNames.bg_default,
       classNames.bg_fail,
@@ -121,6 +124,8 @@ const UpdateQuestionMarkers = (currentQuestion) => {
   questionMarkers[currentQuestion - 1].innerText = prizes[currentQuestion - 1];
 };
 
+let currentQuestionObject = {};
+
 const ContinueGame = async () => {
   currentQuestion++;
   if (currentQuestion > 15) {
@@ -132,12 +137,32 @@ const ContinueGame = async () => {
   if (questionSet.length === 0) {
     questionSet = await GetNewQuestionSet(token);
   }
-  populateElements(questionSet.pop());
+  currentQuestionObject = questionSet.pop();
+  populateElements(currentQuestionObject);
 };
 
 const FailGame = () => {
   currentQuestion = 0;
+  fiftyFifty.disabled = false;
   ContinueGame();
+};
+
+const DisableTwoIncorrectButtons = () => {
+  let disabledButtons = 0;
+  for (let i = 0; i < 4; i++) {
+    if (answerButtons[i].innerText !== currentQuestionObject.correctAnswer) {
+      answerButtons[i].disabled = true;
+      disabledButtons++;
+    }
+    if (disabledButtons === 2) {
+      break;
+    }
+  }
+};
+
+fiftyFifty.onclick = () => {
+  fiftyFifty.disabled = true;
+  DisableTwoIncorrectButtons();
 };
 
 let currentQuestion = 0;

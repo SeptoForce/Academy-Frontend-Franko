@@ -32,12 +32,17 @@ export const fetchPokemonDetailsById = async (id: number) => {
 	)
 		.then((response) => response.json())
 		.then((data) => {
+			if (data.flavor_text_entries.length === 0) {
+				return undefined;
+			}
 			return data.flavor_text_entries.find(
 				(entry: any) => entry.language.name === "en",
 			).flavor_text;
 		})) as string;
 
-	const modifiedResoult = resoult.replace(/[^a-zA-Z0-9 .,!?é]/g, " ");
+	const modifiedResoult = !resoult
+		? undefined
+		: resoult.replace(/[^a-zA-Z0-9 .,!?é]/g, " ");
 
 	return modifiedResoult;
 };

@@ -1,7 +1,11 @@
 "use client";
 
 import clsx from "clsx";
-import type { Pokemon, PokemonTypes } from "./lib/definitions";
+import {
+	MAX_POKEMON_ID,
+	type Pokemon,
+	type PokemonTypes,
+} from "./lib/definitions";
 import { fetchPokemonById } from "./lib/pokeapi";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -13,20 +17,36 @@ export const PokemonEntry = (props: {
 	const [pokemon, setPokemon] = useState<Pokemon | null>(null);
 
 	useEffect(() => {
+		if (props.pokemonId > MAX_POKEMON_ID) {
+			return;
+		}
 		fetchPokemonById(props.pokemonId).then((pokemon) => {
 			setPokemon(pokemon);
 		});
 	}, [props.pokemonId]);
 
+	if (props.pokemonId > MAX_POKEMON_ID) {
+		return <></>;
+	}
+
+	// iron-vailent should be "Iron Valiant"
 	const capitalizedPokemonName =
-		pokemon !== null &&
-		pokemon?.name.charAt(0).toUpperCase() + pokemon?.name.slice(1);
+		pokemon !== null
+			? pokemon.name
+					.split("-")
+					.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+					.join(" ")
+			: null;
 
 	const pokemonHp = pokemon?.hp !== undefined ? `${pokemon?.hp} HP` : null;
+
 	const pokemonHeight =
 		pokemon?.height !== undefined ? `${pokemon?.height * 10} cm` : null;
 	const pokemonWeight =
 		pokemon?.weight !== undefined ? `${pokemon?.weight} kg` : null;
+
+	const pokemonDetails =
+		pokemon?.details !== undefined ? pokemon.details : undefined;
 
 	return (
 		<div
@@ -85,10 +105,12 @@ export const PokemonEntry = (props: {
 							<></>
 						)}
 					</div>
-					<div className="mb-1 text-[0.65rem]">
-						<span className="font-bold">Details: </span>
-						<span className="">{pokemon?.details}</span>
-					</div>
+					{pokemonDetails !== undefined && (
+						<div className="mb-1 text-[0.65rem]">
+							<span className="font-bold">Details: </span>
+							<span className="">{pokemonDetails}</span>
+						</div>
+					)}
 				</div>
 				<div className="hidden h-full w-full max-w-xs flex-col justify-center gap-2 rounded-xl lg:flex">
 					<p className="text-[0.65rem] ">Full view:</p>

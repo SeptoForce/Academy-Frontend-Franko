@@ -1,3 +1,5 @@
+export const MAX_POKEMON_ID = 1025;
+
 export type Pokemon = {
 	id: number;
 	name: string;

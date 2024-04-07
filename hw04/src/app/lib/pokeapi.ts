@@ -3,7 +3,7 @@ import { Pokemon } from "./definitions";
 export const fetchPokemonById = async (id: number) => {
 	const details = await fetchPokemonDetailsById(id);
 
-	return await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+	const data = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
 		.then((response) => response.json())
 		.then((data) => {
 			return {
@@ -22,6 +22,8 @@ export const fetchPokemonById = async (id: number) => {
 				details: details,
 			} as Pokemon;
 		});
+
+	return data;
 };
 
 export const fetchPokemonDetailsById = async (id: number) => {

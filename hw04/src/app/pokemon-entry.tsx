@@ -42,7 +42,7 @@ export const PokemonEntry = (props: {
 			>
 				{pokemon !== null && (
 					<Image
-						src={pokemon?.sprites.default}
+						src={pokemon?.sprites?.default}
 						alt={pokemon?.name}
 						width={240}
 						height={240}
@@ -96,19 +96,21 @@ export const PokemonEntry = (props: {
 						{pokemon !== null && (
 							<>
 								<Image
-									src={pokemon.sprites.front_pixel}
-									alt={pokemon.name}
+									src={pokemon?.sprites?.front_pixel}
+									alt={pokemon?.name}
 									width={96}
 									height={96}
 									className="[image-rendering:pixelated]"
 								/>
-								<Image
-									src={pokemon.sprites.back_pixel}
-									alt={pokemon.name}
-									width={96}
-									height={96}
-									className="[image-rendering:pixelated]"
-								/>
+								{pokemon?.sprites?.back_pixel && (
+									<Image
+										src={pokemon?.sprites?.back_pixel}
+										alt={pokemon?.name}
+										width={96}
+										height={96}
+										className="[image-rendering:pixelated]"
+									/>
+								)}
 							</>
 						)}
 					</div>

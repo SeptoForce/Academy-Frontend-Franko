@@ -1,5 +1,5 @@
-import type {Metadata} from "next";
-import {Poppins} from "next/font/google";
+import type { Metadata } from "next";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -18,12 +18,12 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
+		<html lang="en" className="dark">
 			<body
 				className={
 					poppins.className +
 					" " +
-					"bg-page-lt dark:bg-page-dt text-text-lt dark:text-text-dt transition-colors"
+					"bg-page-lt text-text-lt transition-colors dark:bg-page-dt dark:text-text-dt"
 				}
 			>
 				{children}

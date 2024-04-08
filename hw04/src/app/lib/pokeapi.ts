@@ -18,6 +18,10 @@ export const fetchPokemonById = async (id: number) => {
 						data.sprites.other["official-artwork"].front_default,
 					front_pixel: data.sprites.front_default,
 					back_pixel: data.sprites.back_default,
+					default_shiny:
+						data.sprites.other["official-artwork"].front_shiny,
+					front_shiny: data.sprites.front_shiny,
+					back_shiny: data.sprites.back_shiny,
 				},
 				details: details,
 			} as Pokemon;

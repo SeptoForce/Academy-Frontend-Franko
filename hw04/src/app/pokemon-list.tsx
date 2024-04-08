@@ -3,10 +3,10 @@ import { PokemonEntry } from "./pokemon-entry";
 export default function PokemonList() {
 	return (
 		<div className="h-auto w-full ">
-			{Array.from({ length: 200 }).map((_, index) => (
+			{Array.from({ length: 15 }).map((_, index) => (
 				<PokemonEntry
 					key={index}
-					flipped={index % 2 === 0}
+					flipped={index % 2 === 1}
 					pokemonId={index + 1}
 				/>
 			))}

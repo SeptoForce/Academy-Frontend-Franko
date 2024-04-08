@@ -10,7 +10,10 @@ export type Pokemon = {
 	sprites: {
 		default: string;
 		front_pixel: string;
-		back_pixel: string;
+		back_pixel?: string;
+		default_shiny: string;
+		front_shiny: string;
+		back_shiny?: string;
 	};
 	details: string;
 };

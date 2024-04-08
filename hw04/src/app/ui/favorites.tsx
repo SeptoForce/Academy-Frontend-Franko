@@ -5,14 +5,21 @@ import { RefreshContext } from "../lib/providers";
 
 export const FavoritesMenu = () => {
 	const [isOpen, setIsOpen] = useState(false);
+	const { refreshFavorites } = use(RefreshContext);
 
 	useEffect(() => {
 		if (!isOpen) {
 		}
 	}, [isOpen]);
+
+	const click = (setOpen: boolean) => {
+		refreshFavorites();
+		setIsOpen(setOpen);
+	};
+
 	return (
 		<div className="flex">
-			<button className="" onClick={() => setIsOpen(!isOpen)}>
+			<button className="" onClick={() => click(!isOpen)}>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
@@ -29,10 +36,7 @@ export const FavoritesMenu = () => {
 				</svg>
 			</button>
 			{isOpen && (
-				<FavoritesModal
-					isOpen={isOpen}
-					onClose={() => setIsOpen(false)}
-				/>
+				<FavoritesModal isOpen={isOpen} onClose={() => click(false)} />
 			)}
 		</div>
 	);

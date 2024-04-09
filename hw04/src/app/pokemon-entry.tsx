@@ -10,6 +10,7 @@ import { fetchPokemonById } from "./lib/pokeapi";
 import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { RefreshContext } from "./lib/providers";
+import { motion } from "framer-motion";
 
 export const PokemonEntry = (props: {
 	flipped: boolean;
@@ -91,24 +92,36 @@ export const PokemonEntry = (props: {
 			>
 				{pokemon !== null ? (
 					!favorited ? (
-						<Image
-							src={pokemon?.sprites?.default}
-							alt={pokemon?.name}
-							width={240}
-							height={240}
-							className="[image-rendering:pixelated]"
-						/>
+						<motion.div
+							initial={props.flipped ? { x: -300 } : { x: 300 }}
+							animate={{ x: 0 }}
+							transition={{ duration: 0.5 }}
+						>
+							<Image
+								src={pokemon?.sprites?.default}
+								alt={pokemon?.name}
+								width={240}
+								height={240}
+								className="[image-rendering:pixelated]"
+							/>
+						</motion.div>
 					) : (
-						<Image
-							src={pokemon?.sprites?.default_shiny}
-							alt={pokemon?.name}
-							width={240}
-							height={240}
-							className="[image-rendering:pixelated]"
-						/>
+						<motion.div
+							initial={props.flipped ? { x: -300 } : { x: 300 }}
+							animate={{ x: 0 }}
+							transition={{ duration: 0.5 }}
+						>
+							<Image
+								src={pokemon?.sprites?.default_shiny}
+								alt={pokemon?.name}
+								width={240}
+								height={240}
+								className="[image-rendering:pixelated]"
+							/>
+						</motion.div>
 					)
 				) : (
-					<div className="h-48 w-64 animate-pulse rounded-md bg-black/20" />
+					<></>
 				)}
 
 				<button
@@ -150,69 +163,60 @@ export const PokemonEntry = (props: {
 			</div>
 			<div
 				className={clsx(
-					"flex aspect-square h-auto w-full flex-row items-center justify-center gap-8 bg-details-bg-lt p-8  sm:aspect-auto sm:w-1/2 sm:justify-start dark:bg-details-bg-dt",
+					"z-10 flex aspect-square h-auto w-full flex-row items-center justify-center gap-8 bg-details-bg-lt p-8  sm:aspect-auto sm:w-1/2 sm:justify-start dark:bg-details-bg-dt",
 					{ "sm:justify-end": props.flipped },
 				)}
 			>
-				<div className="flex h-full w-full max-w-xs flex-col items-start justify-center rounded-xl">
-					<p className="mb-4 text-lg font-semibold">
-						{pokemon !== null
-							? pokemonIdFormated + pokemonNameCapitalized
-							: "Loading..."}
-					</p>
-					<div className="mb-2 flex gap-2 text-[0.65rem]">
-						<p className="font-bold">Health Points:</p>
-						<p className="">{pokemonHp}</p>
-					</div>
-					<div className="mb-2 flex gap-2 text-[0.65rem]">
-						<p className="font-bold">Height:</p>
-						<p className="">{pokemonHeight}</p>
-					</div>
-					<div className="mb-2 flex gap-2 text-[0.65rem]">
-						<p className="font-bold">Weight:</p>
-						<p className="">{pokemonWeight}</p>
-					</div>
-					<div className="mb-2 flex items-center gap-2 text-[0.64rem]">
-						<p className="font-bold">Types:</p>
-						{pokemon?.types.map((type, index) => (
-							<TypeBadge key={index} type={type} />
-						))}
-					</div>
-					{pokemonDetails !== undefined && (
-						<div className="mb-1 text-[0.65rem]">
-							<span className="font-bold">Details: </span>
-							<span className="">{pokemonDetails}</span>
+				<motion.div
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					transition={{ duration: 0.5, delay: 1 }}
+				>
+					<div className="flex h-full w-full max-w-xs flex-col items-start justify-center rounded-xl">
+						<p className="mb-4 text-lg font-semibold">
+							{pokemon !== null
+								? pokemonIdFormated + pokemonNameCapitalized
+								: "Loading..."}
+						</p>
+						<div className="mb-2 flex gap-2 text-[0.65rem]">
+							<p className="font-bold">Health Points:</p>
+							<p className="">{pokemonHp}</p>
 						</div>
-					)}
-				</div>
-				<div className="hidden h-full w-full max-w-xs flex-col justify-center gap-2 rounded-xl lg:flex">
-					{pokemon !== null ? (
-						<>
-							<p className="text-[0.65rem] ">Full view:</p>
-							<div className="flex h-16 w-full items-center justify-center">
-								{!favorited ? (
-									<Image
-										src={pokemon?.sprites?.front_pixel}
-										alt={pokemon?.name}
-										width={96}
-										height={96}
-										className="[image-rendering:pixelated]"
-									/>
-								) : (
-									<Image
-										src={pokemon?.sprites?.front_shiny}
-										alt={pokemon?.name}
-										width={96}
-										height={96}
-										className="[image-rendering:pixelated]"
-									/>
-								)}
-
-								{pokemon?.sprites?.back_pixel &&
-									pokemon?.sprites?.back_shiny &&
-									(!favorited ? (
+						<div className="mb-2 flex gap-2 text-[0.65rem]">
+							<p className="font-bold">Height:</p>
+							<p className="">{pokemonHeight}</p>
+						</div>
+						<div className="mb-2 flex gap-2 text-[0.65rem]">
+							<p className="font-bold">Weight:</p>
+							<p className="">{pokemonWeight}</p>
+						</div>
+						<div className="mb-2 flex items-center gap-2 text-[0.64rem]">
+							<p className="font-bold">Types:</p>
+							{pokemon?.types.map((type, index) => (
+								<TypeBadge key={index} type={type} />
+							))}
+						</div>
+						{pokemonDetails !== undefined && (
+							<div className="mb-1 text-[0.65rem]">
+								<span className="font-bold">Details: </span>
+								<span className="">{pokemonDetails}</span>
+							</div>
+						)}
+					</div>
+				</motion.div>
+				<motion.div
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					transition={{ duration: 0.5, delay: 1 }}
+				>
+					<div className="hidden h-full w-full max-w-xs flex-col justify-center gap-2 rounded-xl lg:flex">
+						{pokemon !== null ? (
+							<>
+								<p className="text-[0.65rem] ">Full view:</p>
+								<div className="flex h-16 w-full items-center justify-center">
+									{!favorited ? (
 										<Image
-											src={pokemon?.sprites?.back_pixel}
+											src={pokemon?.sprites?.front_pixel}
 											alt={pokemon?.name}
 											width={96}
 											height={96}
@@ -220,19 +224,44 @@ export const PokemonEntry = (props: {
 										/>
 									) : (
 										<Image
-											src={pokemon?.sprites?.back_shiny}
+											src={pokemon?.sprites?.front_shiny}
 											alt={pokemon?.name}
 											width={96}
 											height={96}
 											className="[image-rendering:pixelated]"
 										/>
-									))}
-							</div>
-						</>
-					) : (
-						<></>
-					)}
-				</div>
+									)}
+
+									{pokemon?.sprites?.back_pixel &&
+										pokemon?.sprites?.back_shiny &&
+										(!favorited ? (
+											<Image
+												src={
+													pokemon?.sprites?.back_pixel
+												}
+												alt={pokemon?.name}
+												width={96}
+												height={96}
+												className="[image-rendering:pixelated]"
+											/>
+										) : (
+											<Image
+												src={
+													pokemon?.sprites?.back_shiny
+												}
+												alt={pokemon?.name}
+												width={96}
+												height={96}
+												className="[image-rendering:pixelated]"
+											/>
+										))}
+								</div>
+							</>
+						) : (
+							<></>
+						)}
+					</div>
+				</motion.div>
 			</div>
 		</div>
 	);

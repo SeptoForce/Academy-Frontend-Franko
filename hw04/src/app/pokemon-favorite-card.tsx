@@ -3,6 +3,7 @@ import { fetchPokemonById } from "./lib/pokeapi";
 import Image from "next/image";
 import { Pokemon } from "./lib/definitions";
 import { formatPokemonName } from "./lib/helpers";
+import { motion } from "framer-motion";
 
 export const PokemonFavoriteCard = (props: { pokemonId: number }) => {
 	const [pokemon, setPokemon] = useState<Pokemon | null>(null);
@@ -66,19 +67,31 @@ export const PokemonFavoriteCard = (props: { pokemonId: number }) => {
 			<div className="flex w-full items-center justify-center">
 				{pokemon !== null &&
 					(!favorited ? (
-						<Image
-							src={pokemon.sprites.default}
-							alt={pokemon.name}
-							width={240}
-							height={240}
-						/>
+						<motion.div
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							transition={{ duration: 0.5 }}
+						>
+							<Image
+								src={pokemon.sprites.default}
+								alt={pokemon.name}
+								width={240}
+								height={240}
+							/>
+						</motion.div>
 					) : (
-						<Image
-							src={pokemon.sprites.default_shiny}
-							alt={pokemon.name}
-							width={240}
-							height={240}
-						/>
+						<motion.div
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							transition={{ duration: 0.5 }}
+						>
+							<Image
+								src={pokemon.sprites.default_shiny}
+								alt={pokemon.name}
+								width={240}
+								height={240}
+							/>
+						</motion.div>
 					))}
 			</div>
 			<span className="text-2xl font-bold text-black dark:text-details-bg-lt">

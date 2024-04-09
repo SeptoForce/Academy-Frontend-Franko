@@ -7,7 +7,7 @@ import {
 	type PokemonTypes,
 } from "./lib/definitions";
 import { fetchPokemonById } from "./lib/pokeapi";
-import { Suspense, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { RefreshContext } from "./lib/providers";
 

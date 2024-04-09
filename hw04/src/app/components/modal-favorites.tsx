@@ -1,8 +1,8 @@
 import clsx from "clsx";
 import { useContext, useEffect, useState } from "react";
-import { PokemonFavoriteCard } from "../pokemon-favorite-card";
+import { PokemonFavoriteCard } from "./pokemon-favorite-card";
 import { MAX_POKEMON_ID } from "../lib/definitions";
-import { RefreshContext } from "../lib/providers";
+import { RefreshContext } from "../context/providers";
 import { motion } from "framer-motion";
 
 export const FavoritesModal = (props: {

@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { PokemonEntry } from "./pokemon-entry";
-import { MAX_POKEMON_ID } from "./lib/definitions";
+import { MAX_POKEMON_ID } from "../lib/definitions";
 
 export default function PokemonList() {
 	const [items, setItems] = useState(Array.from({ length: 15 }));

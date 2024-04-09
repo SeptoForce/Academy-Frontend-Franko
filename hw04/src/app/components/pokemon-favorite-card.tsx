@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { fetchPokemonById } from "./lib/pokeapi";
+import { fetchPokemonById } from "../lib/pokeapi";
 import Image from "next/image";
-import { Pokemon } from "./lib/definitions";
-import { formatPokemonName } from "./lib/helpers";
+import { Pokemon } from "../lib/definitions";
+import { formatPokemonName } from "../lib/helpers";
 import { motion } from "framer-motion";
 
 export const PokemonFavoriteCard = (props: { pokemonId: number }) => {

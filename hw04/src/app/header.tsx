@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { ThemeSettings } from "./ui/theme-settings";
-import { FavoritesMenu } from "./ui/favorites";
+import { ThemeSettings } from "./components/menu-theme";
+import { FavoritesMenu } from "./components/menu-favorites";
 
 export function Header() {
 	return (

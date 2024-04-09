@@ -1,6 +1,6 @@
 import { Header } from "./header";
-import RefreshProvider from "./lib/providers";
-import PokemonList from "./pokemon-list";
+import RefreshProvider from "./context/providers";
+import PokemonList from "./components/pokemon-list";
 
 export default function Home() {
 	return (

@@ -154,26 +154,26 @@ export const PokemonEntry = (props: {
 								? pokemonIdFormated + pokemonNameCapitalized
 								: "Loading..."}
 						</p>
-						<div className="mb-2 flex gap-2 text-[0.65rem]">
+						<div className="mb-2 flex gap-2 text-[0.75rem]">
 							<p className="font-bold">Health Points:</p>
 							<p className="">{pokemonHp}</p>
 						</div>
-						<div className="mb-2 flex gap-2 text-[0.65rem]">
+						<div className="mb-2 flex gap-2 text-[0.75rem]">
 							<p className="font-bold">Height:</p>
 							<p className="">{pokemonHeight}</p>
 						</div>
-						<div className="mb-2 flex gap-2 text-[0.65rem]">
+						<div className="mb-2 flex gap-2 text-[0.75rem]">
 							<p className="font-bold">Weight:</p>
 							<p className="">{pokemonWeight}</p>
 						</div>
-						<div className="mb-2 flex items-center gap-2 text-[0.64rem]">
+						<div className="mb-2 flex items-center gap-2 text-[0.75rem]">
 							<p className="font-bold">Types:</p>
 							{pokemon?.types.map((type, index) => (
 								<TypeBadge key={index} type={type} />
 							))}
 						</div>
 						{pokemonDetails !== undefined && (
-							<div className="mb-1 text-[0.65rem]">
+							<div className="mb-1 text-[0.75rem]">
 								<span className="font-bold">Details: </span>
 								<span className="">{pokemonDetails}</span>
 							</div>
@@ -188,7 +188,7 @@ export const PokemonEntry = (props: {
 					<div className="hidden h-full w-full max-w-xs flex-col justify-center gap-2 rounded-xl lg:flex">
 						{pokemon !== null ? (
 							<>
-								<p className="text-[0.65rem] ">Full view:</p>
+								<p className="text-[0.75rem] ">Full view:</p>
 								<div className="flex h-16 w-full items-center justify-center">
 									{!favorited ? (
 										<Image
@@ -247,7 +247,7 @@ const TypeBadge = (props: { type: PokemonTypes }) => {
 	return (
 		<p
 			className={clsx(
-				"flex  w-14 items-center justify-center rounded-full p-0.5 text-[0.5rem] text-details-bg-lt dark:text-text-lt",
+				"flex  w-14 items-center justify-center rounded-full p-0.5 text-[0.6rem] text-details-bg-lt dark:text-text-lt",
 				"bg-type-" + props.type,
 			)}
 		>

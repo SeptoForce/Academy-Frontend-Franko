@@ -18,9 +18,10 @@ export default function PokemonList() {
 	}, [isFetching]);
 
 	function handleScroll() {
+		const TOLERANCE = 100;
 		if (
-			window.innerHeight + document.documentElement.scrollTop !==
-			document.documentElement.offsetHeight
+			window.innerHeight + document.documentElement.scrollTop <
+			document.documentElement.offsetHeight - TOLERANCE
 		)
 			return;
 		setIsFetching(true);

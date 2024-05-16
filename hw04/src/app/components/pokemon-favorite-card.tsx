@@ -73,6 +73,7 @@ export const PokemonFavoriteCard = (props: { pokemonId: number }) => {
 							transition={{ duration: 0.5 }}
 						>
 							<Image
+								unoptimized
 								src={pokemon.sprites.default}
 								alt={pokemon.name}
 								width={240}
@@ -86,6 +87,7 @@ export const PokemonFavoriteCard = (props: { pokemonId: number }) => {
 							transition={{ duration: 0.5 }}
 						>
 							<Image
+								unoptimized
 								src={pokemon.sprites.default_shiny}
 								alt={pokemon.name}
 								width={240}

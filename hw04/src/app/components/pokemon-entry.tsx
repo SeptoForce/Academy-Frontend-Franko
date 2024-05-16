@@ -98,6 +98,7 @@ export const PokemonEntry = (props: {
 							transition={{ duration: 0.5 }}
 						>
 							<Image
+								unoptimized
 								src={pokemon?.sprites?.default}
 								alt={pokemon?.name}
 								width={240}
@@ -112,6 +113,7 @@ export const PokemonEntry = (props: {
 							transition={{ duration: 0.5 }}
 						>
 							<Image
+								unoptimized
 								src={pokemon?.sprites?.default_shiny}
 								alt={pokemon?.name}
 								width={240}
@@ -192,6 +194,7 @@ export const PokemonEntry = (props: {
 								<div className="flex h-16 w-full items-center justify-center">
 									{!favorited ? (
 										<Image
+											unoptimized
 											src={pokemon?.sprites?.front_pixel}
 											alt={pokemon?.name}
 											width={96}
@@ -200,6 +203,7 @@ export const PokemonEntry = (props: {
 										/>
 									) : (
 										<Image
+											unoptimized
 											src={pokemon?.sprites?.front_shiny}
 											alt={pokemon?.name}
 											width={96}
@@ -212,6 +216,7 @@ export const PokemonEntry = (props: {
 										pokemon?.sprites?.back_shiny &&
 										(!favorited ? (
 											<Image
+												unoptimized
 												src={
 													pokemon?.sprites?.back_pixel
 												}
@@ -222,6 +227,7 @@ export const PokemonEntry = (props: {
 											/>
 										) : (
 											<Image
+												unoptimized
 												src={
 													pokemon?.sprites?.back_shiny
 												}

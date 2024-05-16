@@ -11,8 +11,8 @@ export default function Home() {
         <title>Mini Sofascore</title>
         <meta name="description" content="Final project for Sofascore Academy. Simpler version of Sofascore website." />
       </Head>
-      <Box as="main">
-        <Box as="h1" color="colors.primary">
+      <Box as="main" background="colors.primary">
+        <Box as="h1" color="colors.surface1" fontFamily="fonts.roboto">
           This is your homepage
         </Box>
         <Button onClick={() => setIsDark(v => !v)}>Toggle theme</Button>

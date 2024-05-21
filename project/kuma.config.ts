@@ -2,8 +2,8 @@ import { createTheme } from '@kuma-ui/core'
 
 const theme = createTheme({
   colors: {
-    primary: 'var(--color-primary-default)',
-    secondary: 'var(--color-secondary-default)',
+    primaryDefault: 'var(--color-primary-default)',
+    secondaryDefault: 'var(--color-secondary-default)',
     primaryVariant: 'var(--color-primary-variant)',
     secondaryVariant: 'var(--color-secondary-variant)',
     primaryHighlight: 'var(--color-primary-highlight)',
@@ -27,10 +27,6 @@ const theme = createTheme({
     sm: '8px',
     md: '32px',
   },
-  breakpoints: {
-    sm: '400px',
-    md: '700px',
-  },
   fontWeights: {
     light: 300,
     normal: 400,
@@ -51,22 +47,22 @@ const theme = createTheme({
   components: {
     Button: {
       defaultProps: {
-        variant: 'primary',
         padding: '4px',
         fontWeight: 600,
         _hover: {
           opacity: 0.9,
         },
+        backgroundColor: 'transparent',
+        border: '0',
       },
-      variants: {
-        primary: {
-          bg: 'var(--primary-default)',
-          color: 'var(--on-surface-nLv1)',
+    },
+    Link: {
+      defaultProps: {
+        color: 'colors.primaryDefault',
+        _hover: {
+          opacity: 0.8,
         },
-        secondary: {
-          bg: 'var(--on-surface-nLv1)',
-          color: 'var(--primary-default)',
-        },
+        cursor: 'pointer',
       },
     },
   },

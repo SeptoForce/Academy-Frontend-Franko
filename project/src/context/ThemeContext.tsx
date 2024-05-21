@@ -12,7 +12,7 @@ export const ThemeContextProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setIsDark(true)
+      setIsDark(false)
     }
   }, [])
 

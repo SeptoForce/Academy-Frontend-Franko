@@ -1,5 +1,6 @@
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
+import EventDetailsSection from '@/components/sections/EventDetailsSection'
 import LeagueSection from '@/components/sections/LeagueSection'
 import LiveSection from '@/components/sections/LiveSection'
 import IconPointerRight from '@/components/svg/IconPointerRight'
@@ -45,12 +46,12 @@ export default function Home() {
           <LeagueSection />
           <LiveSection />
 
-          {1 === 0 ? (
-            <Box display={[`none`, `none`, `none`, `flex`]} w={`100%`}>
-              <Box w={`100%`} bg={`black`} />
-            </Box>
+          {1 === 1 ? (
+            <EventDetailsSection />
           ) : (
-            <Box display={[`none`, `none`, `none`, `flex`]} w={`100%`} />
+            <Box display={[`none`, `none`, `none`, `flex`]} w={`100%`}>
+              <Box w={`100%`} />
+            </Box>
           )}
         </HStack>
       </VStack>

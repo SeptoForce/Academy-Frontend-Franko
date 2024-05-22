@@ -58,7 +58,7 @@ function LeagueCell() {
 
 function EventCell() {
   return (
-    <HStack h={`56px`} w={`100%`} alignItems={'center'}>
+    <HStack h={`56px`} w={`100%`} alignItems={'center'} py={`8px`}>
       <VStack
         w={`64px`}
         h={`100%`}
@@ -67,6 +67,7 @@ function EventCell() {
         alignItems={'center'}
         gap={`4px`}
         flexShrink={0}
+        borderEnd={`1px solid var(--on-surface-on-surface-lv-4)`}
       >
         <Text>13:00</Text>
         <Text>FT</Text>

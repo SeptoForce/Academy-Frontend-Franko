@@ -143,7 +143,7 @@ a {
 }
 
 .Tabular {
-  font-family: Roboto;
+  font-family: 'Roboto Condensed';
   font-size: 14px;
   font-weight: normal;
   font-stretch: condensed;
@@ -193,7 +193,7 @@ body {
 }
 
 .Micro {
-  font-family: Roboto;
+  font-family: 'Roboto Condensed';
   font-size: 12px;
   font-weight: normal;
   font-stretch: condensed;

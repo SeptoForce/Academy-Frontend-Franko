@@ -10,9 +10,8 @@ export function Header() {
   const { setIsDark } = useThemeContext()
 
   return (
-    <Flex flexDirection={'column'} position={'sticky'} top={0} w={`100%`}>
+    <Flex as="header" flexDirection={'column'} position={'sticky'} top={0} w={`100%`} zIndex={999}>
       <HStack
-        as="header"
         background="colors.primaryDefault"
         h={[`48px`, `64px`]}
         justifyContent="space-between"

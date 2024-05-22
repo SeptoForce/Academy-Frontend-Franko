@@ -1,9 +1,9 @@
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
+import LeagueSection from '@/components/sections/LeagueSection'
 import LiveSection from '@/components/sections/LiveSection'
 import IconPointerRight from '@/components/svg/IconPointerRight'
-import { HStack, VStack, Text, Link } from '@kuma-ui/core'
-import Head from 'next/head'
+import { HStack, VStack, Text, Link, Box, Spacer, Flex } from '@kuma-ui/core'
 
 export default function Home() {
   return (
@@ -16,7 +16,7 @@ export default function Home() {
         w={`100%`}
         justifyContent={`flex-start`}
         alignItems={`center`}
-        px={`8px`}
+        px={[`8px`, `24px`]}
       >
         <HStack
           w={`100%`}
@@ -40,7 +40,19 @@ export default function Home() {
             <Text userSelect={'none'}>{`Manchester United vs Barcelona`}</Text>
           </HStack>
         </HStack>
-        <LiveSection />
+
+        <HStack w={`100%`} h={`100%`} justifyContent={'center'} gap={`24px`}>
+          <LeagueSection />
+          <LiveSection />
+
+          {1 === 0 ? (
+            <Box display={[`none`, `none`, `none`, `flex`]} w={`100%`}>
+              <Box w={`100%`} bg={`black`} />
+            </Box>
+          ) : (
+            <Box display={[`none`, `none`, `none`, `flex`]} w={`100%`} />
+          )}
+        </HStack>
       </VStack>
       <Footer />
     </>

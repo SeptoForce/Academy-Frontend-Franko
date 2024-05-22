@@ -1,5 +1,6 @@
-import { StyleRegistry, createStyleRegistry } from '@kuma-ui/core'
-import Document, { DocumentContext, Head, Html, Main, NextScript } from 'next/document'
+import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document'
+import { createStyleRegistry, StyleRegistry } from '@kuma-ui/core'
+import Header from '@/components/Header'
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -29,7 +30,7 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <Html lang="en">
+      <Html>
         <Head>
           <link rel="icon" href="/favicon.ico" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />

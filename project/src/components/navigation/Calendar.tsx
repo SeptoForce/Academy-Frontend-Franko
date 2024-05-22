@@ -12,6 +12,7 @@ export function Calendar(props: { mobile?: boolean }) {
       bg={`colors.primaryVariant`}
       position={`relative`}
       display={props.mobile ? [`flex`, `none`] : [`none`, `flex`]}
+      overflow={`hidden`}
     >
       <Box
         w={`100%`}

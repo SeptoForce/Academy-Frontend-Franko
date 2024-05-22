@@ -4,7 +4,7 @@ import IconPointerRight from '../svg/IconPointerRight'
 
 export function LiveSection() {
   return (
-    <>
+    <VStack w={[`100%`, `448px`]} alignItems={'center'} flexBasis={'auto'}>
       <ListSectionSecondary mobile />
       <VStack
         w={[`100%`, `448px`]}
@@ -20,7 +20,7 @@ export function LiveSection() {
         <LeagueEvents />
         <LeagueEvents />
       </VStack>
-    </>
+    </VStack>
   )
 }
 

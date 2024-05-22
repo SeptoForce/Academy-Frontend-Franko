@@ -63,25 +63,22 @@
   margin: 0;
 }
 
-body {
+html {
   color: var(--on-surface-on-surface-lv-1);
   background: var(--surface-surface-0);
-  height: 100vh;
-  max-width: 100vw;
-  overflow-x: hidden;
 }
 
-html {
+body {
   max-width: 100vw;
   overflow-x: hidden;
 }
 
 #__next {
-  height: 100%;
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100vh;
+  height: 100vh;
 }
 
 a {

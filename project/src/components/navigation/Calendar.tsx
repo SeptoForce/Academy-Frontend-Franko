@@ -18,13 +18,20 @@ export function Calendar(props: { mobile?: boolean }) {
         w={`100%`}
         h={`100%`}
         position={`absolute`}
-        bg={`linear-gradient(90deg, #1327baff 5%, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0) 70%, #1327baff 95%)`}
+        bg={`linear-gradient(90deg, var(--color-primary-variant) 0%, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0) 70%, var(--color-primary-variant) 100%)`}
       />
-      <Button position={'absolute'} w={`32px`} aspectRatio={1} bg={`#fff`} borderRadius={`2px`} left={`8px`}>
-        <IconChevronLeft color="#000" />
+      <Button position={'absolute'} w={`32px`} aspectRatio={1} bg={`colors.surface1`} borderRadius={`2px`} left={`8px`}>
+        <IconChevronLeft color="var(--on-surface-on-surface-lv-2)" />
       </Button>
-      <Button position={'absolute'} w={`32px`} aspectRatio={1} bg={`#fff`} borderRadius={`2px`} right={`8px`}>
-        <IconChevronRight color="#000" />
+      <Button
+        position={'absolute'}
+        w={`32px`}
+        aspectRatio={1}
+        bg={`colors.surface1`}
+        borderRadius={`2px`}
+        right={`8px`}
+      >
+        <IconChevronRight color="var(--on-surface-on-surface-lv-2)" />
       </Button>
       <CalendarUnit text={`MON`} date={`31.12.`} />
       <CalendarUnit text={`TUE`} date={`01.01.`} />
@@ -57,7 +64,7 @@ function CalendarUnit(props: { text: string; date: string; active?: boolean }) {
       alignItems={`center`}
       cursor={`pointer`}
       className="Micro"
-      color={`#fff`}
+      color={`colors.surface0`}
       flexShrink={0}
     >
       <Text>{props.text}</Text>

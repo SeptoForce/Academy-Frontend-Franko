@@ -1,4 +1,4 @@
-import { getLeagueImageLink, getTournamentDetails, getTournamentsFromSport } from '@/api/api'
+import { getTournamentDetails, getTournamentImageLink, getTournamentsFromSport } from '@/api/api'
 import { Tournament } from '@/utils/types'
 import { Box, Flex, HStack, Image, Link, Spacer, Text } from '@kuma-ui/core'
 import { useRouter } from 'next/router'
@@ -31,7 +31,7 @@ function LeagueCell(props: { id: number }) {
 
   return (
     <HStack w={`100%`} h={`56px`} alignItems={'center'} gap={`16px`}>
-      <Image src={getLeagueImageLink(props.id)} alt="League image" h={`40px`} />
+      <Image src={getTournamentImageLink(props.id)} alt="League image" h={`40px`} />
       <Text className="Headline-3">{leagueDetails?.name}</Text>
     </HStack>
   )

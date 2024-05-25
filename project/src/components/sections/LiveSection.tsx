@@ -1,24 +1,24 @@
 import { Box, Flex, HStack, Image, Spacer, Text, VStack } from '@kuma-ui/core'
 import Calendar from '../navigation/Calendar'
 import IconPointerRight from '../svg/IconPointerRight'
-import { getEventsFromSportAndDate, getLeagueImageLink, getTeamDetails, getTeamImageLink } from '@/api/api'
+import { getEventsFromSportAndDate, getTeamDetails, getTeamImageLink, getTournamentImageLink } from '@/api/api'
 import { useRouter } from 'next/router'
-import { EventType } from '@/utils/types'
+import { Event } from '@/utils/types'
 import { getTournamentDetails } from '../../api/api'
 
 export function LiveSection() {
   const router = useRouter()
   const slug = router.query.slug as string
   const date = router.query.d as string
-  const events: EventType[] | undefined = getEventsFromSportAndDate(slug, date).data
+  const events = getEventsFromSportAndDate(slug, date).data
 
-  const groupedEventsByTournament = events?.reduce((acc, event) => {
+  const groupedEventsByTournament = events?.reduce((acc: { [key: number]: Event[] }, event: Event) => {
     if (!acc[event.tournament.id]) {
       acc[event.tournament.id] = []
     }
     acc[event.tournament.id].push(event)
     return acc
-  }, {} as { [key: number]: EventType[] })
+  }, {} as { [key: number]: Event[] })
 
   return (
     <VStack w={[`100%`, `448px`]} alignItems={'center'} flexBasis={'auto'}>
@@ -73,7 +73,7 @@ function LeagueCell(props: { tournamentId: number }) {
   return (
     <Flex h={`56px`} w={`100%`} px={`16px`} alignItems={'center'} gap={`32px`}>
       <Image
-        src={getLeagueImageLink(props.tournamentId)}
+        src={getTournamentImageLink(props.tournamentId)}
         alt="League image"
         h={`32px`}
         aspectRatio={1}
@@ -197,7 +197,7 @@ function LeagueEvents(props: { tournamentId: number; events: Object[] }) {
     <>
       <LeagueCell tournamentId={props.tournamentId} />
       {props.events.map(event => {
-        const parsedEvent = event as EventType
+        const parsedEvent = event as Event
 
         const startingTime = new Date(parsedEvent.startDate).toISOString().split('T')[1].slice(0, 5)
         const eventState = parsedEvent.status === 'finished' ? EventState.FINISHED : EventState.UPCOMING

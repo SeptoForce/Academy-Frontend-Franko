@@ -13,6 +13,7 @@ export function Calendar(props: { mobile?: boolean }) {
       position={`relative`}
       display={props.mobile ? [`flex`, `none`] : [`none`, `flex`]}
       overflow={`hidden`}
+      flexShrink={0}
     >
       <Box
         w={`100%`}

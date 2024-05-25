@@ -31,6 +31,7 @@ export default function Home() {
         justifyContent={`flex-start`}
         alignItems={`center`}
         px={[`8px`, `24px`]}
+        flexGrow={1}
       >
         <HStack
           w={`100%`}

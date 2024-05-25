@@ -4,9 +4,22 @@ import EventDetailsSection from '@/components/sections/EventDetailsSection'
 import LeagueSection from '@/components/sections/LeagueSection'
 import LiveSection from '@/components/sections/LiveSection'
 import IconPointerRight from '@/components/svg/IconPointerRight'
-import { HStack, VStack, Text, Link, Box, Spacer, Flex } from '@kuma-ui/core'
+import { HStack, VStack, Text, Link, Box } from '@kuma-ui/core'
+import { useRouter } from 'next/router'
+import { isWindowDefined } from 'swr/_internal'
 
 export default function Home() {
+  const router = useRouter()
+
+  let date = new Date().toISOString().split('T')[0]
+  if (router.query.slug !== undefined && router.query.d === undefined) {
+    router.push(`${router.query.slug}?d=${date}`)
+  } else if (router.query.slug !== undefined && router.query.d !== undefined) {
+    if (isWindowDefined) {
+      sessionStorage.setItem('date', router.query.d as string)
+    }
+  }
+
   return (
     <>
       <Header />

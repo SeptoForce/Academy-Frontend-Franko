@@ -1,11 +1,18 @@
-import { Box, Flex, HStack, Link, Spacer, Text, Button, VStack } from '@kuma-ui/core'
+import { Box, Flex, Link, Spacer, Text, Button, VStack } from '@kuma-ui/core'
 import IconClose from '../svg/IconClose'
 import IconChevronRight from '../svg/IconChevronRight'
 import IconCardRed from '../svg/IconCardRed'
 import IconBallFootball from '../svg/IconBallFootball'
 import IconCardYellow from '../svg/IconCardYellow'
+import { useRouter } from 'next/router'
 
 export function EventDetailsSection() {
+  const router = useRouter()
+
+  if (router.query.e === undefined) {
+    return <Box display={[`none`, `none`, `none`, `flex`]} w={`100%`} flexDir={'column'}></Box>
+  }
+
   return (
     <Box display={[`none`, `none`, `none`, `flex`]} w={`100%`} flexDir={'column'}>
       <Box w={`100%`} bg={`colors.surface1`} borderRadius={`16px`} overflow={'hidden'}>

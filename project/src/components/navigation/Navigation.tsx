@@ -2,9 +2,23 @@ import { Box, Flex, HStack, VStack } from '@kuma-ui/core'
 import IconFootball from '../svg/IconFootball'
 import IconBasketball from '../svg/IconBasketball'
 import IconAmericanFootball from '../svg/IconAmericanFootball'
+import { useRouter } from 'next/router'
 
-function NavigationTab(props: { active?: boolean; children: React.ReactNode }) {
+function NavigationTab(props: { active?: boolean; children: React.ReactNode; redirect?: string }) {
+  const router = useRouter()
   const PADDING_HORIZONTAL = '8px'
+
+  const handleClick = () => {
+    if (props.redirect) {
+      const savedDate = sessionStorage.getItem('date')
+      if (savedDate) {
+        router.push(`${props.redirect}?d=${savedDate}`)
+        return
+      }
+      const date = new Date().toISOString().split('T')[0]
+      router.push(`${props.redirect}?d=${date}`)
+    }
+  }
 
   return (
     <VStack
@@ -17,6 +31,9 @@ function NavigationTab(props: { active?: boolean; children: React.ReactNode }) {
       position={'relative'}
       flexBasis={[0, 'auto']}
       flexGrow={[1, 0]}
+      userSelect={'none'}
+      cursor={'pointer'}
+      onMouseDown={handleClick}
     >
       {props.children}
       <Box
@@ -32,6 +49,7 @@ function NavigationTab(props: { active?: boolean; children: React.ReactNode }) {
 }
 
 export function Navigation() {
+  const currentPath = useRouter().query.slug
   return (
     <HStack
       as="nav"
@@ -42,19 +60,19 @@ export function Navigation() {
       w="100%"
       color="colors.surface1"
     >
-      <NavigationTab active={true}>
+      <NavigationTab active={currentPath === `football`} redirect="/football">
         <Flex justifyContent={'center'} alignItems={'center'} gap={'4px'} flexDir={['column', 'row']}>
           <IconFootball size="16px" />
           <span>Football</span>
         </Flex>
       </NavigationTab>
-      <NavigationTab>
+      <NavigationTab active={currentPath === `basketball`} redirect="/basketball">
         <Flex justifyContent={'center'} alignItems={'center'} gap={'4px'} flexDir={['column', 'row']}>
           <IconBasketball size="16px" />
           <span>Basketball</span>
         </Flex>
       </NavigationTab>
-      <NavigationTab>
+      <NavigationTab active={currentPath === `american-football`} redirect="/american-football">
         <Flex justifyContent={'center'} alignItems={'center'} gap={'4px'} flexDir={['column', 'row']}>
           <IconAmericanFootball size="16px" />
           <span>Am. Football</span>

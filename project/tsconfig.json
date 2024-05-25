@@ -16,6 +16,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "./kuma.config.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "./kuma.config.ts", "src/utils/fetcher.js"],
   "exclude": ["node_modules"]
 }

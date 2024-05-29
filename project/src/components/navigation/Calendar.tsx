@@ -1,8 +1,28 @@
 import { Box, Button, Text, VStack } from '@kuma-ui/core'
 import IconChevronLeft from '../svg/IconChevronLeft'
 import IconChevronRight from '../svg/IconChevronRight'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 
 export function Calendar(props: { mobile?: boolean }) {
+  const router = useRouter()
+  const [selectedDate, setSelectedDate] = useState<string>(router.query.d as string)
+
+  useEffect(() => {
+    if (router.query.d) {
+      setSelectedDate(router.query.d as string)
+    } else {
+      setSelectedDate(new Date().toISOString().split('T')[0])
+    }
+  }, [router.query])
+
+  const NUMBER_OF_SHOWN_DATES = 9
+
+  function goToDate(date: Date) {
+    const ISODate = date.toISOString().split('T')[0]
+    router.push({ query: { ...router.query, d: ISODate } })
+  }
+
   return (
     <Box
       h={`48px`}
@@ -20,8 +40,19 @@ export function Calendar(props: { mobile?: boolean }) {
         h={`100%`}
         position={`absolute`}
         bg={`linear-gradient(90deg, var(--color-primary-variant) 0%, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0) 70%, var(--color-primary-variant) 100%)`}
+        style={{ pointerEvents: 'none' }}
       />
-      <Button position={'absolute'} w={`32px`} aspectRatio={1} bg={`colors.surface1`} borderRadius={`2px`} left={`8px`}>
+      <Button
+        position={'absolute'}
+        w={`32px`}
+        aspectRatio={1}
+        bg={`colors.surface1`}
+        borderRadius={`2px`}
+        left={`8px`}
+        onClick={() => {
+          goToDate(new Date(Date.parse(selectedDate as string) - 60 * 60 * 24 * 1000))
+        }}
+      >
         <IconChevronLeft color="var(--on-surface-on-surface-lv-2)" />
       </Button>
       <Button
@@ -31,31 +62,34 @@ export function Calendar(props: { mobile?: boolean }) {
         bg={`colors.surface1`}
         borderRadius={`2px`}
         right={`8px`}
+        onClick={() => {
+          goToDate(new Date(Date.parse(selectedDate as string) + 60 * 60 * 24 * 1000))
+        }}
       >
         <IconChevronRight color="var(--on-surface-on-surface-lv-2)" />
       </Button>
-      <CalendarUnit text={`MON`} date={`31.12.`} />
-      <CalendarUnit text={`TUE`} date={`01.01.`} />
-      <CalendarUnit text={`WED`} date={`02.01.`} />
-      <CalendarUnit text={`THU`} date={`03.01.`} />
-      <CalendarUnit text={`FRI`} date={`04.01.`} />
-      <CalendarUnit text={`SAT`} date={`05.01.`} />
-      <CalendarUnit text={`SUN`} date={`06.01.`} />
-      <CalendarUnit text={`MON`} date={`07.01.`} active />
-      <CalendarUnit text={`TUE`} date={`08.01.`} />
-      <CalendarUnit text={`WED`} date={`09.01.`} />
-      <CalendarUnit text={`THU`} date={`10.01.`} />
-      <CalendarUnit text={`FRI`} date={`11.01.`} />
-      <CalendarUnit text={`SAT`} date={`12.01.`} />
-      <CalendarUnit text={`SUN`} date={`13.01.`} />
-      <CalendarUnit text={`MON`} date={`14.01.`} />
+      {Array.from({ length: NUMBER_OF_SHOWN_DATES }, (_, i) => {
+        const date: Date = new Date(selectedDate || new Date().toISOString().split('T')[0])
+        date.setDate(date.getDate() + i - Math.floor(NUMBER_OF_SHOWN_DATES / 2))
+        const active = date.toISOString().split('T')[0] === selectedDate
+        return <CalendarUnit key={i} date={date} active={active} />
+      })}
     </Box>
   )
 }
 
 export default Calendar
 
-function CalendarUnit(props: { text: string; date: string; active?: boolean }) {
+function CalendarUnit(props: { date: Date; active?: boolean }) {
+  const router = useRouter()
+
+  function goToDate(date: Date) {
+    return () => {
+      const ISODate = date.toISOString().split('T')[0]
+      router.push({ query: { ...router.query, d: ISODate } })
+    }
+  }
+
   return (
     <VStack
       w={`56px`}
@@ -67,9 +101,15 @@ function CalendarUnit(props: { text: string; date: string; active?: boolean }) {
       className="Micro"
       color={`colors.surface0`}
       flexShrink={0}
+      userSelect={`none`}
+      onClick={goToDate(props.date)}
     >
-      <Text>{props.text}</Text>
-      <Text>{props.date}</Text>
+      <Text>
+        {props.date.toISOString().split('T')[0] === new Date().toISOString().split('T')[0]
+          ? 'TODAY'
+          : props.date.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase()}
+      </Text>
+      <Text>{props.date.toLocaleDateString('hr-HR', { day: 'numeric', month: 'numeric' }).replace('. ', '.')}</Text>
       {props.active ? (
         <Box
           w={`48px`}

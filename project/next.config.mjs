@@ -8,11 +8,10 @@ const nextConfig = {
     return [{ source: '/api/:path*', destination: 'https://academy-backend.sofascore.dev/:path*' }]
   },
   redirects: async () => {
-    const date = new Date().toISOString().split('T')[0]
     return [
       {
         source: '/',
-        destination: '/football?d=' + date,
+        destination: '/football',
         permanent: true,
       },
     ]

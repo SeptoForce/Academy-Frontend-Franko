@@ -4,21 +4,28 @@ import useSWR from 'swr'
 
 //? Events
 
-export function getEventDetails(id: number): { data: Event[]; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(`/api/event/${id}/`, fetcher)
-  if (error) console.error('Failed to fetch event:', error)
+export function getEventDetails(id: number | undefined): { data: Event; error: any; isLoading: boolean } {
+  const { data, error, isLoading } = useSWR(id ? `/api/event/${id}/` : null, fetcher)
   return { data, error, isLoading }
 }
 
+export async function getchEventDetails(id: number) {
+  const res = await fetch(`/api/event/${id}/`)
+  if (!res.ok) {
+    throw new Error('Failed to fetch data')
+  }
+  return res.json()
+}
+
 export function getEventIncidents(id: number): { data: EventIncidents; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(`/api/event/${id}/incidents/`, fetcher)
+  const { data, error, isLoading } = useSWR(id ? `/api/event/${id}/incidents/` : null, fetcher)
   return { data, error, isLoading }
 }
 
 //? Players
 
 export function getPlayerDetails(id: number): { data: Player; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(`/api/player/${id}/`, fetcher)
+  const { data, error, isLoading } = useSWR(id ? `/api/player/${id}/` : null, fetcher)
   return { data, error, isLoading }
 }
 
@@ -27,12 +34,15 @@ export function getEventsFromPlayer(
   span: 'next' | 'last',
   page: number
 ): { data: Event[]; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(`api/player/${id}/events/${span}/${page}`, fetcher)
+  const { data, error, isLoading } = useSWR(
+    id && span && page ? `api/player/${id}/events/${span}/${page}` : null,
+    fetcher
+  )
   return { data, error, isLoading }
 }
 
 export function getPlayerImageLink(id: number) {
-  return `/api/player/${id}/image`
+  return id ? `/api/player/${id}/image` : ``
 }
 
 //? Sports
@@ -41,45 +51,45 @@ export function getEventsFromSportAndDate(
   sport: string,
   date: string
 ): { data: Event[]; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(`/api/sport/${sport}/events/${date}/`, fetcher)
+  const { data, error, isLoading } = useSWR(sport && date ? `/api/sport/${sport}/events/${date}/` : null, fetcher)
   return { data, error, isLoading }
 }
 
 export function getTournamentsFromSport(sport: string): { data: Tournament[]; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(`/api/sport/${sport}/tournaments`, fetcher)
+  const { data, error, isLoading } = useSWR(sport ? `/api/sport/${sport}/tournaments` : null, fetcher)
   return { data, error, isLoading }
 }
 
 //? Teams
 
 export function getTeamDetails(id: number) {
-  const { data, error, isLoading } = useSWR(`/api/team/${id}/`, fetcher)
+  const { data, error, isLoading } = useSWR(id ? `/api/team/${id}/` : null, fetcher)
   return { data, error, isLoading }
 }
 
 export function getPlayersFromTeam(id: number): { data: Player[]; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(`/api/team/${id}/players`, fetcher)
+  const { data, error, isLoading } = useSWR(id ? `/api/team/${id}/players` : null, fetcher)
   return { data, error, isLoading }
 }
 
 export function getEventsFromTeam(id: number): { data: Event[]; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(`/api/team/${id}/events`, fetcher)
+  const { data, error, isLoading } = useSWR(id ? `/api/team/${id}/events` : null, fetcher)
   return { data, error, isLoading }
 }
 
 export function getTeamImageLink(id: number) {
-  return `/api/team/${id}/image`
+  return id ? `/api/team/${id}/image` : ``
 }
 
 export function getToutnamentsFromTeam(id: number): { data: Tournament[]; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(`/api/team/${id}/tournaments`, fetcher)
+  const { data, error, isLoading } = useSWR(id ? `/api/team/${id}/tournaments` : null, fetcher)
   return { data, error, isLoading }
 }
 
 //? Tournaments
 
 export function getTournamentDetails(id: number) {
-  const { data, error, isLoading } = useSWR(`/api/tournament/${id}/`, fetcher)
+  const { data, error, isLoading } = useSWR(id ? `/api/tournament/${id}/` : null, fetcher)
   return { data, error, isLoading }
 }
 
@@ -88,15 +98,15 @@ export function getEventsFromTournament(
   span: 'next' | 'last',
   page: number
 ): { data: Event[]; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(`api/${id}/events/${span}/${page}`, fetcher)
+  const { data, error, isLoading } = useSWR(id && span && page ? `api/${id}/events/${span}/${page}` : null, fetcher)
   return { data, error, isLoading }
 }
 
 export function getTournamentStandings(id: number): { data: TournamentStandings; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(`/api/tournament/${id}/standings`, fetcher)
+  const { data, error, isLoading } = useSWR(id ? `/api/tournament/${id}/standings` : null, fetcher)
   return { data, error, isLoading }
 }
 
 export function getTournamentImageLink(id: number) {
-  return `/api/tournament/${id}/image`
+  return id ? `/api/tournament/${id}/image` : ``
 }

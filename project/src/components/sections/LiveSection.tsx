@@ -1,16 +1,30 @@
 import { Box, Flex, HStack, Image, Spacer, Text, VStack } from '@kuma-ui/core'
 import Calendar from '../navigation/Calendar'
 import IconPointerRight from '../svg/IconPointerRight'
-import { getEventsFromSportAndDate, getTeamDetails, getTeamImageLink, getTournamentImageLink } from '@/api/api'
-import { useRouter } from 'next/router'
 import { Event } from '@/utils/types'
-import { getTournamentDetails } from '../../api/api'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import { getExampleEventsFromSportAndDate, getExampleTourament } from '@/api/exampleObjects'
+import { getTeamImageLink, getTournamentImageLink } from '@/api/api'
+import { useAppContext } from '@/context/AppContext'
+import { isWindowDefined } from 'swr/_internal'
 
 export function LiveSection() {
   const router = useRouter()
+  const [selectedDate, setSelectedDate] = useState<string>(router.query.d as string)
+
+  useEffect(() => {
+    if (router.query.d) {
+      setSelectedDate(router.query.d as string)
+    } else {
+      setSelectedDate(new Date().toISOString().split('T')[0])
+    }
+  }, [router.query])
+
   const slug = router.query.slug as string
-  const date = router.query.d as string
-  const events = getEventsFromSportAndDate(slug, date).data
+  const dateToday = new Date().toISOString().split('T')[0]
+  // const events = getEventsFromSportAndDate(slug, selectedDate || dateToday).data
+  const events = getExampleEventsFromSportAndDate()
 
   const groupedEventsByTournament = events?.reduce((acc: { [key: number]: Event[] }, event: Event) => {
     if (!acc[event.tournament.id]) {
@@ -41,6 +55,18 @@ export function LiveSection() {
               events={groupedEventsByTournament[parseInt(tournamentId)]}
             />
           ))}
+        {events?.length === 0 && (
+          <Flex
+            h={`48px`}
+            justifyContent={'center'}
+            alignItems={'center'}
+            borderTop={`1px solid var(--on-surface-on-surface-lv-4)`}
+            mt={`5px`}
+          >
+            No events for this day.
+          </Flex>
+        )}
+        <Spacer />
       </VStack>
     </VStack>
   )
@@ -48,9 +74,23 @@ export function LiveSection() {
 
 function ListSectionSecondary(props: { mobile?: boolean; numberOfEvents?: number }) {
   const router = useRouter()
+  const [currentDate, setCurrentDate] = useState<string>(router.query.d as string)
+  const [locale, setLocale] = useState<string>('hr-HR')
+
+  useEffect(() => {
+    if (router.query.d) {
+      setCurrentDate(router.query.d as string)
+    } else {
+      setCurrentDate(new Date().toISOString().split('T')[0])
+    }
+  }, [router.query])
+
+  useEffect(() => {
+    setLocale(navigator.language || 'hr-HR')
+  }, [])
+
   const today = new Date().toISOString().split('T')[0]
-  let date = router.query.d || today
-  const locale = typeof window !== 'undefined' ? navigator.language : 'hr-HR'
+  let date = currentDate || today
   date = date === today ? 'Today' : new Date(date as string).toLocaleDateString(locale)
 
   return (
@@ -81,39 +121,59 @@ function LeagueCell(props: { tournamentId: number }) {
       />
       <HStack h={`100%`} alignItems={'center'}>
         <Text className="Headline-3" color={`colors.onSurfaceLv1`}>
-          {getTournamentDetails(props.tournamentId).data?.country.name}
+          {/* {getTournamentDetails(props.tournamentId).data?.country.name} */}
+          {getExampleTourament().country.name}
         </Text>
         <IconPointerRight color={`var(--on-surface-on-surface-lv-2)`} />
-        <Text color={`colors.onSurfaceLv2`}>{getTournamentDetails(props.tournamentId).data?.name}</Text>
+        <Text color={`colors.onSurfaceLv2`}>
+          {/* {getTournamentDetails(props.tournamentId).data?.name} */}
+          {getExampleTourament().name}
+        </Text>
       </HStack>
     </Flex>
   )
 }
 enum EventState {
-  LIVE = 'LIVE',
-  UPCOMING = 'UPCOMING',
-  FINISHED = 'FINISHED',
+  LIVE = 'inprogress',
+  UPCOMING = 'notstarted',
+  FINISHED = 'finished',
 }
-function EventCell(props: {
-  state: EventState
-  time: string
-  team1Id: number
-  team2Id: number
-  scoreTeam1?: number
-  scoreTeam2?: number
-  currentMinute?: number
-}) {
+function EventCell(props: { event: Event }) {
+  const appContext = useAppContext()
+  const router = useRouter()
+
   const winningTeam =
-    props.scoreTeam1 !== undefined && props.scoreTeam2 !== undefined
-      ? props.scoreTeam1 !== props.scoreTeam2
-        ? props.scoreTeam1 > props.scoreTeam2
+    props.event.homeScore.total !== undefined && props.event.awayScore.total !== undefined
+      ? props.event.homeScore.total !== props.event.awayScore.total
+        ? props.event.homeScore.total > props.event.awayScore.total
           ? 1
           : 2
         : 0
       : 0
 
+  const openEvent = (id: number) => () => {
+    console.log('Open event', id, appContext.isMobile)
+    if (appContext.isMobile) {
+      router.push(`/event/${id}`)
+    } else {
+      router.push({ query: { ...router.query, e: id } }, undefined, { shallow: true })
+    }
+  }
+
+  const currentDateTime = new Date()
+  const startDateTime = new Date(props.event.startDate)
+  const minutesPassed = Math.floor((currentDateTime.getTime() - startDateTime.getTime()) / 60000)
+
   return (
-    <HStack h={`56px`} w={`100%`} alignItems={'center'} py={`8px`}>
+    <HStack
+      h={`56px`}
+      w={`100%`}
+      alignItems={'center'}
+      py={`8px`}
+      _hover={{ bg: 'colors.primaryHighlight', cursor: 'pointer' }}
+      bg={props.event.id === Number(router.query.e) ? `colors.primaryHighlight` : `transparent`}
+      onClick={openEvent(props.event.id)}
+    >
       <VStack
         w={`64px`}
         h={`100%`}
@@ -125,66 +185,80 @@ function EventCell(props: {
         borderEnd={`1px solid var(--on-surface-on-surface-lv-4)`}
         color={`colors.onSurfaceLv2`}
       >
-        <Text>{props.time}</Text>
-        <Text color={props.state === EventState.LIVE ? `var(--specific-live)` : ``}>
-          {props.state === EventState.FINISHED ? `FT` : ``}
-          {props.state === EventState.LIVE ? `${props.currentMinute}'` : ``}
-          {props.state === EventState.UPCOMING ? `-` : ``}
+        <Text>{`${new Date(props.event.startDate).toISOString().split('T')[1].slice(0, 5)}`}</Text>
+        <Text color={props.event.status === EventState.LIVE ? `var(--specific-live)` : ``}>
+          {props.event.status === EventState.FINISHED ? `FT` : ``}
+          {props.event.status === EventState.LIVE ? `${minutesPassed}'` : ``}
+          {props.event.status === EventState.UPCOMING ? `-` : ``}
         </Text>
       </VStack>
       <VStack h={`100%`} w={`100%`} px={`16px`} justifyContent={'center'} gap={`4px`}>
         <HStack alignItems={'center'} gap={`8px`} className="Body">
-          <Image src={getTeamImageLink(props.team1Id)} alt="League image" w={`16px`} aspectRatio={1} flexShrink={0} />
+          <Image
+            src={getTeamImageLink(props.event.homeTeam.id)}
+            alt="League image"
+            w={`16px`}
+            aspectRatio={1}
+            flexShrink={0}
+            loading="lazy"
+          />
           <Text
             className="Body-1"
             color={
-              props.state === EventState.UPCOMING
+              props.event.status === EventState.UPCOMING
                 ? `var(--on-surface-on-surface-lv-1)`
-                : props.state === EventState.LIVE
+                : props.event.status === EventState.LIVE
                 ? `var(--on-surface-on-surface-lv-1)`
                 : `${winningTeam === 1 ? `var(--on-surface-on-surface-lv-1)` : `var(--on-surface-on-surface-lv-2)`}`
             }
             flexShrink={0}
           >
-            {getTeamDetails(props.team1Id).data?.name}
+            {props.event.homeTeam.name}
           </Text>
           <Spacer w={`100%`}></Spacer>
           <Text
             color={
-              props.state === EventState.LIVE
+              props.event.status === EventState.LIVE
                 ? `var(--specific-live)`
                 : `${winningTeam === 1 ? `var(--on-surface-on-surface-lv-1)` : `var(--on-surface-on-surface-lv-2)`}`
             }
             flexShrink={0}
           >
-            {props.state === EventState.UPCOMING ? `` : `${props.scoreTeam1}`}
+            {props.event.status === EventState.UPCOMING ? `` : `${props.event.homeScore.total}`}
           </Text>
         </HStack>
         <HStack alignItems={'center'} gap={`8px`} className="Body">
-          <Image src={getTeamImageLink(props.team2Id)} alt="League image" w={`16px`} aspectRatio={1} flexShrink={0} />
+          <Image
+            src={getTeamImageLink(props.event.awayTeam.id)}
+            alt="League image"
+            w={`16px`}
+            aspectRatio={1}
+            flexShrink={0}
+            loading="lazy"
+          />
           <Text
             className="Body-1"
             color={
-              props.state === EventState.UPCOMING
+              props.event.status === EventState.UPCOMING
                 ? `var(--on-surface-on-surface-lv-1)`
-                : props.state === EventState.LIVE
+                : props.event.status === EventState.LIVE
                 ? `var(--on-surface-on-surface-lv-1)`
                 : `${winningTeam === 2 ? `var(--on-surface-on-surface-lv-1)` : `var(--on-surface-on-surface-lv-2)`}`
             }
             flexShrink={0}
           >
-            {getTeamDetails(props.team2Id).data?.name}
+            {props.event.awayTeam.name}
           </Text>
           <Spacer w={`100%`}></Spacer>
           <Text
             color={
-              props.state === EventState.LIVE
+              props.event.status === EventState.LIVE
                 ? `var(--specific-live)`
                 : `${winningTeam === 2 ? `var(--on-surface-on-surface-lv-1)` : `var(--on-surface-on-surface-lv-2)`}`
             }
             flexShrink={0}
           >
-            {props.state === EventState.UPCOMING ? `` : `${props.scoreTeam2}`}
+            {props.event.status === EventState.UPCOMING ? `` : `${props.event.awayScore.total}`}
           </Text>
         </HStack>
       </VStack>
@@ -202,19 +276,9 @@ function LeagueEvents(props: { tournamentId: number; events: Object[] }) {
         const startingTime = new Date(parsedEvent.startDate).toISOString().split('T')[1].slice(0, 5)
         const eventState = parsedEvent.status === 'finished' ? EventState.FINISHED : EventState.UPCOMING
 
-        return (
-          <EventCell
-            key={parsedEvent.id}
-            team1Id={parsedEvent.homeTeam.id}
-            team2Id={parsedEvent.awayTeam.id}
-            state={eventState}
-            time={startingTime}
-            scoreTeam1={parsedEvent.homeScore.total}
-            scoreTeam2={parsedEvent.awayScore.total}
-          />
-        )
+        return <EventCell key={parsedEvent.id} event={parsedEvent} />
       })}
-      <Spacer h={`8px`} borderBottom={`1px solid var(--on-surface-on-surface-lv-4)`} />
+      <Spacer h={`16px`} borderBottom={`1px solid var(--on-surface-on-surface-lv-4)`} />
     </>
   )
 }

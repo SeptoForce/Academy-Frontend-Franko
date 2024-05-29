@@ -4,23 +4,22 @@ import IconChevronRight from '../svg/IconChevronRight'
 import IconCardRed from '../svg/IconCardRed'
 import IconBallFootball from '../svg/IconBallFootball'
 import IconCardYellow from '../svg/IconCardYellow'
+import { Event } from '@/utils/types'
 import { useRouter } from 'next/router'
 
-export function EventDetailsSection() {
-  const router = useRouter()
-
-  if (router.query.e === undefined) {
-    return <Box display={[`none`, `none`, `none`, `flex`]} w={`100%`} flexDir={'column'}></Box>
-  }
-
+export function EventDetailsSection(props: { event: Event; noHeader?: boolean }) {
   return (
-    <Box display={[`none`, `none`, `none`, `flex`]} w={`100%`} flexDir={'column'}>
-      <Box w={`100%`} bg={`colors.surface1`} borderRadius={`16px`} overflow={'hidden'}>
-        <Actions />
-        <Hero />
-        <Spacer borderBottom={`1px solid var(--on-surface-on-surface-lv-4)`} w={`100%`} />
-        <IncidentSection />
-      </Box>
+    <Box
+      w={`100%`}
+      bg={`colors.surface1`}
+      borderRadius={`16px`}
+      overflow={'hidden'}
+      boxShadow={`0 1px 4px 0 rgba(0, 0, 0, 0.08)`}
+    >
+      {props.noHeader ? null : <Actions />}
+      <Hero />
+      <Spacer borderBottom={`1px solid var(--on-surface-on-surface-lv-4)`} w={`100%`} />
+      <IncidentSection />
     </Box>
   )
 }
@@ -125,6 +124,13 @@ function IncidentCell(props: {
 }
 
 function Actions() {
+  const router = useRouter()
+  const hideEvent = () => {
+    const query = { ...router.query }
+    delete query.e
+    router.push({ query }, undefined, { shallow: true })
+  }
+
   return (
     <Box
       display={[`none`, 'flex']}
@@ -134,7 +140,7 @@ function Actions() {
       justifyContent={'space-between'}
       p={`16px`}
     >
-      <Button>
+      <Button onClick={hideEvent}>
         <IconClose color="var(--on-surface-on-surface-lv-1)" size="24" />
       </Button>
       <Link className="Action" display={'flex'}>

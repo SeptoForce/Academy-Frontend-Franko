@@ -1,13 +1,12 @@
 import { Box, Flex, HStack, Image, Spacer, Text, VStack } from '@kuma-ui/core'
 import Calendar from '../navigation/Calendar'
 import IconPointerRight from '../svg/IconPointerRight'
-import { Event } from '@/utils/types'
+import { Event, EventStatus } from '@/utils/types'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { getExampleEventsFromSportAndDate, getExampleTourament } from '@/api/exampleObjects'
 import { getTeamImageLink, getTournamentImageLink } from '@/api/api'
 import { useAppContext } from '@/context/AppContext'
-import { isWindowDefined } from 'swr/_internal'
 
 export function LiveSection() {
   const router = useRouter()
@@ -110,6 +109,8 @@ function ListSectionSecondary(props: { mobile?: boolean; numberOfEvents?: number
 }
 
 function LeagueCell(props: { tournamentId: number }) {
+  const tournament = getExampleTourament()
+
   return (
     <Flex h={`56px`} w={`100%`} px={`16px`} alignItems={'center'} gap={`32px`}>
       <Image
@@ -122,34 +123,23 @@ function LeagueCell(props: { tournamentId: number }) {
       <HStack h={`100%`} alignItems={'center'}>
         <Text className="Headline-3" color={`colors.onSurfaceLv1`}>
           {/* {getTournamentDetails(props.tournamentId).data?.country.name} */}
-          {getExampleTourament().country.name}
+          {tournament.country.name}
         </Text>
         <IconPointerRight color={`var(--on-surface-on-surface-lv-2)`} />
         <Text color={`colors.onSurfaceLv2`}>
           {/* {getTournamentDetails(props.tournamentId).data?.name} */}
-          {getExampleTourament().name}
+          {tournament.name}
         </Text>
       </HStack>
     </Flex>
   )
 }
-enum EventState {
-  LIVE = 'inprogress',
-  UPCOMING = 'notstarted',
-  FINISHED = 'finished',
-}
+
 function EventCell(props: { event: Event }) {
   const appContext = useAppContext()
   const router = useRouter()
 
-  const winningTeam =
-    props.event.homeScore.total !== undefined && props.event.awayScore.total !== undefined
-      ? props.event.homeScore.total !== props.event.awayScore.total
-        ? props.event.homeScore.total > props.event.awayScore.total
-          ? 1
-          : 2
-        : 0
-      : 0
+  const winnerCode = props.event.winnerCode
 
   const openEvent = (id: number) => () => {
     console.log('Open event', id, appContext.isMobile)
@@ -186,10 +176,10 @@ function EventCell(props: { event: Event }) {
         color={`colors.onSurfaceLv2`}
       >
         <Text>{`${new Date(props.event.startDate).toISOString().split('T')[1].slice(0, 5)}`}</Text>
-        <Text color={props.event.status === EventState.LIVE ? `var(--specific-live)` : ``}>
-          {props.event.status === EventState.FINISHED ? `FT` : ``}
-          {props.event.status === EventState.LIVE ? `${minutesPassed}'` : ``}
-          {props.event.status === EventState.UPCOMING ? `-` : ``}
+        <Text color={props.event.status === EventStatus.LIVE ? `var(--specific-live)` : ``}>
+          {props.event.status === EventStatus.FINISHED ? `FT` : ``}
+          {props.event.status === EventStatus.LIVE ? `${minutesPassed}'` : ``}
+          {props.event.status === EventStatus.UPCOMING ? `-` : ``}
         </Text>
       </VStack>
       <VStack h={`100%`} w={`100%`} px={`16px`} justifyContent={'center'} gap={`4px`}>
@@ -205,11 +195,11 @@ function EventCell(props: { event: Event }) {
           <Text
             className="Body-1"
             color={
-              props.event.status === EventState.UPCOMING
+              props.event.status === EventStatus.UPCOMING
                 ? `var(--on-surface-on-surface-lv-1)`
-                : props.event.status === EventState.LIVE
+                : props.event.status === EventStatus.LIVE
                 ? `var(--on-surface-on-surface-lv-1)`
-                : `${winningTeam === 1 ? `var(--on-surface-on-surface-lv-1)` : `var(--on-surface-on-surface-lv-2)`}`
+                : `${winnerCode === 'home' ? `var(--on-surface-on-surface-lv-1)` : `var(--on-surface-on-surface-lv-2)`}`
             }
             flexShrink={0}
           >
@@ -218,13 +208,13 @@ function EventCell(props: { event: Event }) {
           <Spacer w={`100%`}></Spacer>
           <Text
             color={
-              props.event.status === EventState.LIVE
+              props.event.status === EventStatus.LIVE
                 ? `var(--specific-live)`
-                : `${winningTeam === 1 ? `var(--on-surface-on-surface-lv-1)` : `var(--on-surface-on-surface-lv-2)`}`
+                : `${winnerCode === 'home' ? `var(--on-surface-on-surface-lv-1)` : `var(--on-surface-on-surface-lv-2)`}`
             }
             flexShrink={0}
           >
-            {props.event.status === EventState.UPCOMING ? `` : `${props.event.homeScore.total}`}
+            {props.event.status === EventStatus.UPCOMING ? `` : `${props.event.homeScore.total}`}
           </Text>
         </HStack>
         <HStack alignItems={'center'} gap={`8px`} className="Body">
@@ -239,11 +229,11 @@ function EventCell(props: { event: Event }) {
           <Text
             className="Body-1"
             color={
-              props.event.status === EventState.UPCOMING
+              props.event.status === EventStatus.UPCOMING
                 ? `var(--on-surface-on-surface-lv-1)`
-                : props.event.status === EventState.LIVE
+                : props.event.status === EventStatus.LIVE
                 ? `var(--on-surface-on-surface-lv-1)`
-                : `${winningTeam === 2 ? `var(--on-surface-on-surface-lv-1)` : `var(--on-surface-on-surface-lv-2)`}`
+                : `${winnerCode === 'away' ? `var(--on-surface-on-surface-lv-1)` : `var(--on-surface-on-surface-lv-2)`}`
             }
             flexShrink={0}
           >
@@ -252,13 +242,13 @@ function EventCell(props: { event: Event }) {
           <Spacer w={`100%`}></Spacer>
           <Text
             color={
-              props.event.status === EventState.LIVE
+              props.event.status === EventStatus.LIVE
                 ? `var(--specific-live)`
-                : `${winningTeam === 2 ? `var(--on-surface-on-surface-lv-1)` : `var(--on-surface-on-surface-lv-2)`}`
+                : `${winnerCode === 'away' ? `var(--on-surface-on-surface-lv-1)` : `var(--on-surface-on-surface-lv-2)`}`
             }
             flexShrink={0}
           >
-            {props.event.status === EventState.UPCOMING ? `` : `${props.event.awayScore.total}`}
+            {props.event.status === EventStatus.UPCOMING ? `` : `${props.event.awayScore.total}`}
           </Text>
         </HStack>
       </VStack>
@@ -274,7 +264,7 @@ function LeagueEvents(props: { tournamentId: number; events: Object[] }) {
         const parsedEvent = event as Event
 
         const startingTime = new Date(parsedEvent.startDate).toISOString().split('T')[1].slice(0, 5)
-        const eventState = parsedEvent.status === 'finished' ? EventState.FINISHED : EventState.UPCOMING
+        const eventState = parsedEvent.status === 'finished' ? EventStatus.FINISHED : EventStatus.UPCOMING
 
         return <EventCell key={parsedEvent.id} event={parsedEvent} />
       })}

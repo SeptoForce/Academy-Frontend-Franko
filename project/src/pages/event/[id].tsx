@@ -5,13 +5,15 @@ import LeagueSection from '@/components/sections/LeagueSection'
 import IconPointerRight from '@/components/svg/IconPointerRight'
 import { HStack, VStack, Text, Link, Box } from '@kuma-ui/core'
 import { getExampleEvent } from '@/api/exampleObjects'
+import HeaderEventBreadcrumbs from '@/components/navigation/HeaderEventBreadcrumbs'
+import { Event } from '@/utils/types'
 
 export default function EventPage(props: { slug: string; date: string; event: number; data: any }) {
   const event = getExampleEvent()
 
   return (
     <>
-      <Header />
+      <Header noCalendar />
       <VStack
         as="main"
         h={`100%`}
@@ -30,20 +32,7 @@ export default function EventPage(props: { slug: string; date: string; event: nu
           px={`12px`}
           display={[`none`, `flex`]}
         >
-          <HStack
-            className="Micro"
-            userSelect={`none`}
-            cursor={'default'}
-            alignItems={'center'}
-            color={'colors.onSurfaceLv2'}
-            visibility={event ? 'visible' : 'hidden'}
-          >
-            <Link href={'#'}>{event?.tournament.country.name}</Link>
-            <IconPointerRight size={`24px`} color={`var(--on-surface-on-surface-lv-2)`} />
-            <Link href={'#'}>{event?.tournament.name}</Link>
-            <IconPointerRight size={`24px`} color={`var(--on-surface-on-surface-lv-2)`} />
-            <Text userSelect={'none'}>{`${event?.homeTeam.name} vs ${event?.awayTeam.name}`}</Text>
-          </HStack>
+          <HeaderEventBreadcrumbs event={event as Event} />
         </HStack>
 
         <HStack w={`100%`} h={`100%`} justifyContent={'center'} gap={`24px`}>
@@ -51,7 +40,7 @@ export default function EventPage(props: { slug: string; date: string; event: nu
             <LeagueSection />
           </Box>
 
-          <Box display={`flex`} w={`100%`} flexBasis={0} flexDir={'column'} flexShrink={0} flexGrow={1}>
+          <Box display={`flex`} w={`200px`} flexDir={'column'} flexShrink={0} flexGrow={1}>
             <EventDetailsSection noHeader event={event} />
           </Box>
 

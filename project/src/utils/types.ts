@@ -2,6 +2,54 @@ export interface TournamentImage {
   imageUrl: string
 }
 
+export enum EventStatus {
+  LIVE = 'inprogress',
+  UPCOMING = 'notstarted',
+  FINISHED = 'finished',
+}
+
+export enum WinnerCode {
+  HOME = 'home',
+  AWAY = 'away',
+  DRAW = 'draw',
+}
+
+export enum GoalType {
+  REGULAR = 'regular',
+  OWNGOAL = 'owngoal',
+  PENALTY = 'penalty',
+  ONEPOINT = 'onepoint',
+  TWOPOINT = 'twopoint',
+  THREEPOINT = 'threepoint',
+  TOUCHDOWN = 'touchdown',
+  SAFETY = 'safety',
+  FIELDGOAL = 'fieldgoal',
+  EXTRAPOINT = 'extrapoint',
+}
+
+export enum TeamSide {
+  HOME = 'home',
+  AWAY = 'away',
+}
+
+export enum CardColor {
+  YELLOW = 'yellow',
+  RED = 'red',
+  YELLOWRED = 'yellowred',
+}
+
+export enum IncidentType {
+  CARD = 'card',
+  GOAL = 'goal',
+  PERIOD = 'period',
+}
+
+export enum StandingsType {
+  TOTAL = 'total',
+  HOME = 'home',
+  AWAY = 'away',
+}
+
 export type Event = {
   id: number
   slug: string
@@ -35,7 +83,7 @@ export type Event = {
       name: string
     }
   }
-  status: 'notstarted' | 'inprogress' | 'finished'
+  status: 'inprogress' | 'notstarted' | 'finished'
   startDate: string
   homeScore: {
     total?: number
@@ -53,7 +101,7 @@ export type Event = {
     period4?: number
     overtime?: number
   }
-  winnerCode: string
+  winnerCode: 'home' | 'away' | 'draw'
   round: number
 }
 
@@ -148,7 +196,9 @@ export type TournamentStandings = {
   }[]
 }[]
 
-export type EventIncidents = {
+export type EventIncidents = EventIncident[]
+
+export type EventIncident = {
   player?: {
     id: number
     name: string
@@ -179,4 +229,4 @@ export type EventIncidents = {
   id: number
   time: number
   type: 'card' | 'goal' | 'period'
-}[]
+}

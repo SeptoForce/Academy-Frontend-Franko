@@ -1,11 +1,24 @@
-import { Box, Flex, Link, Spacer, Text, Button, VStack } from '@kuma-ui/core'
+import { Box, Flex, Link, Spacer, Text, Button, VStack, Image } from '@kuma-ui/core'
 import IconClose from '../svg/IconClose'
 import IconChevronRight from '../svg/IconChevronRight'
 import IconCardRed from '../svg/IconCardRed'
 import IconBallFootball from '../svg/IconBallFootball'
 import IconCardYellow from '../svg/IconCardYellow'
-import { Event } from '@/utils/types'
+import { CardColor, Event, EventIncident, EventStatus, GoalType, IncidentType, TeamSide } from '@/utils/types'
 import { useRouter } from 'next/router'
+import { getTeamImageLink } from '@/api/api'
+import { getExampleIncidents } from '@/api/exampleObjects'
+import IconAutogoal from '../svg/IconAutogoal'
+import IconPenaltyScored from '../svg/IconPenaltyScored'
+import IconExtraPoint from '../svg/IconExtraPoint'
+import IconFieldGoal from '../svg/IconFieldGoal'
+import IconTouchdown from '../svg/IconTouchdown'
+import IconRogue from '../svg/IconRogue'
+import IconTwoPointConversion from '../svg/IconTwoPointConversion'
+import IconRugbyPoint1 from '../svg/IconRugbyPoint1'
+import IconBasketballIncident1 from '../svg/IconBasketballIncident1'
+import IconRugbyPoint3 from '../svg/IconRugbyPoint3'
+import IconBasketballIncident3 from '../svg/IconBasketballIncident3'
 
 export function EventDetailsSection(props: { event: Event; noHeader?: boolean }) {
   return (
@@ -17,50 +30,136 @@ export function EventDetailsSection(props: { event: Event; noHeader?: boolean })
       boxShadow={`0 1px 4px 0 rgba(0, 0, 0, 0.08)`}
     >
       {props.noHeader ? null : <Actions />}
-      <Hero />
+      <Hero event={props.event} />
       <Spacer borderBottom={`1px solid var(--on-surface-on-surface-lv-4)`} w={`100%`} />
-      <IncidentSection />
+      <IncidentSection event={props.event} />
     </Box>
   )
 }
 
-function IncidentSection() {
+function IncidentSection(props: { event: Event }) {
+  const eventIncidents = getExampleIncidents()
+
   return (
-    <VStack w={`100%`} alignItems={'flex-end'} pb={`16px`} justifyContent={'space-between'}>
-      <Flex w={`100%`} h={`40px`} p={`8px`}>
-        <Flex
-          w={`100%`}
-          h={`100%`}
-          borderRadius={`16px`}
-          bg={'colors.secondaryHighlight'}
-          alignItems={'center'}
-          justifyContent={'center'}
-        >
-          <Text color={'colors.specificLive'} className="Assistive">
-            First Half (2 - 1)
-          </Text>
-        </Flex>
-      </Flex>
-      <IncidentCell type={IncidentType.RED_CARD} player={'Jonathan Livingstone'} argument={'Foul'} time={'36"'} />
-      <IncidentCell type={IncidentType.GOAL} player={'Leonel Messi'} time={'21"'} flipped />
-      <IncidentCell type={IncidentType.YELLOW_CARD} player={'John Smith'} argument={'Foul'} time={'17"'} flipped />
-      <IncidentCell type={IncidentType.YELLOW_CARD} player={'Christiano Rolando'} argument={'Argument'} time={'17"'} />
+    <VStack w={`100%`} flexDir={'column-reverse'} alignItems={'flex-end'} pb={`16px`} justifyContent={'space-between'}>
+      {eventIncidents.map((incident, index) => {
+        const _incident = incident as EventIncident
+        if (_incident.type === IncidentType.PERIOD) {
+          return <PeriodCell key={_incident.id} incident={_incident} live={props.event.status === EventStatus.LIVE} />
+        } else {
+          return (
+            <IncidentCell
+              sport={props.event.tournament.sport.slug}
+              key={_incident.id}
+              incident={_incident}
+              flipped={_incident.teamSide === TeamSide.AWAY}
+            />
+          )
+        }
+      })}
     </VStack>
   )
 }
 
-enum IncidentType {
-  GOAL = 'GOAL',
-  YELLOW_CARD = 'YELLOW_CARD',
-  RED_CARD = 'RED_CARD',
+function PeriodCell(props: { incident: EventIncident; live?: boolean }) {
+  const incident = props.incident
+
+  let incidentText = incident.text || ''
+  if (incidentText.startsWith('HT')) {
+    incidentText = 'Half Time' + incidentText.slice(2)
+  }
+  if (incidentText.startsWith('FT')) {
+    incidentText = 'Full Time' + incidentText.slice(2)
+  }
+
+  return (
+    <Flex w={`100%`} h={`40px`} p={`8px`} color={props.live ? `colors.specificLive` : `colors.onSurfaceLv1`}>
+      <Flex
+        w={`100%`}
+        h={`100%`}
+        borderRadius={`16px`}
+        bg={'colors.secondaryHighlight'}
+        alignItems={'center'}
+        justifyContent={'center'}
+      >
+        <Text className="Assistive">{`${incidentText}`}</Text>
+      </Flex>
+    </Flex>
+  )
 }
-function IncidentCell(props: {
-  flipped?: boolean
-  type?: IncidentType
-  player?: string
-  argument?: string
-  time?: string
-}) {
+
+function IncidentCell(props: { flipped?: boolean; incident: EventIncident; sport: string }) {
+  const incident = props.incident
+  const incidentType = incident.type
+  let icon = <></>
+
+  switch (incidentType) {
+    case IncidentType.CARD:
+      switch (incident.color) {
+        case CardColor.YELLOW:
+          icon = <IconCardYellow />
+          break
+        case CardColor.RED:
+          icon = <IconCardRed />
+          break
+      }
+      break
+    case IncidentType.GOAL:
+      switch (incident.goalType) {
+        case GoalType.REGULAR:
+          icon = <IconBallFootball />
+          break
+        case GoalType.OWNGOAL:
+          icon = <IconAutogoal />
+          break
+        case GoalType.PENALTY:
+          icon = <IconPenaltyScored />
+          break
+        case GoalType.EXTRAPOINT:
+          icon = <IconExtraPoint />
+          break
+        case GoalType.FIELDGOAL:
+          icon = <IconFieldGoal />
+          break
+        case GoalType.TOUCHDOWN:
+          icon = <IconTouchdown />
+          break
+        case GoalType.SAFETY:
+          icon = <IconRogue />
+          break
+        case GoalType.ONEPOINT:
+          switch (props.sport) {
+            case 'american-football':
+              icon = <IconRugbyPoint1 />
+              break
+            case 'basketball':
+              icon = <IconBasketballIncident1 />
+              break
+          }
+          break
+        case GoalType.TWOPOINT:
+          switch (props.sport) {
+            case 'american-football':
+              icon = <IconTwoPointConversion />
+              break
+            case 'basketball':
+              icon = <IconBasketballIncident1 />
+              break
+          }
+          break
+        case GoalType.THREEPOINT:
+          switch (props.sport) {
+            case 'american-football':
+              icon = <IconRugbyPoint3 />
+              break
+            case 'basketball':
+              icon = <IconBasketballIncident3 />
+              break
+          }
+          break
+      }
+  }
+
   return (
     <Box
       display={'flex'}
@@ -82,10 +181,9 @@ function IncidentCell(props: {
         borderStart={props.flipped ? '1px solid var(--on-surface-on-surface-lv-4)' : 'none'}
         color={'colors.onSurfaceLv2'}
       >
-        {props.type === IncidentType.GOAL && <IconBallFootball size="24" />}
-        {props.type === IncidentType.YELLOW_CARD && <IconCardYellow />}
-        {props.type === IncidentType.RED_CARD && <IconCardRed />}
-        <Text className="Micro">{props.time}</Text>
+        {icon}
+
+        <Text className="Micro">{incident.time}'</Text>
       </Box>
       <Box
         h={`100%`}
@@ -98,24 +196,26 @@ function IncidentCell(props: {
           className="Headline-1"
           flexShrink={0}
           w={`84px`}
-          display={props.type === IncidentType.GOAL ? 'flex' : 'none'}
+          display={incident.type === IncidentType.GOAL ? 'flex' : 'none'}
           justifyContent={'center'}
           alignItems={'center'}
         >
-          0 - 1
+          {`${incident.homeScore}-${incident.awayScore}`}
         </Text>
         <VStack
           h={`100%`}
           w={`100%`}
-          mx={props.type === IncidentType.GOAL ? '0px' : '12px'}
+          mx={incident.type === IncidentType.GOAL ? '0px' : '12px'}
           justifyContent={'center'}
           alignItems={props.flipped ? 'flex-end' : 'flex-start'}
         >
           <Text className="Body" color={`colors.onSurfaceLv1`} flexShrink={0}>
-            {props.player}
+            {incident.player?.name}
           </Text>
           <Text className="Micro" color={`colors.onSurfaceLv2`} flexShrink={0}>
-            {props.argument}
+            {incident.type === IncidentType.CARD ? `Foul` : ``}
+            {incident.goalType === GoalType.OWNGOAL ? `Own Goal` : ``}
+            {incident.goalType === GoalType.PENALTY ? `Penalty` : ``}
           </Text>
         </VStack>
       </Box>
@@ -131,6 +231,10 @@ function Actions() {
     router.push({ query }, undefined, { shallow: true })
   }
 
+  const viewFullPage = () => {
+    router.push(`/event/${router.query.e}`)
+  }
+
   return (
     <Box
       display={[`none`, 'flex']}
@@ -143,7 +247,7 @@ function Actions() {
       <Button onClick={hideEvent}>
         <IconClose color="var(--on-surface-on-surface-lv-1)" size="24" />
       </Button>
-      <Link className="Action" display={'flex'}>
+      <Link onClick={viewFullPage} className="Action" display={'flex'}>
         <Text>View Full Page</Text>
         <IconChevronRight color="var(--color-primary-default)" />
       </Link>
@@ -151,20 +255,22 @@ function Actions() {
   )
 }
 
-function Hero() {
+function Hero(props: { event: Event }) {
+  const event = props.event
+
   return (
     <Flex w={`100%`} h={`112px`} alignItems={'flex-end'} justifyContent={'space-between'} p={`16px`}>
-      <HeroSectionUnit />
-      <Score />
-      <HeroSectionUnit />
+      <HeroSectionUnit teamName={event.homeTeam.name} teamId={event.homeTeam.id} />
+      <Score event={event} />
+      <HeroSectionUnit teamName={event.awayTeam.name} teamId={event.awayTeam.id} />
     </Flex>
   )
 }
 
-function HeroSectionUnit() {
+function HeroSectionUnit(props: { teamName: string; teamId: number }) {
   return (
     <VStack h={`80px`} w={`96px`} alignItems={'center'} justifyContent={'space-between'}>
-      <Box h={`40px`} flexShrink={0} aspectRatio={1} bg={`black`} />
+      <Image h={`40px`} flexShrink={0} aspectRatio={1} src={getTeamImageLink(props.teamId)} />
       <Text
         h={`100%`}
         w={`100%`}
@@ -174,15 +280,24 @@ function HeroSectionUnit() {
         alignItems={'center'}
         className="Assistive"
       >
-        Manchester United
+        {props.teamName}
       </Text>
     </VStack>
   )
 }
 
-function Score() {
+function Score(props: { event: Event }) {
+  const event = props.event
+  const winnerCode = event.status === EventStatus.FINISHED ? event.winnerCode : undefined
+
   return (
-    <VStack h={`112px`} w={`96px`} alignItems={'center'} justifyContent={'center'}>
+    <VStack
+      h={`112px`}
+      w={`96px`}
+      alignItems={'center'}
+      justifyContent={'center'}
+      color={event.status === EventStatus.LIVE ? 'colors.specificLive' : 'colors.onSurfaceLv2'}
+    >
       <Flex
         h={`40px`}
         w={`100%`}
@@ -190,16 +305,23 @@ function Score() {
         justifyContent={'center'}
         className="Headline-1-Desktop"
         gap={`4px`}
-        color={'colors.specificLive'}
       >
-        <Text className="Display">1</Text>
+        <Text className="Display" color={winnerCode === `home` ? `colors.onSurfaceLv1` : ``}>
+          {event.homeScore.total}
+        </Text>
         <Spacer />
         <Text className="Display">-</Text>
         <Spacer />
-        <Text className="Display">0</Text>
+        <Text className="Display" color={winnerCode === `away` ? `colors.onSurfaceLv1` : ``}>
+          {event.awayScore.total}
+        </Text>
       </Flex>
-      <Text className="Micro" color={'colors.specificLive'}>
-        36'
+      <Text className="Micro">
+        {event.status === EventStatus.UPCOMING ? new Date(event.startDate).toISOString().slice(11, 16) : ``}
+        {event.status === EventStatus.LIVE
+          ? `${Math.floor((new Date().getTime() - new Date(event.startDate).getTime()) / (1000 * 60))}'`
+          : ``}
+        {event.status === EventStatus.FINISHED ? `Full Time` : ``}
       </Text>
     </VStack>
   )

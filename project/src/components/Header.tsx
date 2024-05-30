@@ -1,12 +1,12 @@
 import { useThemeContext } from '@/context/ThemeContext'
-import { Box, Button, Flex, HStack } from '@kuma-ui/core'
+import { Box, Button, Flex, HStack, Link } from '@kuma-ui/core'
 import IconSofascoreLogo from './svg/IconSofascoreLogo'
 import IconTrophy from './svg/IconTrophy'
 import IconSettings from './svg/IconSettings'
 import { Navigation } from './navigation/Navigation'
 import Calendar from './navigation/Calendar'
 
-export function Header() {
+export function Header(props: { noNavigation?: boolean; noCalendar?: boolean }) {
   const { setIsDark } = useThemeContext()
 
   return (
@@ -27,7 +27,9 @@ export function Header() {
           flexBasis={0}
           textAlign={[`start`, `center`]}
         >
-          <IconSofascoreLogo />
+          <Link href="/">
+            <IconSofascoreLogo />
+          </Link>
         </Box>
         <HStack
           color="colors.surface1"
@@ -46,8 +48,8 @@ export function Header() {
           </Button>
         </HStack>
       </HStack>
-      <Navigation />
-      <Calendar mobile />
+      {props.noNavigation ? null : <Navigation />}
+      {props.noCalendar ? null : <Calendar mobile />}
     </Flex>
   )
 }

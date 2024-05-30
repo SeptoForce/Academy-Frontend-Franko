@@ -1,13 +1,12 @@
 import { Box, Flex, Link, Spacer, Text, Button, VStack, Image } from '@kuma-ui/core'
+import { CardColor, Event, EventIncident, EventStatus, GoalType, IncidentType, TeamSide } from '@/utils/types'
+import { useRouter } from 'next/router'
+import { fetchEventIncidents, getTeamImageLink } from '@/api/api'
 import IconClose from '../svg/IconClose'
 import IconChevronRight from '../svg/IconChevronRight'
 import IconCardRed from '../svg/IconCardRed'
 import IconBallFootball from '../svg/IconBallFootball'
 import IconCardYellow from '../svg/IconCardYellow'
-import { CardColor, Event, EventIncident, EventStatus, GoalType, IncidentType, TeamSide } from '@/utils/types'
-import { useRouter } from 'next/router'
-import { getTeamImageLink } from '@/api/api'
-import { getExampleIncidents } from '@/api/exampleObjects'
 import IconAutogoal from '../svg/IconAutogoal'
 import IconPenaltyScored from '../svg/IconPenaltyScored'
 import IconExtraPoint from '../svg/IconExtraPoint'
@@ -19,6 +18,8 @@ import IconRugbyPoint1 from '../svg/IconRugbyPoint1'
 import IconBasketballIncident1 from '../svg/IconBasketballIncident1'
 import IconRugbyPoint3 from '../svg/IconRugbyPoint3'
 import IconBasketballIncident3 from '../svg/IconBasketballIncident3'
+import { useEffect, useState } from 'react'
+import IconBasketballIncident2 from '../svg/IconBasketballIncident2'
 
 export function EventDetailsSection(props: { event: Event; noHeader?: boolean }) {
   return (
@@ -38,7 +39,12 @@ export function EventDetailsSection(props: { event: Event; noHeader?: boolean })
 }
 
 function IncidentSection(props: { event: Event }) {
-  const eventIncidents = getExampleIncidents()
+  const [eventIncidents, setEventIncidents] = useState<EventIncident[]>([])
+  useEffect(() => {
+    fetchEventIncidents(props.event.id)
+      .then(data => setEventIncidents(data))
+      .catch(error => console.error(error))
+  }, [props.event])
 
   return (
     <VStack w={`100%`} flexDir={'column-reverse'} alignItems={'flex-end'} pb={`16px`} justifyContent={'space-between'}>
@@ -52,7 +58,7 @@ function IncidentSection(props: { event: Event }) {
               sport={props.event.tournament.sport.slug}
               key={_incident.id}
               incident={_incident}
-              flipped={_incident.teamSide === TeamSide.AWAY}
+              flipped={_incident.teamSide === TeamSide.AWAY || _incident.scoringTeam === TeamSide.AWAY}
             />
           )
         }
@@ -143,7 +149,7 @@ function IncidentCell(props: { flipped?: boolean; incident: EventIncident; sport
               icon = <IconTwoPointConversion />
               break
             case 'basketball':
-              icon = <IconBasketballIncident1 />
+              icon = <IconBasketballIncident2 />
               break
           }
           break
@@ -269,20 +275,22 @@ function Hero(props: { event: Event }) {
 
 function HeroSectionUnit(props: { teamName: string; teamId: number }) {
   return (
-    <VStack h={`80px`} w={`96px`} alignItems={'center'} justifyContent={'space-between'}>
-      <Image h={`40px`} flexShrink={0} aspectRatio={1} src={getTeamImageLink(props.teamId)} />
-      <Text
-        h={`100%`}
-        w={`100%`}
-        textAlign={'center'}
-        display={'flex'}
-        justifyContent={'center'}
-        alignItems={'center'}
-        className="Assistive"
-      >
-        {props.teamName}
-      </Text>
-    </VStack>
+    <Link href={`/team/${props.teamId}`} color={`colors.onSurfaceLv1`}>
+      <VStack h={`80px`} w={`96px`} alignItems={'center'} justifyContent={'space-between'}>
+        <Image h={`40px`} flexShrink={0} aspectRatio={1} src={getTeamImageLink(props.teamId)} />
+        <Text
+          h={`100%`}
+          w={`100%`}
+          textAlign={'center'}
+          display={'flex'}
+          justifyContent={'center'}
+          alignItems={'center'}
+          className="Assistive"
+        >
+          {props.teamName}
+        </Text>
+      </VStack>
+    </Link>
   )
 }
 
@@ -296,7 +304,7 @@ function Score(props: { event: Event }) {
       w={`96px`}
       alignItems={'center'}
       justifyContent={'center'}
-      color={event.status === EventStatus.LIVE ? 'colors.specificLive' : 'colors.onSurfaceLv2'}
+      color={event.status === EventStatus.LIVE ? 'var(--specific-live)' : 'var(--on-surface-on-surface-lv-2)'}
     >
       <Flex
         h={`40px`}
@@ -306,13 +314,13 @@ function Score(props: { event: Event }) {
         className="Headline-1-Desktop"
         gap={`4px`}
       >
-        <Text className="Display" color={winnerCode === `home` ? `colors.onSurfaceLv1` : ``}>
+        <Text className="Display" color={winnerCode === `home` ? `var(--on-surface-on-surface-lv-1)` : ``}>
           {event.homeScore.total}
         </Text>
         <Spacer />
         <Text className="Display">-</Text>
         <Spacer />
-        <Text className="Display" color={winnerCode === `away` ? `colors.onSurfaceLv1` : ``}>
+        <Text className="Display" color={winnerCode === `away` ? `var(--on-surface-on-surface-lv-1)` : ``}>
           {event.awayScore.total}
         </Text>
       </Flex>

@@ -1,29 +1,31 @@
-import { Box, Flex, HStack, Image, Spacer, Text, VStack } from '@kuma-ui/core'
+import { Box, Flex, HStack, Image, Link, Spacer, Text, VStack } from '@kuma-ui/core'
 import Calendar from '../navigation/Calendar'
 import IconPointerRight from '../svg/IconPointerRight'
 import { Event, EventStatus } from '@/utils/types'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { getExampleEventsFromSportAndDate, getExampleTourament } from '@/api/exampleObjects'
-import { getTeamImageLink, getTournamentImageLink } from '@/api/api'
+import { getExampleTourament } from '@/api/exampleObjects'
+import { fetchEventsFromSportAndDate, getTeamImageLink, getTournamentImageLink } from '@/api/api'
 import { useAppContext } from '@/context/AppContext'
 
 export function LiveSection() {
   const router = useRouter()
   const [selectedDate, setSelectedDate] = useState<string>(router.query.d as string)
+  const [events, setEvents] = useState<Event[]>()
 
   useEffect(() => {
+    let date = new Date().toISOString().split('T')[0]
     if (router.query.d) {
-      setSelectedDate(router.query.d as string)
-    } else {
-      setSelectedDate(new Date().toISOString().split('T')[0])
+      date = router.query.d as string
     }
+    setSelectedDate(date)
+    fetchEventsFromSportAndDate(router.query.slug as string, date)
+      .then(data => setEvents(data))
+      .catch(error => console.error(error))
   }, [router.query])
 
   const slug = router.query.slug as string
   const dateToday = new Date().toISOString().split('T')[0]
-  // const events = getEventsFromSportAndDate(slug, selectedDate || dateToday).data
-  const events = getExampleEventsFromSportAndDate()
 
   const groupedEventsByTournament = events?.reduce((acc: { [key: number]: Event[] }, event: Event) => {
     if (!acc[event.tournament.id]) {
@@ -112,26 +114,28 @@ function LeagueCell(props: { tournamentId: number }) {
   const tournament = getExampleTourament()
 
   return (
-    <Flex h={`56px`} w={`100%`} px={`16px`} alignItems={'center'} gap={`32px`}>
-      <Image
-        src={getTournamentImageLink(props.tournamentId)}
-        alt="League image"
-        h={`32px`}
-        aspectRatio={1}
-        flexShrink={0}
-      />
-      <HStack h={`100%`} alignItems={'center'}>
-        <Text className="Headline-3" color={`colors.onSurfaceLv1`}>
-          {/* {getTournamentDetails(props.tournamentId).data?.country.name} */}
-          {tournament.country.name}
-        </Text>
-        <IconPointerRight color={`var(--on-surface-on-surface-lv-2)`} />
-        <Text color={`colors.onSurfaceLv2`}>
-          {/* {getTournamentDetails(props.tournamentId).data?.name} */}
-          {tournament.name}
-        </Text>
-      </HStack>
-    </Flex>
+    <Link href={`/tournament/${props.tournamentId}`}>
+      <Flex h={`56px`} w={`100%`} px={`16px`} alignItems={'center'} gap={`32px`}>
+        <Image
+          src={getTournamentImageLink(props.tournamentId)}
+          alt="League image"
+          h={`32px`}
+          aspectRatio={1}
+          flexShrink={0}
+        />
+        <HStack h={`100%`} alignItems={'center'}>
+          <Text className="Headline-3" color={`colors.onSurfaceLv1`}>
+            {/* {getTournamentDetails(props.tournamentId).data?.country.name} */}
+            {tournament.country.name}
+          </Text>
+          <IconPointerRight color={`var(--on-surface-on-surface-lv-2)`} />
+          <Text color={`colors.onSurfaceLv2`}>
+            {/* {getTournamentDetails(props.tournamentId).data?.name} */}
+            {tournament.name}
+          </Text>
+        </HStack>
+      </Flex>
+    </Link>
   )
 }
 

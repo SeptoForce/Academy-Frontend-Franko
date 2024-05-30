@@ -1,44 +1,31 @@
-import { fetcher } from '@/pages/_app'
-import { Event, EventIncidents, Player, Tournament, TournamentStandings } from '@/utils/types'
-import useSWR from 'swr'
+import { Event, EventIncidents, Player, Team, Tournament, TournamentStandings } from '@/utils/types'
 
 //? Events
 
-export function getEventDetails(id: number | undefined): { data: Event; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(id ? `/api/event/${id}/` : null, fetcher)
-  return { data, error, isLoading }
+export async function fetchEventDetails(eventId: number): Promise<Event> {
+  const response = await fetch(`/api/event/${eventId}`)
+  const data = await response.json()
+  return data
 }
 
-export async function getchEventDetails(id: number) {
-  const res = await fetch(`/api/event/${id}/`)
-  if (!res.ok) {
-    throw new Error('Failed to fetch data')
-  }
-  return res.json()
-}
-
-export function getEventIncidents(id: number): { data: EventIncidents; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(id ? `/api/event/${id}/incidents/` : null, fetcher)
-  return { data, error, isLoading }
+export async function fetchEventIncidents(eventId: number): Promise<EventIncidents> {
+  const response = await fetch(`/api/event/${eventId}/incidents`)
+  const data = await response.json()
+  return data
 }
 
 //? Players
 
-export function getPlayerDetails(id: number): { data: Player; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(id ? `/api/player/${id}/` : null, fetcher)
-  return { data, error, isLoading }
+export async function fetchPlayerDetails(id: number): Promise<Player> {
+  const response = await fetch(`/api/player/${id}`)
+  const data = await response.json()
+  return data
 }
 
-export function getEventsFromPlayer(
-  id: number,
-  span: 'next' | 'last',
-  page: number
-): { data: Event[]; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(
-    id && span && page ? `api/player/${id}/events/${span}/${page}` : null,
-    fetcher
-  )
-  return { data, error, isLoading }
+export async function fetchEventsFromPlayer(id: number, span: 'next' | 'last', page: number): Promise<Event[]> {
+  const response = await fetch(`/api/player/${id}/events/${span}/${page}`)
+  const data = await response.json()
+  return data
 }
 
 export function getPlayerImageLink(id: number) {
@@ -47,64 +34,66 @@ export function getPlayerImageLink(id: number) {
 
 //? Sports
 
-export function getEventsFromSportAndDate(
-  sport: string,
-  date: string
-): { data: Event[]; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(sport && date ? `/api/sport/${sport}/events/${date}/` : null, fetcher)
-  return { data, error, isLoading }
+export async function fetchEventsFromSportAndDate(sport: string, date: string): Promise<Event[]> {
+  const response = await fetch(`/api/sport/${sport}/events/${date}`)
+  const data = await response.json()
+  return data
 }
 
-export function getTournamentsFromSport(sport: string): { data: Tournament[]; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(sport ? `/api/sport/${sport}/tournaments` : null, fetcher)
-  return { data, error, isLoading }
+export async function fetchTournamentsFromSport(sport: string): Promise<Tournament[]> {
+  const response = await fetch(`/api/sport/${sport}/tournaments`)
+  const data = await response.json()
+  return data
 }
 
 //? Teams
 
-export function getTeamDetails(id: number) {
-  const { data, error, isLoading } = useSWR(id ? `/api/team/${id}/` : null, fetcher)
-  return { data, error, isLoading }
+export async function fetchTeamDetails(id: number): Promise<Team> {
+  const response = await fetch(`/api/team/${id}`)
+  const data = await response.json()
+  return data
 }
 
-export function getPlayersFromTeam(id: number): { data: Player[]; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(id ? `/api/team/${id}/players` : null, fetcher)
-  return { data, error, isLoading }
+export async function fetchPlayersFromTeam(id: number): Promise<Player[]> {
+  const response = await fetch(`/api/team/${id}/players`)
+  const data = await response.json()
+  return data
 }
 
-export function getEventsFromTeam(id: number): { data: Event[]; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(id ? `/api/team/${id}/events` : null, fetcher)
-  return { data, error, isLoading }
+export async function fetchEventsFromTeam(id: number): Promise<Event[]> {
+  const response = await fetch(`/api/team/${id}/events`)
+  const data = await response.json()
+  return data
 }
 
 export function getTeamImageLink(id: number) {
   return id ? `/api/team/${id}/image` : ``
 }
 
-export function getToutnamentsFromTeam(id: number): { data: Tournament[]; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(id ? `/api/team/${id}/tournaments` : null, fetcher)
-  return { data, error, isLoading }
+export async function fetchTournamentsFromTeam(id: number): Promise<Tournament[]> {
+  const response = await fetch(`/api/team/${id}/tournaments`)
+  const data = await response.json()
+  return data
 }
 
 //? Tournaments
 
-export function getTournamentDetails(id: number) {
-  const { data, error, isLoading } = useSWR(id ? `/api/tournament/${id}/` : null, fetcher)
-  return { data, error, isLoading }
+export async function fetchTournamentDetails(id: number): Promise<Tournament> {
+  const response = await fetch(`/api/tournament/${id}`)
+  const data = await response.json()
+  return data
 }
 
-export function getEventsFromTournament(
-  id: number,
-  span: 'next' | 'last',
-  page: number
-): { data: Event[]; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(id && span && page ? `api/${id}/events/${span}/${page}` : null, fetcher)
-  return { data, error, isLoading }
+export async function fetchEventsFromTournament(id: number, span: 'next' | 'last', page: number): Promise<Event[]> {
+  const response = await fetch(`/api/tournament/${id}/events/${span}/${page}`)
+  const data = await response.json()
+  return data
 }
 
-export function getTournamentStandings(id: number): { data: TournamentStandings; error: any; isLoading: boolean } {
-  const { data, error, isLoading } = useSWR(id ? `/api/tournament/${id}/standings` : null, fetcher)
-  return { data, error, isLoading }
+export async function fetchTournamentStandings(id: number): Promise<TournamentStandings> {
+  const response = await fetch(`/api/tournament/${id}/standings`)
+  const data = await response.json()
+  return data
 }
 
 export function getTournamentImageLink(id: number) {

@@ -2,7 +2,7 @@ import { HStack, Link, Text } from '@kuma-ui/core'
 import IconPointerRight from '../svg/IconPointerRight'
 import { Event } from '@/utils/types'
 import { useEffect, useState } from 'react'
-import { getExampleEvent } from '@/api/exampleObjects'
+import { fetchEventDetails } from '@/api/api'
 
 export function HeaderEventBreadcrumbs(props: { event: Event }) {
   const [event, setEvent] = useState<Event | undefined>(props.event)
@@ -10,7 +10,9 @@ export function HeaderEventBreadcrumbs(props: { event: Event }) {
   useEffect(() => {
     let event: Event | undefined = undefined
     if (props.event) {
-      event = getExampleEvent()
+      fetchEventDetails(props.event.id)
+        .then(data => setEvent(data))
+        .catch(error => console.error(error))
     }
     setEvent(event)
   }, [props.event])

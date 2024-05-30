@@ -3,40 +3,12 @@ import Header from '@/components/Header'
 import EventDetailsSection from '@/components/sections/EventDetailsSection'
 import LeagueSection from '@/components/sections/LeagueSection'
 import { HStack, VStack, Box } from '@kuma-ui/core'
+import { getExampleEvent } from '@/api/exampleObjects'
 import HeaderEventBreadcrumbs from '@/components/navigation/HeaderEventBreadcrumbs'
 import { Event } from '@/utils/types'
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import { fetchEventDetails } from '@/api/api'
 
-export async function getServerSideProps(context: any) {
-  const result = await fetch(`https://academy-backend.sofascore.dev/event/${context.params.id}`)
-  const eventDetails = await result.json()
-
-  return {
-    props: {
-      eventDetails: eventDetails,
-    },
-  }
-}
-
-export default function EventPage(props: { eventDetails: Event }) {
-  const router = useRouter()
-  const [event, setEvent] = useState<Event>(props.eventDetails)
-
-  useEffect(() => {
-    if (router.query.e && event?.id !== Number(router.query.e)) {
-      fetchEventDetails(Number(router.query.e))
-        .then(data => setEvent(data))
-        .catch(error => console.error(error))
-    }
-
-    if (!router.query.e && router.query.id) {
-      fetchEventDetails(Number(router.query.id))
-        .then(data => setEvent(data))
-        .catch(error => console.error(error))
-    }
-  }, [router.query])
+export default function PlayerPage(props: { slug: string; date: string; event: number; data: any }) {
+  const event = getExampleEvent()
 
   return (
     <>

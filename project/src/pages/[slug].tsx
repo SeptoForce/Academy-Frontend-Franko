@@ -1,4 +1,4 @@
-import { getExampleEvent } from '@/api/exampleObjects'
+import { fetchEventDetails } from '@/api/api'
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import HeaderEventBreadcrumbs from '@/components/navigation/HeaderEventBreadcrumbs'
@@ -36,7 +36,7 @@ export function getServerSideProps(context: GetServerSidePropsContext) {
 
   const slug = context.params.slug as string
   const date = context.query.d as string
-  const event = context.query.e ? parseInt(context.query.e as string) : null
+  const event = null
 
   return {
     props: {
@@ -47,17 +47,17 @@ export function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
-export default function HomePage(props: { slug: string; date: string; event: number }) {
+export default function HomePage(props: { slug: string; date: string; event: Event }) {
   const appContext = useAppContext()
   const router = useRouter()
   const [event, setEvent] = useState<Event>()
 
   useEffect(() => {
-    let event: Event | undefined = undefined
     if (router.query.e) {
-      event = getExampleEvent()
+      fetchEventDetails(Number(router.query.e))
+        .then(data => setEvent(data))
+        .catch(error => console.error(error))
     }
-    setEvent(event)
   }, [router.query])
 
   return (
@@ -80,19 +80,19 @@ export default function HomePage(props: { slug: string; date: string; event: num
         )}
 
         <HStack w={`100%`} h={`100%`} justifyContent={'center'} gap={`24px`}>
-          <Box display={[`none`, `none`, `none`, `flex`]} w={`100%`} flexBasis={0} flexGrow={1} flexDir={'column'}>
+          <Box display={[`none`, `none`, `none`, `flex`]} flex={`1 2 0`} flexDir={'column'}>
             <LeagueSection />
           </Box>
-          <Box display={`flex`} w={`100%`} flexBasis={0} flexGrow={1} alignItems={'center'} flexDir={'column'}>
+          <Box display={`flex`} alignItems={'center'} flex={`1 1 0`} flexDir={'column'}>
             <LiveSection />
           </Box>
 
           {event !== undefined ? (
-            <Box display={[`none`, `none`, `none`, `flex`]} w={`100%`} flexBasis={0} flexGrow={1} flexDir={'column'}>
+            <Box display={[`none`, `none`, `none`, `flex`]} flex={`1 3 0`} flexDir={'column'}>
               <EventDetailsSection event={event} />
             </Box>
           ) : (
-            <Box display={[`none`, `none`, `none`, `flex`]} w={`100%`} flexBasis={0} flexGrow={1} />
+            <Box display={[`none`, `none`, `none`, `flex`]} flex={`1 1 0`} />
           )}
         </HStack>
       </VStack>

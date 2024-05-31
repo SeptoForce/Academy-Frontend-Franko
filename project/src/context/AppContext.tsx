@@ -34,7 +34,7 @@ export const AppContextProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     const handleResize = () => {
-      const isMobile = window.innerWidth < 993
+      const isMobile = window.innerWidth < 768
       setIsMobile(isMobile)
     }
     handleResize()

@@ -1,11 +1,16 @@
 import { Box, Flex, HStack, Image, Link, Spacer, Text, VStack } from '@kuma-ui/core'
 import Calendar from '../navigation/Calendar'
 import IconPointerRight from '../svg/IconPointerRight'
-import { Event, EventStatus } from '@/utils/types'
+import { Event, EventStatus, Tournament } from '@/utils/types'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { getExampleTourament } from '@/api/exampleObjects'
-import { fetchEventsFromSportAndDate, getTeamImageLink, getTournamentImageLink } from '@/api/api'
+import {
+  fetchEventsFromSportAndDate,
+  fetchTournamentDetails,
+  getTeamImageLink,
+  getTournamentImageLink,
+} from '@/api/api'
 import { useAppContext } from '@/context/AppContext'
 
 export function LiveSection() {
@@ -110,14 +115,12 @@ function ListSectionSecondary(props: { mobile?: boolean; numberOfEvents?: number
   )
 }
 
-function LeagueCell(props: { tournamentId: number }) {
-  const tournament = getExampleTourament()
-
+function LeagueCell(props: { tournament: Tournament }) {
   return (
-    <Link href={`/tournament/${props.tournamentId}`}>
+    <Link href={`/tournament/${props.tournament.id}`}>
       <Flex h={`56px`} w={`100%`} px={`16px`} alignItems={'center'} gap={`32px`}>
         <Image
-          src={getTournamentImageLink(props.tournamentId)}
+          src={getTournamentImageLink(props.tournament.id)}
           alt="League image"
           h={`32px`}
           aspectRatio={1}
@@ -126,12 +129,12 @@ function LeagueCell(props: { tournamentId: number }) {
         <HStack h={`100%`} alignItems={'center'}>
           <Text className="Headline-3" color={`colors.onSurfaceLv1`}>
             {/* {getTournamentDetails(props.tournamentId).data?.country.name} */}
-            {tournament.country.name}
+            {props.tournament.country.name}
           </Text>
           <IconPointerRight color={`var(--on-surface-on-surface-lv-2)`} />
           <Text color={`colors.onSurfaceLv2`}>
             {/* {getTournamentDetails(props.tournamentId).data?.name} */}
-            {tournament.name}
+            {props.tournament.name}
           </Text>
         </HStack>
       </Flex>
@@ -261,9 +264,17 @@ function EventCell(props: { event: Event }) {
 }
 
 function LeagueEvents(props: { tournamentId: number; events: Object[] }) {
+  const [tournament, setTournament] = useState<Tournament>(getExampleTourament())
+
+  useEffect(() => {
+    fetchTournamentDetails(props.tournamentId)
+      .then(data => setTournament(data))
+      .catch(error => console.error(error))
+  }, [props.tournamentId])
+
   return (
     <>
-      <LeagueCell tournamentId={props.tournamentId} />
+      <LeagueCell tournament={tournament} />
       {props.events.map(event => {
         const parsedEvent = event as Event
 

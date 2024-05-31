@@ -1,15 +1,21 @@
-import { getTournamentImageLink } from '@/api/api'
+import { fetchTournamentDetails, fetchTournamentsFromSport, getTournamentImageLink } from '@/api/api'
 import { Tournament } from '@/utils/types'
 import { Box, Flex, HStack, Image, Link, Spacer, Text } from '@kuma-ui/core'
 import { useRouter } from 'next/router'
-import { getExampleTourament } from '@/api/exampleObjects'
+import { useEffect, useState } from 'react'
 
-export function LeagueSection() {
+export function TournamentsSection(props: { tournaments: Tournament[] }) {
   const router = useRouter()
   const slug = router.query.slug as string
+  const [tournaments, setTournaments] = useState<Tournament[]>(props.tournaments)
 
-  // const tournaments: Tournament[] = getTournamentsFromSport(slug).data
-  const tournaments: Tournament[] = [getExampleTourament(), getExampleTourament(), getExampleTourament()]
+  useEffect(() => {
+    if (slug) {
+      fetchTournamentsFromSport(slug)
+        .then(data => setTournaments(data))
+        .catch(error => console.error(error))
+    }
+  }, [router.query])
 
   return (
     <Box
@@ -21,11 +27,10 @@ export function LeagueSection() {
       boxShadow={`0 1px 4px 0 rgba(0, 0, 0, 0.08)`}
     >
       <Flex w={`100%`} h={`48px`} mx={`8px`} alignItems={'center'}>
-        <Text className="Headline-1">Leagues</Text>
+        <Text className="Headline-1">{router.query.slug === `football` ? `Leagues` : `Tournaments`}</Text>
       </Flex>
       {tournaments?.map(tournament => (
-        //! Chenge later to use the real id
-        <LeagueCell key={Math.ceil(Math.random() * 1000000)} id={tournament.id} />
+        <TournamentCell key={tournament.id} id={tournament.id} />
       ))}
       <Spacer h={`24px`} />
       <Link href="#" mx={`8px`} className="Action">
@@ -35,9 +40,16 @@ export function LeagueSection() {
   )
 }
 
-function LeagueCell(props: { id: number }) {
-  // const leagueDetails = getTournamentDetails(props.id).data
-  const leagueDetails = getExampleTourament()
+function TournamentCell(props: { id: number }) {
+  const [tournamentDetails, setTournamentDetails] = useState<Tournament>()
+
+  useEffect(() => {
+    if (props.id !== undefined) {
+      fetchTournamentDetails(props.id)
+        .then(data => setTournamentDetails(data))
+        .catch(error => console.error(error))
+    }
+  }, [props.id])
 
   return (
     <Link color={`colors.onSurfaceLv1`} href={`/tournament/${props.id}`}>
@@ -51,10 +63,10 @@ function LeagueCell(props: { id: number }) {
         px={`8px`}
       >
         <Image src={getTournamentImageLink(props.id)} alt="League image" h={`40px`} />
-        <Text className="Headline-3">{leagueDetails?.name}</Text>
+        <Text className="Headline-3">{tournamentDetails?.name}</Text>
       </HStack>
     </Link>
   )
 }
 
-export default LeagueSection
+export default TournamentsSection

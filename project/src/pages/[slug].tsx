@@ -1,18 +1,18 @@
-import { fetchEventDetails } from '@/api/api'
+import { fetchEventDetails, fetchTournamentsFromSport } from '@/api/api'
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import HeaderEventBreadcrumbs from '@/components/navigation/HeaderEventBreadcrumbs'
 import EventDetailsSection from '@/components/sections/EventDetailsSection'
-import LeagueSection from '@/components/sections/LeagueSection'
+import TournamentsSection from '@/components/sections/TournamentsSection'
 import LiveSection from '@/components/sections/LiveSection'
 import { useAppContext } from '@/context/AppContext'
-import { Event } from '@/utils/types'
+import { Event, Tournament } from '@/utils/types'
 import { HStack, VStack, Box } from '@kuma-ui/core'
 import { GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
-export function getServerSideProps(context: GetServerSidePropsContext) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (
     !context.params?.slug ||
     ['football', 'basketball', 'american-football'].indexOf(context.params.slug as string) === -1
@@ -34,20 +34,17 @@ export function getServerSideProps(context: GetServerSidePropsContext) {
     }
   }
 
-  const slug = context.params.slug as string
-  const date = context.query.d as string
-  const event = null
+  const response = await fetch(`https://academy-backend.sofascore.dev/sport/${context.query.slug}/tournaments`)
+  const tournaments = await response.json()
 
   return {
     props: {
-      slug,
-      date,
-      event,
+      tournaments,
     },
   }
 }
 
-export default function HomePage(props: { slug: string; date: string; event: Event }) {
+export default function HomePage(props: { tournaments: Tournament[] }) {
   const appContext = useAppContext()
   const router = useRouter()
   const [event, setEvent] = useState<Event>()
@@ -81,7 +78,7 @@ export default function HomePage(props: { slug: string; date: string; event: Eve
 
         <HStack w={`100%`} h={`100%`} justifyContent={'center'} gap={`24px`}>
           <Box display={[`none`, `none`, `none`, `flex`]} flex={`1 2 0`} flexDir={'column'}>
-            <LeagueSection />
+            <TournamentsSection tournaments={props.tournaments} />
           </Box>
           <Box display={`flex`} alignItems={'center'} flex={`1 1 0`} flexDir={'column'}>
             <LiveSection />

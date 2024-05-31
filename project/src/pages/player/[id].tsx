@@ -1,7 +1,7 @@
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import EventDetailsSection from '@/components/sections/EventDetailsSection'
-import LeagueSection from '@/components/sections/LeagueSection'
+import TournamentsSection from '@/components/sections/TournamentsSection'
 import { HStack, VStack, Box } from '@kuma-ui/core'
 import { getExampleEvent } from '@/api/exampleObjects'
 import HeaderEventBreadcrumbs from '@/components/navigation/HeaderEventBreadcrumbs'
@@ -36,7 +36,7 @@ export default function PlayerPage(props: { slug: string; date: string; event: n
 
         <HStack w={`100%`} h={`100%`} justifyContent={'center'} gap={`24px`}>
           <Box display={[`none`, `none`, `none`, `flex`]} w={`100%`} flexBasis={0} flexGrow={1} flexDir={'column'}>
-            <LeagueSection />
+            <TournamentsSection />
           </Box>
 
           <Box display={`flex`} w={`200px`} flexDir={'column'} flexShrink={0} flexGrow={1}>

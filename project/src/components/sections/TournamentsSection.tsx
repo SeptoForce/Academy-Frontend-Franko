@@ -4,10 +4,10 @@ import { Box, Flex, HStack, Image, Link, Spacer, Text } from '@kuma-ui/core'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
-export function TournamentsSection(props: { tournaments: Tournament[] }) {
+export function TournamentsSection(props: { tournaments?: Tournament[] }) {
   const router = useRouter()
   const slug = router.query.slug as string
-  const [tournaments, setTournaments] = useState<Tournament[]>(props.tournaments)
+  const [tournaments, setTournaments] = useState<Tournament[] | undefined>(props.tournaments)
 
   useEffect(() => {
     if (slug) {

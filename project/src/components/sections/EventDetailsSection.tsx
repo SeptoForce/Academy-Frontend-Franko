@@ -25,6 +25,7 @@ export function EventDetailsSection(props: { event: Event; noHeader?: boolean })
   return (
     <Box
       w={`100%`}
+      h={`fit-content`}
       bg={`colors.surface1`}
       borderRadius={`16px`}
       overflow={'hidden'}
@@ -106,6 +107,9 @@ function IncidentCell(props: { flipped?: boolean; incident: EventIncident; sport
           icon = <IconCardYellow />
           break
         case CardColor.RED:
+          icon = <IconCardRed />
+          break
+        case CardColor.YELLOWRED:
           icon = <IconCardRed />
           break
       }

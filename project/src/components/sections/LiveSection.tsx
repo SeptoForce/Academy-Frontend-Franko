@@ -142,7 +142,7 @@ function LeagueCell(props: { tournament: Tournament }) {
   )
 }
 
-function EventCell(props: { event: Event }) {
+export function EventCell(props: { event: Event }) {
   const appContext = useAppContext()
   const router = useRouter()
 

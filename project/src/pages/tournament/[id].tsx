@@ -2,14 +2,16 @@ import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import EventDetailsSection from '@/components/sections/EventDetailsSection'
 import { HStack, VStack, Box, Flex, Image, Text } from '@kuma-ui/core'
-import { getExampleEvent, getExampleTourament } from '@/api/exampleObjects'
 import HeaderEventBreadcrumbs from '@/components/navigation/HeaderEventBreadcrumbs'
 import { Event, Tournament } from '@/utils/types'
 import TournamentsSection from '@/components/sections/TournamentsSection'
 import { GetServerSidePropsContext } from 'next'
 import { useAppContext } from '@/context/AppContext'
-import { getTournamentImageLink } from '@/api/api'
-import { useState } from 'react'
+import { fetchEventDetails, getTournamentImageLink } from '@/api/api'
+import { useEffect, useState } from 'react'
+import Matches from '@/components/sections/Matches'
+import { useRouter } from 'next/router'
+import Standings from '@/components/sections/Standings'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const response = await fetch(`https://academy-backend.sofascore.dev/tournament/${context.query.id}`)
@@ -31,9 +33,20 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 export default function TournamentPage(props: { currentTournament: Tournament; tournaments: Tournament[] }) {
+  const router = useRouter()
   const appContext = useAppContext()
   const [tab, setTab] = useState<'matches' | 'standings'>('matches')
-  const [event, setEvent] = useState<Event>(getExampleEvent())
+  const [event, setEvent] = useState<Event>()
+
+  useEffect(() => {
+    if (router.query.e) {
+      fetchEventDetails(Number(router.query.e))
+        .then(data => setEvent(data))
+        .catch(error => console.error(error))
+    } else {
+      setEvent(undefined)
+    }
+  }, [router.query])
 
   return (
     <>
@@ -71,13 +84,7 @@ export default function TournamentPage(props: { currentTournament: Tournament; t
             {tab === `matches` ? (
               <HStack w={`100%`} gap={`24px`}>
                 <Flex flex={`1 1 0`} justifyContent={'center'}>
-                  <Box
-                    h={`300px`}
-                    w={`100%`}
-                    bg={[``, 'colors.surface1']}
-                    boxShadow={[``, `0 1px 4px 0 rgba(0, 0, 0, 0.08)`]}
-                    borderRadius={`16px`}
-                  />
+                  <Matches objectId={props.currentTournament.id} objectType="tournament" />
                 </Flex>
                 <Box flex={`1 1 0`} display={[`none`, `none`, `flex`]}>
                   {event && <EventDetailsSection event={event} />}
@@ -86,13 +93,7 @@ export default function TournamentPage(props: { currentTournament: Tournament; t
             ) : (
               <HStack w={`100%`} gap={`24px`}>
                 <Flex flex={`1 1 0`} justifyContent={'center'}>
-                  <Box
-                    h={`300px`}
-                    w={`100%`}
-                    bg={'colors.surface1'}
-                    boxShadow={`0 1px 4px 0 rgba(0, 0, 0, 0.08)`}
-                    borderRadius={`16px`}
-                  />
+                  <Standings objectId={props.currentTournament.id} objectType="tournament" />
                 </Flex>
               </HStack>
             )}

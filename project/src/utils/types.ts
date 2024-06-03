@@ -101,7 +101,7 @@ export type Event = {
     period4?: number
     overtime?: number
   }
-  winnerCode: 'home' | 'away' | 'draw'
+  winnerCode?: 'home' | 'away' | 'draw'
   round: number
 }
 
@@ -195,6 +195,26 @@ export type TournamentStandings = {
     percentage?: number
   }[]
 }[]
+
+export type TournamentStandingsRow = {
+  id: number
+  team: {
+    id: number
+    name: string
+    country: {
+      id: number
+      name: string
+    }
+  }
+  points: number
+  scoresFor: number
+  scoresAgainst: number
+  played: number
+  wins: number
+  draws: number
+  losses: number
+  percentage?: number
+}
 
 export type EventIncidents = EventIncident[]
 

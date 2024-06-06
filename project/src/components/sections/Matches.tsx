@@ -20,7 +20,7 @@ export function Matches(props: { objectId: number; objectType: 'tournament' | 't
           .catch(error => console.error(error))
         break
       case 'team':
-        fetchEventsFromTeam(props.objectId)
+        fetchEventsFromTeam(props.objectId, span, page)
           .then(data => setEvents(data))
           .catch(error => console.error(error))
         break

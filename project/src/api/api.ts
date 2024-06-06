@@ -60,8 +60,8 @@ export async function fetchPlayersFromTeam(id: number): Promise<Player[]> {
   return data
 }
 
-export async function fetchEventsFromTeam(id: number): Promise<Event[]> {
-  const response = await fetch(`/api/team/${id}/events`)
+export async function fetchEventsFromTeam(id: number, span: 'next' | 'last', page: number): Promise<Event[]> {
+  const response = await fetch(`/api/team/${id}/events/${span}/${page}`)
   const data = await response.json()
   return data
 }

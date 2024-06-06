@@ -2,6 +2,39 @@ export interface TournamentImage {
   imageUrl: string
 }
 
+export enum Positions {
+  // Football
+  F = 'Forward',
+  M = 'Midfield',
+  D = 'Defender',
+  GK = 'Goalkeeper',
+
+  // Basketball
+  G = 'Guard',
+  PG = 'Point Guard',
+  SG = 'Shooting Guard',
+  SF = 'Small Forward',
+  PF = 'Power Forward',
+  C = 'Center',
+
+  // American Football
+  CB = 'Cornerback',
+  QB = 'Quarterback',
+  RB = 'Running Back',
+  WR = 'Wide Receiver',
+  TE = 'Tight End',
+  OL = 'Offensive Line',
+  DL = 'Defensive Line',
+  LB = 'Linebacker',
+  DB = 'Defensive Back',
+  K = 'Kicker',
+  P = 'Punter',
+  LS = 'Long Snapper',
+  SAF = 'Safety',
+  OLB = 'Outside Linebacker',
+  DE = 'Defensive End',
+}
+
 export enum EventStatus {
   LIVE = 'inprogress',
   UPCOMING = 'notstarted',

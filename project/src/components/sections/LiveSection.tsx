@@ -12,6 +12,7 @@ import {
   getTournamentImageLink,
 } from '@/api/api'
 import { useAppContext } from '@/context/AppContext'
+import { format } from 'date-fns'
 
 export function LiveSection() {
   const router = useRouter()
@@ -19,7 +20,7 @@ export function LiveSection() {
   const [events, setEvents] = useState<Event[]>()
 
   useEffect(() => {
-    let date = new Date().toISOString().split('T')[0]
+    let date = format(new Date(), 'yyyy-MM-dd')
     if (router.query.d) {
       date = router.query.d as string
     }
@@ -30,7 +31,7 @@ export function LiveSection() {
   }, [router.query])
 
   const slug = router.query.slug as string
-  const dateToday = new Date().toISOString().split('T')[0]
+  const dateToday = format(new Date(), 'yyyy-MM-dd')
 
   const groupedEventsByTournament = events?.reduce((acc: { [key: number]: Event[] }, event: Event) => {
     if (!acc[event.tournament.id]) {
@@ -80,24 +81,20 @@ export function LiveSection() {
 
 function ListSectionSecondary(props: { mobile?: boolean; numberOfEvents?: number }) {
   const router = useRouter()
+  const appContext = useAppContext()
   const [currentDate, setCurrentDate] = useState<string>(router.query.d as string)
-  const [locale, setLocale] = useState<string>('hr-HR')
 
   useEffect(() => {
     if (router.query.d) {
       setCurrentDate(router.query.d as string)
     } else {
-      setCurrentDate(new Date().toISOString().split('T')[0])
+      setCurrentDate(format(new Date(), 'yyyy-MM-dd'))
     }
   }, [router.query])
 
-  useEffect(() => {
-    setLocale(navigator.language || 'hr-HR')
-  }, [])
-
-  const today = new Date().toISOString().split('T')[0]
+  const today = format(new Date(), 'yyyy-MM-dd')
   let date = currentDate || today
-  date = date === today ? 'Today' : new Date(date as string).toLocaleDateString(locale)
+  date = date === today ? 'Today' : format(new Date(date as string), appContext.dateFormat)
 
   return (
     <Box
@@ -142,14 +139,14 @@ export function LeagueCell(props: { tournament: Tournament }) {
   )
 }
 
-export function EventCell(props: { event: Event }) {
+export function EventCell(props: { event: Event; directLink?: boolean }) {
   const appContext = useAppContext()
   const router = useRouter()
 
   const winnerCode = props.event.winnerCode
 
   const openEvent = (id: number) => () => {
-    if (appContext.isMobile) {
+    if (appContext.isMobile || props.directLink) {
       router.push(`/event/${id}`)
     } else {
       router.push({ query: { ...router.query, e: id } }, undefined, { shallow: true })
@@ -181,7 +178,7 @@ export function EventCell(props: { event: Event }) {
         borderEnd={`1px solid var(--on-surface-on-surface-lv-4)`}
         color={`colors.onSurfaceLv2`}
       >
-        <Text>{`${new Date(props.event.startDate).toISOString().split('T')[1].slice(0, 5)}`}</Text>
+        <Text>{`${format(props.event.startDate, appContext.timeFormat)}`}</Text>
         <Text color={props.event.status === EventStatus.LIVE ? `var(--specific-live)` : ``}>
           {props.event.status === EventStatus.FINISHED ? `FT` : ``}
           {props.event.status === EventStatus.LIVE ? `${minutesPassed}'` : ``}
@@ -276,9 +273,6 @@ function LeagueEvents(props: { tournamentId: number; events: Object[] }) {
       <LeagueCell tournament={tournament} />
       {props.events.map(event => {
         const parsedEvent = event as Event
-
-        const startingTime = new Date(parsedEvent.startDate).toISOString().split('T')[1].slice(0, 5)
-        const eventState = parsedEvent.status === 'finished' ? EventStatus.FINISHED : EventStatus.UPCOMING
 
         return <EventCell key={parsedEvent.id} event={parsedEvent} />
       })}

@@ -20,6 +20,8 @@ import IconRugbyPoint3 from '../svg/IconRugbyPoint3'
 import IconBasketballIncident3 from '../svg/IconBasketballIncident3'
 import { useEffect, useState } from 'react'
 import IconBasketballIncident2 from '../svg/IconBasketballIncident2'
+import { format } from 'date-fns'
+import { useAppContext } from '@/context/AppContext'
 
 export function EventDetailsSection(props: { event: Event; noHeader?: boolean }) {
   return (
@@ -34,7 +36,36 @@ export function EventDetailsSection(props: { event: Event; noHeader?: boolean })
       {props.noHeader ? null : <Actions />}
       <Hero event={props.event} />
       <Spacer borderBottom={`1px solid var(--on-surface-on-surface-lv-4)`} w={`100%`} />
-      <IncidentSection event={props.event} />
+      {props.event.status === EventStatus.UPCOMING ? (
+        <VStack h={`148px`} p={`8px`} mt={`8px`} gap={`16px`} alignItems={'center'}>
+          <Flex
+            h={`52px`}
+            w={`100%`}
+            bg={'colors.surface2'}
+            borderRadius={`8px`}
+            alignItems={'center'}
+            justifyContent={'center'}
+          >
+            <Text color={'colors.onSurfaceLv2'}>No results yet.</Text>
+          </Flex>
+          <Link href={`/tournament/${props.event.tournament.id}`} color={`colors.primaryDefault`}>
+            <Box
+              p={`8px`}
+              px={`16px`}
+              borderRadius={`2px`}
+              border={`2px solid var(--color-primary-default)`}
+              w={'fit-content'}
+              h={'fit-content'}
+              className="Action"
+              _hover={{ bg: 'var(--color-primary-default)', color: 'white' }}
+            >
+              View Tournament Details
+            </Box>
+          </Link>
+        </VStack>
+      ) : (
+        <IncidentSection event={props.event} />
+      )}
     </Box>
   )
 }
@@ -269,7 +300,7 @@ function Hero(props: { event: Event }) {
   const event = props.event
 
   return (
-    <Flex w={`100%`} h={`112px`} alignItems={'flex-end'} justifyContent={'space-between'} p={`16px`}>
+    <Flex w={`100%`} h={`112px`} alignItems={`flex-end`} justifyContent={'space-between'} p={`16px`}>
       <HeroSectionUnit teamName={event.homeTeam.name} teamId={event.homeTeam.id} />
       <Score event={event} />
       <HeroSectionUnit teamName={event.awayTeam.name} teamId={event.awayTeam.id} />
@@ -299,6 +330,7 @@ function HeroSectionUnit(props: { teamName: string; teamId: number }) {
 }
 
 function Score(props: { event: Event }) {
+  const appContext = useAppContext()
   const event = props.event
   const winnerCode = event.status === EventStatus.FINISHED ? event.winnerCode : undefined
 
@@ -308,28 +340,34 @@ function Score(props: { event: Event }) {
       w={`96px`}
       alignItems={'center'}
       justifyContent={'center'}
+      gap={`4px`}
       color={event.status === EventStatus.LIVE ? 'var(--specific-live)' : 'var(--on-surface-on-surface-lv-2)'}
     >
-      <Flex
-        h={`40px`}
-        w={`100%`}
-        alignItems={'center'}
-        justifyContent={'center'}
-        className="Headline-1-Desktop"
-        gap={`4px`}
-      >
-        <Text className="Display" color={winnerCode === `home` ? `var(--on-surface-on-surface-lv-1)` : ``}>
-          {event.homeScore.total}
-        </Text>
-        <Spacer />
-        <Text className="Display">-</Text>
-        <Spacer />
-        <Text className="Display" color={winnerCode === `away` ? `var(--on-surface-on-surface-lv-1)` : ``}>
-          {event.awayScore.total}
-        </Text>
-      </Flex>
+      {event.status === EventStatus.UPCOMING ? (
+        <Text className="Micro">{format(event.startDate, appContext.dateFormat)}</Text>
+      ) : (
+        <Flex
+          h={`40px`}
+          w={`100%`}
+          alignItems={'center'}
+          justifyContent={'center'}
+          className="Headline-1-Desktop"
+          gap={`4px`}
+        >
+          <Text className="Display" color={winnerCode === `home` ? `var(--on-surface-on-surface-lv-1)` : ``}>
+            {event.homeScore.total}
+          </Text>
+          <Spacer />
+          <Text className="Display">-</Text>
+          <Spacer />
+          <Text className="Display" color={winnerCode === `away` ? `var(--on-surface-on-surface-lv-1)` : ``}>
+            {event.awayScore.total}
+          </Text>
+        </Flex>
+      )}
+
       <Text className="Micro">
-        {event.status === EventStatus.UPCOMING ? new Date(event.startDate).toISOString().slice(11, 16) : ``}
+        {event.status === EventStatus.UPCOMING ? format(event.startDate, appContext.timeFormat) : ``}
         {event.status === EventStatus.LIVE
           ? `${Math.floor((new Date().getTime() - new Date(event.startDate).getTime()) / (1000 * 60))}'`
           : ``}

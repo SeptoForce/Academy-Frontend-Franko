@@ -12,6 +12,7 @@ import Matches from '@/components/sections/Matches'
 import { useRouter } from 'next/router'
 import { Event, Player, Positions, Tournament } from '@/utils/types'
 import { FlagComponent } from '@/components/FlagComponent'
+import { format } from 'date-fns'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const response = await fetch(`https://academy-backend.sofascore.dev/player/${context.query.id}`)
@@ -189,7 +190,7 @@ function PlayerHeader(props: { player?: Player }) {
             gap={`4px`}
           >
             <Text color={'colors.onSurfaceLv2'} className="Assistive">
-              {date.toLocaleDateString('hr-HR')}
+              {format(date, 'dd.MM.yyyy')}
             </Text>
             <Text className="Headline-3">{`${new Date().getFullYear() - date.getFullYear()} Yrs`}</Text>
           </Flex>

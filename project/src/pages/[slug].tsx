@@ -1,4 +1,4 @@
-import { fetchEventDetails, fetchTournamentsFromSport } from '@/api/api'
+import { fetchEventDetails } from '@/api/api'
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import HeaderEventBreadcrumbs from '@/components/navigation/HeaderEventBreadcrumbs'
@@ -11,6 +11,7 @@ import { HStack, VStack, Box } from '@kuma-ui/core'
 import { GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { format } from 'date-fns'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (
@@ -28,7 +29,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!context.query.d || !new Date(context.query.d as string).getTime()) {
     return {
       redirect: {
-        destination: `/${context.params.slug}?d=${new Date().toISOString().split('T')[0]}`,
+        destination: `/${context.params.slug}?d=${format(new Date(), 'yyyy-MM-dd')}`,
         permanent: false,
       },
     }

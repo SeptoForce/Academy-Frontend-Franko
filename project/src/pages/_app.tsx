@@ -1,9 +1,9 @@
 import '@/styles/globals.css'
-import { ThemeContextProvider } from '@/context/ThemeContext'
+import { ThemeContextProvider, useThemeContext } from '@/context/ThemeContext'
 import type { AppProps } from 'next/app'
 import { SWRConfig } from 'swr'
 import Head from 'next/head'
-import { AppContextProvider } from '@/context/AppContext'
+import { AppContextProvider, useAppContext } from '@/context/AppContext'
 
 //@ts-ignore
 export const fetcher = (...args) =>
@@ -17,6 +17,8 @@ export const fetcher = (...args) =>
   })
 
 export default function App({ Component, pageProps }: AppProps) {
+  const themeContext = useThemeContext()
+
   return (
     <SWRConfig value={{ fetcher }}>
       <AppContextProvider>

@@ -8,9 +8,14 @@ export default class MyDocument extends Document {
     const registry = createStyleRegistry()
     const originalRenderPage = ctx.renderPage
     const { theme } = nextCookies(ctx)
+    const { dateFormat } = nextCookies(ctx)
 
     if (!theme && !isWindowDefined) {
       ctx.res?.setHeader('Set-Cookie', 'theme=light; path=/; max-age=31536000;')
+    }
+
+    if (!dateFormat && !isWindowDefined) {
+      ctx.res?.setHeader('Set-Cookie', 'dateFormat=MM/dd/yyyy ; path=/; max-age=31536000;')
     }
 
     try {
@@ -29,6 +34,7 @@ export default class MyDocument extends Document {
         ...initialProps,
         styles: [initialProps.styles, registry.styles()],
         theme,
+        dateFormat,
       }
     } finally {
       registry.flush()

@@ -8,6 +8,7 @@ import IconRadioOn from '../../components/svg/IconRadioOn'
 import IconRadioOff from '@/components/svg/IconRadioOff'
 import IconSofascoreLogo from '@/components/svg/IconSofascoreLogo'
 import { GetServerSidePropsContext } from 'next'
+import { format } from 'date-fns'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -65,7 +66,7 @@ export default function SettingsPage() {
               <HStack h={`48px`} px={`16px`} alignItems={'center'}>
                 <Text className="Headline-1">Settings</Text>
               </HStack>
-              <VStack bg={'colors.surface2'} w={`100%`} h={`152px`} borderRadius={`8px`} p={`16px`}>
+              <VStack bg={'colors.surface2'} w={`100%`} h={`fit-content`} borderRadius={`8px`} p={`16px`}>
                 <HStack w={`100%`} h={`48px`} justifyContent={'space-between'} alignItems={'center'}>
                   <Text color={'colors.primaryDefault'} className="Assistive">
                     Theme
@@ -96,10 +97,10 @@ export default function SettingsPage() {
                   {themeContext.isDark ? <IconRadioOn /> : <IconRadioOff />}
                 </HStack>
               </VStack>
-              <VStack bg={'colors.surface2'} w={`100%`} h={`152px`} borderRadius={`8px`} p={`16px`}>
+              <VStack bg={'colors.surface2'} w={`100%`} h={`fit-content`} borderRadius={`8px`} p={`16px`}>
                 <HStack w={`100%`} h={`48px`} justifyContent={'space-between'} alignItems={'center'}>
                   <Text color={'colors.primaryDefault'} className="Assistive">
-                    Date Format
+                    Date Format - {format(new Date(), appContext.dateFormat)}
                   </Text>
                 </HStack>
                 <HStack
@@ -107,24 +108,36 @@ export default function SettingsPage() {
                   h={`48px`}
                   justifyContent={'space-between'}
                   alignItems={'center'}
-                  onMouseDown={() => themeContext.setTheme('light')}
+                  onMouseDown={() => appContext.setDateFormat('dd.MM.yyyy.')}
                   cursor={'pointer'}
                   userSelect={'none'}
                 >
-                  <Text>DD / MM / YYYY</Text>
-                  {!themeContext.isDark ? <IconRadioOff /> : <IconRadioOn />}
+                  <Text>DD. MM. YYYY.</Text>
+                  {appContext.dateFormat === 'dd.MM.yyyy.' ? <IconRadioOn /> : <IconRadioOff />}
                 </HStack>
                 <HStack
                   w={`100%`}
                   h={`48px`}
                   justifyContent={'space-between'}
                   alignItems={'center'}
-                  onMouseDown={() => themeContext.setTheme('dark')}
+                  onMouseDown={() => appContext.setDateFormat('MM/dd/yyyy')}
                   cursor={'pointer'}
                   userSelect={'none'}
                 >
                   <Text>MM / DD / YYYY</Text>
-                  {!themeContext.isDark ? <IconRadioOn /> : <IconRadioOff />}
+                  {appContext.dateFormat === 'MM/dd/yyyy' ? <IconRadioOn /> : <IconRadioOff />}
+                </HStack>
+                <HStack
+                  w={`100%`}
+                  h={`48px`}
+                  justifyContent={'space-between'}
+                  alignItems={'center'}
+                  onMouseDown={() => appContext.setDateFormat('dd-MM-yyyy')}
+                  cursor={'pointer'}
+                  userSelect={'none'}
+                >
+                  <Text>DD-MM-YYYY</Text>
+                  {appContext.dateFormat === 'dd-MM-yyyy' ? <IconRadioOn /> : <IconRadioOff />}
                 </HStack>
               </VStack>
               <VStack

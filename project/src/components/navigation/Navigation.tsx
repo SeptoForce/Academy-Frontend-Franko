@@ -4,6 +4,7 @@ import IconBasketball from '../svg/IconBasketball'
 import IconAmericanFootball from '../svg/IconAmericanFootball'
 import { useAppContext } from '@/context/AppContext'
 import { useRouter } from 'next/router'
+import { format } from 'date-fns'
 
 function NavigationTab(props: { active?: boolean; children: React.ReactNode; redirect?: string }) {
   const router = useRouter()
@@ -12,7 +13,7 @@ function NavigationTab(props: { active?: boolean; children: React.ReactNode; red
   const handleClick = () => {
     if (props.redirect) {
       const currentQuery = router.query
-      const date = currentQuery.d || new Date().toISOString().split('T')[0]
+      const date = currentQuery.d || format(new Date(), 'yyyy-MM-dd')
       router.push(`/${props.redirect}?d=${date}`)
     }
   }

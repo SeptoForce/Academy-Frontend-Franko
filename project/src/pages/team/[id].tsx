@@ -417,7 +417,7 @@ function TeamNextMatchBox(props: { team?: Team }) {
       {tournament && event && (
         <>
           <LeagueCell tournament={tournament} />
-          <EventCell event={event} />
+          <EventCell event={event} directLink />
         </>
       )}
     </VStack>

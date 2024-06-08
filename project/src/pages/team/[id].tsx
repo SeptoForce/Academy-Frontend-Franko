@@ -28,11 +28,9 @@ import { getExamplePlayer } from '@/api/exampleObjects'
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const response = await fetch(`https://academy-backend.sofascore.dev/team/${context.query.id}`)
   const currentTeam = (await response.json()) as Team
-  console.log(currentTeam)
 
   const response2 = await fetch(`https://academy-backend.sofascore.dev/team/${context.query.id}/tournaments`)
   const tournaments = await response2.json()
-  console.log(tournaments)
 
   return {
     props: {

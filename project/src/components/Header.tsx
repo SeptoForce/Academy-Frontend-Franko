@@ -1,5 +1,4 @@
-import { useThemeContext } from '@/context/ThemeContext'
-import { Box, Button, Flex, HStack, Link } from '@kuma-ui/core'
+import { Box, Flex, HStack, Link } from '@kuma-ui/core'
 import IconSofascoreLogo from './svg/IconSofascoreLogo'
 import IconTrophy from './svg/IconTrophy'
 import IconSettings from './svg/IconSettings'
@@ -7,8 +6,6 @@ import { Navigation } from './navigation/Navigation'
 import Calendar from './navigation/Calendar'
 
 export function Header(props: { noNavigation?: boolean; noCalendar?: boolean }) {
-  const { setIsDark } = useThemeContext()
-
   return (
     <Flex as="header" flexDirection={'column'} position={'sticky'} top={0} w={`100%`} zIndex={999}>
       <HStack
@@ -48,9 +45,6 @@ export function Header(props: { noNavigation?: boolean; noCalendar?: boolean }) 
           <Link href="/settings">
             <IconSettings />
           </Link>
-          <Button onClick={() => setIsDark(v => !v)}>
-            <IconSettings color="yellow" />
-          </Button>
         </HStack>
       </HStack>
       {props.noNavigation ? null : <Navigation />}

@@ -37,8 +37,6 @@ export function HeaderEventBreadcrumbs(props: {
         .then(data => setTournament(data[0]))
         .catch(error => console.error(error))
     }
-
-    console.log(event, tournament, player, team)
   }, [props.event, props.tournament, props.player, props.team])
 
   return (

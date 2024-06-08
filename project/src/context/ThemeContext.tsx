@@ -1,5 +1,4 @@
-import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useEffect, useState } from 'react'
-import { isWindowDefined } from 'swr/_internal'
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react'
 import Cookies from 'js-cookie'
 
 interface ContextValue {
@@ -10,30 +9,20 @@ interface ContextValue {
 const ThemeContext = createContext<ContextValue>({} as ContextValue)
 
 export const ThemeContextProvider = ({ children }: PropsWithChildren) => {
-  const [isDark, setIsDark] = useState(false)
+  const [isDark, setIsDark] = useState(true)
 
   const setTheme = (theme: 'dark' | 'light') => {
     if (theme === 'dark') {
-      Cookies.set('theme', 'dark')
+      Cookies.set('theme', 'dark', { expires: 365, path: '/' })
       setIsDark(true)
     } else {
-      Cookies.set('theme', 'light')
+      Cookies.set('theme', 'light', { expires: 365, path: '/' })
       setIsDark(false)
     }
   }
 
   useEffect(() => {
-    if (isWindowDefined) {
-      const theme = localStorage.getItem('theme')
-      if (theme === 'dark') {
-        setIsDark(true)
-      }
-      return
-    }
-
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      // setIsDark(true)
-    }
+    setIsDark(Cookies.get('theme') === 'dark')
   }, [])
 
   useEffect(() => {

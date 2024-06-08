@@ -12,13 +12,11 @@ import { fetchEventDetails } from '@/api/api'
 export async function getServerSideProps(context: any) {
   const result = await fetch(`https://academy-backend.sofascore.dev/event/${context.params.id}`)
   const eventDetails = await result.json()
-  console.log(eventDetails)
 
   const result2 = await fetch(
     `https://academy-backend.sofascore.dev/sport/${eventDetails.tournament.sport.slug}/tournaments`
   )
   const tournaments = await result2.json()
-  console.log(tournaments)
 
   return {
     props: {

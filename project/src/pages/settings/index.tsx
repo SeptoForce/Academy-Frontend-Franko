@@ -7,13 +7,18 @@ import { useThemeContext } from '@/context/ThemeContext'
 import IconRadioOn from '../../components/svg/IconRadioOn'
 import IconRadioOff from '@/components/svg/IconRadioOff'
 import IconSofascoreLogo from '@/components/svg/IconSofascoreLogo'
+import { GetServerSidePropsContext } from 'next'
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  return {
+    props: {},
+  }
+}
 
 export default function SettingsPage() {
   const router = useRouter()
   const appContext = useAppContext()
   const themeContext = useThemeContext()
-
-  console.log('theme', themeContext.isDark)
 
   return (
     <>
@@ -107,7 +112,7 @@ export default function SettingsPage() {
                   userSelect={'none'}
                 >
                   <Text>DD / MM / YYYY</Text>
-                  {themeContext.isDark ? <IconRadioOff /> : <IconRadioOn />}
+                  {!themeContext.isDark ? <IconRadioOff /> : <IconRadioOn />}
                 </HStack>
                 <HStack
                   w={`100%`}
@@ -119,7 +124,7 @@ export default function SettingsPage() {
                   userSelect={'none'}
                 >
                   <Text>MM / DD / YYYY</Text>
-                  {themeContext.isDark ? <IconRadioOn /> : <IconRadioOff />}
+                  {!themeContext.isDark ? <IconRadioOn /> : <IconRadioOff />}
                 </HStack>
               </VStack>
               <VStack

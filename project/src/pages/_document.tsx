@@ -1,10 +1,17 @@
 import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document'
 import { createStyleRegistry, StyleRegistry } from '@kuma-ui/core'
+import nextCookies from 'next-cookies'
+import { isWindowDefined } from 'swr/_internal'
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
     const registry = createStyleRegistry()
     const originalRenderPage = ctx.renderPage
+    const { theme } = nextCookies(ctx)
+
+    if (!theme && !isWindowDefined) {
+      ctx.res?.setHeader('Set-Cookie', 'theme=light; path=/; max-age=31536000;')
+    }
 
     try {
       ctx.renderPage = () =>
@@ -21,6 +28,7 @@ export default class MyDocument extends Document {
       return {
         ...initialProps,
         styles: [initialProps.styles, registry.styles()],
+        theme,
       }
     } finally {
       registry.flush()
@@ -28,8 +36,10 @@ export default class MyDocument extends Document {
   }
 
   render() {
+    const { theme } = this.props as { theme?: string }
+
     return (
-      <Html>
+      <Html className={theme === 'dark' ? 'dark' : ''}>
         <Head>
           <link rel="icon" href="/favicon.ico" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />

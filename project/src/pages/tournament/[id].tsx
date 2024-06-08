@@ -17,13 +17,11 @@ import { FlagComponent } from '@/components/FlagComponent'
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const response = await fetch(`https://academy-backend.sofascore.dev/tournament/${context.query.id}`)
   const currentTournament = await response.json()
-  console.log(currentTournament)
 
   const response2 = await fetch(
     `https://academy-backend.sofascore.dev/sport/${currentTournament.sport.slug}/tournaments`
   )
   const tournaments = await response2.json()
-  console.log(tournaments)
 
   return {
     props: {

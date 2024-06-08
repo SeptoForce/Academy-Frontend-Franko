@@ -149,7 +149,6 @@ export function EventCell(props: { event: Event }) {
   const winnerCode = props.event.winnerCode
 
   const openEvent = (id: number) => () => {
-    console.log('Open event', id, appContext.isMobile)
     if (appContext.isMobile) {
       router.push(`/event/${id}`)
     } else {

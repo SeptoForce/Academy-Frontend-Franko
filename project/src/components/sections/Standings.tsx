@@ -1,17 +1,30 @@
-import { fetchTournamentStandings } from '@/api/api'
+import { fetchTournamentsFromTeam, fetchTournamentStandings } from '@/api/api'
 import { getExampleStandings } from '@/api/exampleObjects'
 import { TournamentStandings, TournamentStandingsRow } from '@/utils/types'
-import { Box, VStack, HStack, Grid, Flex, Link } from '@kuma-ui/core'
+import { Box, VStack, HStack, Grid, Flex, Link, Spacer } from '@kuma-ui/core'
 import { useEffect, useState } from 'react'
 
+// Solution is made with flexboxes because of the lack of a table system in Kuma UI + grid system was messy because of key prop
 export function Standings(props: { objectId: number; objectType: 'tournament' | 'team' }) {
   const [standings, setStandings] = useState<TournamentStandings>()
   const [standingsTotal, setStandingsTotal] = useState<TournamentStandingsRow[]>()
 
   useEffect(() => {
-    fetchTournamentStandings(props.objectId)
-      .then(data => setStandings(data))
-      .catch(error => console.error(error))
+    if (props.objectType === 'tournament') {
+      fetchTournamentStandings(props.objectId)
+        .then(data => setStandings(data))
+        .catch(error => console.error(error))
+    }
+
+    if (props.objectType === 'team') {
+      fetchTournamentsFromTeam(props.objectId)
+        .then(tournaments =>
+          fetchTournamentStandings(tournaments[0].id)
+            .then(data => setStandings(data))
+            .catch(error => console.error(error))
+        )
+        .catch(error => console.error(error))
+    }
   }, [props.objectId, props.objectType])
 
   useEffect(() => {
@@ -19,7 +32,6 @@ export function Standings(props: { objectId: number; objectType: 'tournament' | 
 
     if (_standings) {
       setStandingsTotal(_standings)
-      console.log(_standings)
     }
   }, [standings])
 
@@ -30,86 +42,88 @@ export function Standings(props: { objectId: number; objectType: 'tournament' | 
       bg={'colors.surface1'}
       boxShadow={`0 1px 4px 0 rgba(0, 0, 0, 0.08)`}
       borderRadius={`16px`}
-      p={`8px`}
       pb={`16px`}
     >
-      {props.objectType === 'team' ? <Box h={`48px`} bg={'colors.surface2'} borderRadius={`8px`} m={`2px`} /> : <></>}
-      <Grid
-        w={`100%`}
-        gridTemplateColumns={`min-content 5fr 1fr 1fr 1fr 1fr 1.5fr 1.5fr`}
-        borderBottom={`1px solid ${'colors.border'}`}
-        className="Tabular"
-        color={`colors.onSurfaceLv1`}
-        gridAutoRows={`48px`}
-        columnGap={`8px`}
-      >
-        <Flex color={`colors.onSurfaceLv2`} alignItems={'center'} justifyContent={'center'}>
-          #
-        </Flex>
-        <Flex color={`colors.onSurfaceLv2`} px={`4px`} alignItems={'center'} justifyContent={'flex-start'}>
-          Team
-        </Flex>
-        <Flex color={`colors.onSurfaceLv2`} alignItems={'center'} justifyContent={'center'}>
-          P
-        </Flex>
-        <Flex color={`colors.onSurfaceLv2`} alignItems={'center'} justifyContent={'center'}>
-          W
-        </Flex>
-        <Flex color={`colors.onSurfaceLv2`} alignItems={'center'} justifyContent={'center'}>
-          D
-        </Flex>
-        <Flex color={`colors.onSurfaceLv2`} alignItems={'center'} justifyContent={'center'}>
-          L
-        </Flex>
-        <Flex color={`colors.onSurfaceLv2`} alignItems={'center'} justifyContent={'center'}>
-          Goals
-        </Flex>
-        <Flex color={`colors.onSurfaceLv2`} alignItems={'center'} justifyContent={'center'}>
-          PTS
-        </Flex>
+      <VStack minH={`40px`}>
+        <HStack h={`48px`} gap={`8px`} alignItems={'center'}>
+          <Flex w={`24px`} mx={`8px`} flexShrink={0} justifyContent={'center'}>
+            #
+          </Flex>
+          <Flex w={[`104px`, `150px`]} flexShrink={0}>
+            Team
+          </Flex>
+          <Spacer w={`100%`} />
+          <Flex w={`100%`} minW={`24px`} justifyContent={'center'}>
+            P
+          </Flex>
+          <Flex w={`100%`} minW={`24px`} justifyContent={'center'}>
+            W
+          </Flex>
+          <Flex w={`100%`} minW={`24px`} justifyContent={'center'}>
+            D
+          </Flex>
+          <Flex w={`100%`} minW={`24px`} justifyContent={'center'}>
+            L
+          </Flex>
+          <Flex w={`100%`} minW={`32px`} justifyContent={'center'}>
+            Goals
+          </Flex>
+          <Flex w={`100%`} minW={`32px`} justifyContent={'center'}>
+            PTS
+          </Flex>
+        </HStack>
         {standingsTotal?.map((standingsRow, index) => (
-          <>
-            <Flex alignItems={'center'} justifyContent={'center'}>
-              <NumberCell value={index + 1} />
-            </Flex>
-            <Flex alignItems={'center'} px={`4px`} justifyContent={'flex-start'}>
-              <Link
-                color={`colors.onSurfaceLv1`}
-                w={`100%`}
-                href={`/team/${standingsRow.team.id}`}
-                _hover={{ bg: `colors.secondaryHighlight` }}
-                p={`8px`}
-                borderRadius={`8px`}
-              >
-                {standingsRow.team.name}
-              </Link>
-            </Flex>
-            <Flex alignItems={'center'} justifyContent={'center'}>
+          <HStack
+            h={`48px`}
+            gap={`8px`}
+            alignItems={'center'}
+            key={index}
+            bg={
+              props.objectType === `team` && standingsRow.team.id === props.objectId
+                ? `var(--color-primary-highlight)`
+                : ``
+            }
+          >
+            <NumberCell
+              value={index + 1}
+              active={props.objectType === `team` && standingsRow.team.id === props.objectId ? true : false}
+            />
+            <Link
+              w={[`104px`, `150px`]}
+              flexShrink={0}
+              href={`/team/${standingsRow.team.id}`}
+              borderRadius={`8px`}
+              color={`colors.onSurfaceLv1`}
+            >
+              {standingsRow.team.name}
+            </Link>
+            <Spacer w={`100%`} />
+            <Flex w={`100%`} minW={`24px`} justifyContent={'center'}>
               {standingsRow.played}
             </Flex>
-            <Flex alignItems={'center'} justifyContent={'center'}>
+            <Flex w={`100%`} minW={`24px`} justifyContent={'center'}>
               {standingsRow.wins}
             </Flex>
-            <Flex alignItems={'center'} justifyContent={'center'}>
+            <Flex w={`100%`} minW={`24px`} justifyContent={'center'}>
               {standingsRow.draws}
             </Flex>
-            <Flex alignItems={'center'} justifyContent={'center'}>
+            <Flex w={`100%`} minW={`24px`} justifyContent={'center'}>
               {standingsRow.losses}
             </Flex>
-            <Flex alignItems={'center'} justifyContent={'center'}>
+            <Flex w={`100%`} minW={`32px`} justifyContent={'center'}>
               {`${standingsRow.scoresFor}:${standingsRow.scoresAgainst}`}
             </Flex>
-            <Flex alignItems={'center'} justifyContent={'center'}>
+            <Flex w={`100%`} minW={`32px`} justifyContent={'center'}>
               {standingsRow.points}
             </Flex>
-          </>
+          </HStack>
         ))}
-      </Grid>
+      </VStack>
     </VStack>
   )
 }
 
-function NumberCell(props: { value: number }) {
+function NumberCell(props: { value: number; active?: boolean }) {
   return (
     <Flex
       justifyContent={'center'}
@@ -117,7 +131,8 @@ function NumberCell(props: { value: number }) {
       borderRadius={999}
       h={`24px`}
       aspectRatio={1}
-      bg={`colors.secondaryDefault`}
+      bg={props.active ? `colors.surface1` : `colors.secondaryDefault`}
+      mx={`8px`}
     >
       {props.value}
     </Flex>

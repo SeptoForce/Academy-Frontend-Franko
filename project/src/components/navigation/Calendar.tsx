@@ -49,7 +49,7 @@ export function Calendar(props: { mobile?: boolean }) {
         bg={`colors.surface1`}
         borderRadius={`2px`}
         left={`8px`}
-        onClick={() => {
+        onMouseDown={() => {
           goToDate(new Date(Date.parse(selectedDate as string) - 60 * 60 * 24 * 1000))
         }}
       >
@@ -62,7 +62,7 @@ export function Calendar(props: { mobile?: boolean }) {
         bg={`colors.surface1`}
         borderRadius={`2px`}
         right={`8px`}
-        onClick={() => {
+        onMouseDown={() => {
           goToDate(new Date(Date.parse(selectedDate as string) + 60 * 60 * 24 * 1000))
         }}
       >
@@ -102,7 +102,7 @@ function CalendarUnit(props: { date: Date; active?: boolean }) {
       color={`colors.surface0`}
       flexShrink={0}
       userSelect={`none`}
-      onClick={goToDate(props.date)}
+      onMouseDown={goToDate(props.date)}
     >
       <Text>
         {props.date.toISOString().split('T')[0] === new Date().toISOString().split('T')[0]

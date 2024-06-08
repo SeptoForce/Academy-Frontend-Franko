@@ -41,10 +41,15 @@ export function Header(props: { noNavigation?: boolean; noCalendar?: boolean }) 
           gap={`24px`}
         >
           <Flex display={[`flex`, `none`]}>
-            <IconTrophy />
+            <Link>
+              <IconTrophy />
+            </Link>
           </Flex>
-          <Button onClick={() => setIsDark(v => !v)}>
+          <Link href="/settings">
             <IconSettings />
+          </Link>
+          <Button onClick={() => setIsDark(v => !v)}>
+            <IconSettings color="yellow" />
           </Button>
         </HStack>
       </HStack>

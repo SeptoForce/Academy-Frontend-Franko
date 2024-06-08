@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react'
 import Matches from '@/components/sections/Matches'
 import { useRouter } from 'next/router'
 import Standings from '@/components/sections/Standings'
+import { FlagComponent } from '@/components/FlagComponent'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const response = await fetch(`https://academy-backend.sofascore.dev/tournament/${context.query.id}`)
@@ -142,7 +143,7 @@ function TournamentHeader(props: {
         <VStack>
           <Text className={appContext.isMobile ? `Headline-1` : `Headline-1-Desktop`}>{props.tournament?.name}</Text>
           <HStack gap={`4px`} alignItems={'center'}>
-            <Box h={`16px`} aspectRatio={1} bg={'black'} borderRadius={999} />
+            <FlagComponent countryName={props.tournament?.country.name || ''} />
             <Text className="Headline-3">{props.tournament?.country.name}</Text>
           </HStack>
         </VStack>
@@ -174,7 +175,14 @@ function NavigationButton(props: { text: string; active?: boolean; onClick: () =
     >
       {props.text}
       {props.active && (
-        <Box position={`absolute`} bottom={`0`} w={`calc(100% - 24px)`} h={`4px`} bg={`colors.primaryDefault`} />
+        <Box
+          position={`absolute`}
+          bottom={`0`}
+          w={`calc(100% - 24px)`}
+          h={`4px`}
+          borderRadius={`2px 2px 0 0`}
+          bg={`colors.primaryDefault`}
+        />
       )}
     </Flex>
   )

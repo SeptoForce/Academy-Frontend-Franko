@@ -18,7 +18,7 @@ export function Footer() {
     >
       <IconSofascoreLogo color={`var(--on-surface-on-surface-lv-1)`} />
       <Text color={`colors.onSurfaceLv2`} className="Micro">
-        © 2023 Sofascore – All Rights Reserved.
+        © 2024 Sofascore – All Rights Reserved.
       </Text>
     </VStack>
   )

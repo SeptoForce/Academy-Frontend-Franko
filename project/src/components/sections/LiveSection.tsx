@@ -115,7 +115,7 @@ function ListSectionSecondary(props: { mobile?: boolean; numberOfEvents?: number
   )
 }
 
-function LeagueCell(props: { tournament: Tournament }) {
+export function LeagueCell(props: { tournament: Tournament }) {
   return (
     <Link href={`/tournament/${props.tournament.id}`}>
       <Flex h={`56px`} w={`100%`} px={`16px`} alignItems={'center'} gap={`32px`}>

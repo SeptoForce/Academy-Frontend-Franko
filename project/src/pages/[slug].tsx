@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react'
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (
     !context.params?.slug ||
-    ['football', 'basketball', 'american-football'].indexOf(context.params.slug as string) === -1
+    ['football', 'basketball', 'american-football', 'settings'].indexOf(context.params.slug as string) === -1
   ) {
     return {
       redirect: {

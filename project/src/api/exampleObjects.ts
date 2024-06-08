@@ -736,7 +736,7 @@ export function getExampleTeam(): Team {
 
 export function getExamplePlayer(): Player {
   return {
-    id: 1,
+    id: 2,
     name: 'Shoretire, Shola',
     slug: 'shoretire-shola',
     sport: {

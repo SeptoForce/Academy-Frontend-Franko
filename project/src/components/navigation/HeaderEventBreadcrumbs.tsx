@@ -22,39 +22,23 @@ export function HeaderEventBreadcrumbs(props: {
   const [team, setTeam] = useState<Team | undefined>(props.team)
 
   useEffect(() => {
-    if (props.event !== undefined) {
-      fetchEventDetails(props.event.id)
-        .then(data => setEvent(data))
-        .catch(error => console.error(error))
-    }
-
-    if (props.tournament != undefined) {
-      fetchTournamentDetails(props.tournament.id)
-        .then(data => setTournament(data))
-        .catch(error => console.error(error))
-    }
-
     if (props.player !== undefined) {
-      fetchPlayerDetails(props.player.id)
-        .then(data => {
-          setPlayer(data)
-          fetchTeamDetails(data.team.id)
-            .then(teamData => {
-              setTeam(teamData)
-              fetchTournamentsFromTeam(data.team.id)
-                .then(data => setTournament(data[0]))
-                .catch(error => console.error(error))
-            })
+      fetchTeamDetails(props.player.team.id)
+        .then(teamData => {
+          fetchTournamentsFromTeam(teamData.id)
+            .then(data => setTournament(data[0]))
             .catch(error => console.error(error))
         })
         .catch(error => console.error(error))
     }
 
     if (props.team !== undefined) {
-      fetchTeamDetails(props.team.id)
-        .then(data => setTeam(data))
+      fetchTournamentsFromTeam(props.team.id)
+        .then(data => setTournament(data[0]))
         .catch(error => console.error(error))
     }
+
+    console.log(event, tournament, player, team)
   }, [props.event, props.tournament, props.player, props.team])
 
   return (
@@ -70,7 +54,7 @@ export function HeaderEventBreadcrumbs(props: {
         <Link href={`/${event?.tournament.sport.slug || tournament?.sport.slug || player?.sport.slug}`}>
           {event?.tournament.sport.name || tournament?.sport.name || player?.sport.name}
         </Link>
-        {(event || player) && (
+        {(event || player || team) && (
           <>
             <IconPointerRight size={`24px`} color={`var(--on-surface-on-surface-lv-2)`} />
             <Link href={`/tournament/${event?.tournament.id || tournament?.id}`}>
@@ -78,11 +62,18 @@ export function HeaderEventBreadcrumbs(props: {
             </Link>
           </>
         )}
+        {player && (
+          <>
+            <IconPointerRight size={`24px`} color={`var(--on-surface-on-surface-lv-2)`} />
+            <Link href={`/team/${player.team.id}`}>{player.team.name}</Link>
+          </>
+        )}
         <IconPointerRight size={`24px`} color={`var(--on-surface-on-surface-lv-2)`} />
         <Text userSelect={'none'}>
           {event ? `${event?.homeTeam.name} vs ${event?.awayTeam.name}` : ``}
           {tournament && !player && !team ? tournament.name : ``}
           {player ? player.name : ``}
+          {team ? team.name : ``}
         </Text>
       </HStack>
     </HStack>

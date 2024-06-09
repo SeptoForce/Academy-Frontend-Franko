@@ -9,17 +9,29 @@ import IconRadioOff from '@/components/svg/IconRadioOff'
 import IconSofascoreLogo from '@/components/svg/IconSofascoreLogo'
 import { GetServerSidePropsContext } from 'next'
 import { format } from 'date-fns'
+import { parseCookies } from 'nookies'
+import { useEffect, useState } from 'react'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { theme } = parseCookies(context)
+
   return {
-    props: {},
+    props: {
+      theme,
+    },
   }
 }
 
-export default function SettingsPage() {
+export default function SettingsPage(props: { theme: 'dark' | 'light' }) {
+  const [isDark, setIsDark] = useState(props.theme === 'dark')
+
   const router = useRouter()
   const appContext = useAppContext()
   const themeContext = useThemeContext()
+
+  useEffect(() => {
+    setIsDark(themeContext.isDark)
+  }, [themeContext.isDark])
 
   return (
     <>
@@ -82,7 +94,7 @@ export default function SettingsPage() {
                   userSelect={'none'}
                 >
                   <Text>Light</Text>
-                  {themeContext.isDark ? <IconRadioOff /> : <IconRadioOn />}
+                  {isDark ? <IconRadioOff /> : <IconRadioOn />}
                 </HStack>
                 <HStack
                   w={`100%`}
@@ -94,7 +106,7 @@ export default function SettingsPage() {
                   userSelect={'none'}
                 >
                   <Text>Dark</Text>
-                  {themeContext.isDark ? <IconRadioOn /> : <IconRadioOff />}
+                  {isDark ? <IconRadioOn /> : <IconRadioOff />}
                 </HStack>
               </VStack>
               <VStack bg={'colors.surface2'} w={`100%`} h={`fit-content`} borderRadius={`8px`} p={`16px`}>

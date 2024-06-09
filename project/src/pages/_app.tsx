@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app'
 import { SWRConfig } from 'swr'
 import Head from 'next/head'
 import { AppContextProvider, useAppContext } from '@/context/AppContext'
+import { isWindowDefined } from 'swr/_internal'
 
 //@ts-ignore
 export const fetcher = (...args) =>

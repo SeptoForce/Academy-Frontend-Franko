@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
-import { createContext, PropsWithChildren, ReactChildren, ReactNode, useContext, useEffect, useState } from 'react'
-import Cookies from 'js-cookie'
+import { parseCookies, setCookie } from 'nookies'
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 
 interface AppProviderContext {
   isMobile: boolean
@@ -31,7 +31,7 @@ export function AppContextProvider(props: { children: ReactNode }) {
   }, [])
 
   function setDateFormat(dateFormat: string) {
-    Cookies.set('dateFormat', dateFormat)
+    setCookie(null, 'dateFormat', dateFormat, { maxAge: 365 * 24 * 60 * 60, path: '/' })
     _setDateFormat(dateFormat)
   }
 
@@ -46,11 +46,11 @@ export function AppContextProvider(props: { children: ReactNode }) {
   }, [dateFormat])
 
   useEffect(() => {
-    const dateFormatCookie = Cookies.get('dateFormat')
+    const dateFormatCookie = parseCookies().dateFormat
     if (dateFormatCookie) {
       _setDateFormat(dateFormatCookie)
     }
-  }, [Cookies.get()])
+  }, [parseCookies()])
 
   return (
     <AppContext.Provider

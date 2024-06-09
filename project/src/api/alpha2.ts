@@ -115,7 +115,7 @@ const alpha2: { [key: string]: string } = {
   KZ: 'Kazakhstan',
   KE: 'Kenya',
   KI: 'Kiribati',
-  KR: 'Korea',
+  KR: 'South Korea',
   XK: 'Kosovo',
   KP: 'North Korea',
   KW: 'Kuwait',
@@ -250,6 +250,10 @@ const alpha2: { [key: string]: string } = {
 }
 
 export function getCountryCode(country: string): string {
+  if (country === 'Scotland' || country === 'Wales' || country === 'Northern Ireland') {
+    return 'gb'
+  }
+
   const countryCode = Object.keys(alpha2)
     .find(key => alpha2[key] === country)
     ?.toLowerCase()

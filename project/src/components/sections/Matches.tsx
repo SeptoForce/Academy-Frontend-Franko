@@ -30,7 +30,7 @@ export function Matches(props: { objectId: number; objectType: 'tournament' | 't
           .catch(error => console.error(error))
         break
     }
-  }, [events, page, props.objectId, props.objectType])
+  }, [page, props.objectId, props.objectType])
 
   function handleNextPage() {
     if (span === 'next') {

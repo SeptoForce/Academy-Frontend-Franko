@@ -4,7 +4,6 @@ import { TournamentStandings, TournamentStandingsRow } from '@/utils/types'
 import { Box, VStack, HStack, Grid, Flex, Link, Spacer } from '@kuma-ui/core'
 import { useEffect, useState } from 'react'
 
-// Solution is made with flexboxes because of the lack of a table system in Kuma UI + grid system was messy because of key prop
 export function Standings(props: { objectId: number; objectType: 'tournament' | 'team' }) {
   const [standings, setStandings] = useState<TournamentStandings>()
   const [standingsTotal, setStandingsTotal] = useState<TournamentStandingsRow[]>()

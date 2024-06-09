@@ -151,8 +151,8 @@ export type Tournament = {
     id: number
     name: string
   }
-  numberOfCompetitors: number
-  headToHeadCount: number
+  numberOfCompetitors?: number
+  headToHeadCount?: number
 }
 
 export type Player = {

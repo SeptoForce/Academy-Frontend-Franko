@@ -1,21 +1,27 @@
 import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document'
 import { createStyleRegistry, StyleRegistry } from '@kuma-ui/core'
-import nextCookies from 'next-cookies'
 import { isWindowDefined } from 'swr/_internal'
+import { parseCookies, setCookie } from 'nookies'
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
     const registry = createStyleRegistry()
     const originalRenderPage = ctx.renderPage
-    const { theme } = nextCookies(ctx)
-    const { dateFormat } = nextCookies(ctx)
+    const { theme } = parseCookies(ctx)
+    const { dateFormat } = parseCookies(ctx)
 
     if (!theme && !isWindowDefined) {
-      ctx.res?.setHeader('Set-Cookie', 'theme=light; path=/; max-age=31536000;')
+      setCookie(ctx, 'theme', 'light', {
+        path: '/',
+        maxAge: 31536000,
+      })
     }
 
     if (!dateFormat && !isWindowDefined) {
-      ctx.res?.setHeader('Set-Cookie', 'dateFormat=MM/dd/yyyy ; path=/; max-age=31536000;')
+      setCookie(ctx, 'dateFormat', 'dd.MM.yyyy.', {
+        path: '/',
+        maxAge: 31536000,
+      })
     }
 
     try {

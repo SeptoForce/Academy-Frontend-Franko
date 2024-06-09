@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { getExampleTourament } from '@/api/exampleObjects'
 import {
+  fetchEventDetails,
   fetchEventsFromSportAndDate,
   fetchTournamentDetails,
   getTeamImageLink,
@@ -112,12 +113,16 @@ function ListSectionSecondary(props: { mobile?: boolean; numberOfEvents?: number
   )
 }
 
-export function LeagueCell(props: { tournament: Tournament }) {
+export function LeagueCell(props: { tournament?: Tournament }) {
+  if (props.tournament === undefined) {
+    return null
+  }
+
   return (
-    <Link href={`/tournament/${props.tournament.id}`}>
+    <Link href={`/tournament/${props.tournament?.id}`}>
       <Flex h={`56px`} w={`100%`} px={`16px`} alignItems={'center'} gap={`32px`}>
         <Image
-          src={getTournamentImageLink(props.tournament.id)}
+          src={getTournamentImageLink(props.tournament?.id)}
           alt="League image"
           h={`32px`}
           aspectRatio={1}
@@ -125,14 +130,10 @@ export function LeagueCell(props: { tournament: Tournament }) {
         />
         <HStack h={`100%`} alignItems={'center'}>
           <Text className="Headline-3" color={`colors.onSurfaceLv1`}>
-            {/* {getTournamentDetails(props.tournamentId).data?.country.name} */}
-            {props.tournament.country.name}
+            {props.tournament?.country.name}
           </Text>
           <IconPointerRight color={`var(--on-surface-on-surface-lv-2)`} />
-          <Text color={`colors.onSurfaceLv2`}>
-            {/* {getTournamentDetails(props.tournamentId).data?.name} */}
-            {props.tournament.name}
-          </Text>
+          <Text color={`colors.onSurfaceLv2`}>{props.tournament?.name}</Text>
         </HStack>
       </Flex>
     </Link>
@@ -259,8 +260,8 @@ export function EventCell(props: { event: Event; directLink?: boolean }) {
   )
 }
 
-function LeagueEvents(props: { tournamentId: number; events: Object[] }) {
-  const [tournament, setTournament] = useState<Tournament>(getExampleTourament())
+export function LeagueEvents(props: { tournamentId: number; events: Event[] }) {
+  const [tournament, setTournament] = useState<Tournament>()
 
   useEffect(() => {
     fetchTournamentDetails(props.tournamentId)

@@ -55,6 +55,8 @@ export default function HomePage(props: { tournaments: Tournament[] }) {
       fetchEventDetails(Number(router.query.e))
         .then(data => setEvent(data))
         .catch(error => console.error(error))
+    } else {
+      setEvent(undefined)
     }
   }, [router.query])
 

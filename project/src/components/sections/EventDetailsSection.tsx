@@ -1,4 +1,4 @@
-import { Box, Flex, Link, Spacer, Text, Button, VStack, Image } from '@kuma-ui/core'
+import { Box, Flex, Link, Spacer, Text, Button, VStack, Image, HStack } from '@kuma-ui/core'
 import { CardColor, Event, EventIncident, EventStatus, GoalType, IncidentType, TeamSide } from '@/utils/types'
 import { useRouter } from 'next/router'
 import { fetchEventIncidents, getTeamImageLink } from '@/api/api'
@@ -22,6 +22,9 @@ import { useEffect, useState } from 'react'
 import IconBasketballIncident2 from '../svg/IconBasketballIncident2'
 import { format } from 'date-fns'
 import { useAppContext } from '@/context/AppContext'
+import IconBookmark from '../svg/IconBookmark'
+import IconBookmarkSolid from '../svg/IconBookmarkSolid'
+import { isWindowDefined } from 'swr/_internal'
 
 export function EventDetailsSection(props: { event: Event; noHeader?: boolean }) {
   return (
@@ -33,7 +36,7 @@ export function EventDetailsSection(props: { event: Event; noHeader?: boolean })
       overflow={'hidden'}
       boxShadow={`0 1px 4px 0 rgba(0, 0, 0, 0.08)`}
     >
-      {props.noHeader ? null : <Actions />}
+      {props.noHeader ? <BookmarkHeader event={props.event} /> : <Actions event={props.event} />}
       <Hero event={props.event} />
       <Spacer borderBottom={`1px solid var(--on-surface-on-surface-lv-4)`} w={`100%`} />
       {props.event.status === EventStatus.UPCOMING ? (
@@ -264,12 +267,12 @@ function IncidentCell(props: { flipped?: boolean; incident: EventIncident; sport
   )
 }
 
-function Actions() {
+function Actions(props: { event: Event }) {
   const router = useRouter()
   const hideEvent = () => {
     const query = { ...router.query }
     delete query.e
-    router.push({ query }, undefined, { shallow: true })
+    router.push({ query })
   }
 
   const viewFullPage = () => {
@@ -285,9 +288,12 @@ function Actions() {
       justifyContent={'space-between'}
       p={`16px`}
     >
-      <Button onClick={hideEvent}>
-        <IconClose color="var(--on-surface-on-surface-lv-1)" size="24" />
-      </Button>
+      <HStack>
+        <Button onClick={hideEvent}>
+          <IconClose color="var(--on-surface-on-surface-lv-1)" size="24" />
+        </Button>
+        <BookmarkButton event={props.event} />
+      </HStack>
       <Link onClick={viewFullPage} className="Action" display={'flex'}>
         <Text>View Full Page</Text>
         <IconChevronRight color="var(--color-primary-default)" />
@@ -374,6 +380,62 @@ function Score(props: { event: Event }) {
         {event.status === EventStatus.FINISHED ? `Full Time` : ``}
       </Text>
     </VStack>
+  )
+}
+
+function BookmarkHeader(props: { event: Event }) {
+  return (
+    <Box display={'flex'} w={`100%`} h={`56px`} alignItems={'center'} justifyContent={'space-between'} p={`16px`}>
+      <BookmarkButton event={props.event} />
+    </Box>
+  )
+}
+
+export function BookmarkButton(props: { event: Event }) {
+  const [isBookmarked, setIsBookmarked] = useState(false)
+
+  useEffect(() => {
+    if (isWindowDefined) {
+      const trackedEvents: Event[] = JSON.parse(localStorage.getItem('trackedEvents') || '[]')
+      if (trackedEvents) {
+        setIsBookmarked(trackedEvents.some(event => event.id === props.event.id))
+      }
+    }
+  }, [
+    () => {
+      if (isWindowDefined) {
+        return localStorage.getItem('trackedEvents')
+      }
+    },
+  ])
+
+  function ToggleBookmark() {
+    if (isWindowDefined) {
+      const trackedEvents = localStorage.getItem('trackedEvents')
+      if (trackedEvents) {
+        let trackedEvents = JSON.parse(localStorage.getItem('trackedEvents') || '[]') as Event[]
+        if (trackedEvents.some(event => event.id === props.event.id)) {
+          trackedEvents = trackedEvents.filter(event => event.id !== props.event.id)
+          localStorage.setItem('trackedEvents', JSON.stringify(trackedEvents))
+          setIsBookmarked(false)
+        } else {
+          trackedEvents.push(props.event)
+          localStorage.setItem('trackedEvents', JSON.stringify(trackedEvents))
+          setIsBookmarked(true)
+        }
+      } else {
+        let trackedEvents = [] as Event[]
+        trackedEvents.push(props.event)
+        localStorage.setItem('trackedEvents', JSON.stringify(trackedEvents))
+        setIsBookmarked(true)
+      }
+    }
+  }
+
+  return (
+    <Button color={'colors.onSurfaceLv1'} _hover={{ color: 'colors.primaryDefault' }} onClick={ToggleBookmark}>
+      {isBookmarked ? <IconBookmarkSolid color="currentColor" /> : <IconBookmark color="currentColor" />}
+    </Button>
   )
 }
 

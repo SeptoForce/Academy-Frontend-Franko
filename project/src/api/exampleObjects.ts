@@ -2229,3 +2229,284 @@ export function getExampleEventsFromTournament(): Event[] {
     },
   ]
 }
+
+export function getExampleTrackedEvents(): Event[] {
+  return [
+    {
+      id: 40,
+      slug: 'everton-manchester-city',
+      tournament: {
+        id: 1,
+        name: 'Premier League',
+        slug: 'premier-league',
+        sport: {
+          id: 1,
+          name: 'Football',
+          slug: 'football',
+        },
+        country: {
+          id: 70,
+          name: 'England',
+        },
+      },
+      homeTeam: {
+        id: 11,
+        name: 'Everton',
+        country: {
+          id: 70,
+          name: 'England',
+        },
+      },
+      awayTeam: {
+        id: 19,
+        name: 'Manchester City',
+        country: {
+          id: 70,
+          name: 'England',
+        },
+      },
+      status: 'finished',
+      startDate: '2024-06-10T23:59:00+02:00',
+      homeScore: {
+        total: 2,
+        period2: 2,
+      },
+      awayScore: {
+        total: 0,
+        period2: 0,
+      },
+      winnerCode: 'home',
+      round: 21,
+    },
+    {
+      id: 38,
+      slug: 'arsenal-burnley',
+      tournament: {
+        id: 1,
+        name: 'Premier League',
+        slug: 'premier-league',
+        sport: {
+          id: 1,
+          name: 'Football',
+          slug: 'football',
+        },
+        country: {
+          id: 70,
+          name: 'England',
+        },
+      },
+      homeTeam: {
+        id: 12,
+        name: 'Arsenal',
+        country: {
+          id: 70,
+          name: 'England',
+        },
+      },
+      awayTeam: {
+        id: 4,
+        name: 'Burnley',
+        country: {
+          id: 70,
+          name: 'England',
+        },
+      },
+      status: 'finished',
+      startDate: '2024-06-09T00:00:00+02:00',
+      homeScore: {
+        total: 2,
+        period2: 2,
+      },
+      awayScore: {
+        total: 0,
+        period2: 0,
+      },
+      winnerCode: 'home',
+      round: 21,
+    },
+    {
+      id: 34,
+      slug: 'tottenham-hotspur-crystal-palace',
+      tournament: {
+        id: 1,
+        name: 'Premier League',
+        slug: 'premier-league',
+        sport: {
+          id: 1,
+          name: 'Football',
+          slug: 'football',
+        },
+        country: {
+          id: 70,
+          name: 'England',
+        },
+      },
+      homeTeam: {
+        id: 9,
+        name: 'Tottenham Hotspur',
+        country: {
+          id: 70,
+          name: 'England',
+        },
+      },
+      awayTeam: {
+        id: 15,
+        name: 'Crystal Palace',
+        country: {
+          id: 70,
+          name: 'England',
+        },
+      },
+      status: 'notstarted',
+      startDate: '2024-06-10T00:00:00+02:00',
+      homeScore: {
+        total: 2,
+        period2: 2,
+      },
+      awayScore: {
+        total: 1,
+        period2: 1,
+      },
+      winnerCode: 'home',
+      round: 21,
+    },
+    {
+      id: 42,
+      slug: 'manchester-city-brighton-and-hove-albion',
+      tournament: {
+        id: 1,
+        name: 'Premier League',
+        slug: 'premier-league',
+        sport: {
+          id: 1,
+          name: 'Football',
+          slug: 'football',
+        },
+        country: {
+          id: 70,
+          name: 'England',
+        },
+      },
+      homeTeam: {
+        id: 19,
+        name: 'Manchester City',
+        country: {
+          id: 70,
+          name: 'England',
+        },
+      },
+      awayTeam: {
+        id: 2,
+        name: 'Brighton & Hove 2',
+        country: {
+          id: 70,
+          name: 'England',
+        },
+      },
+      status: 'notstarted',
+      startDate: '2024-06-11T00:00:00+02:00',
+      homeScore: {
+        total: 1,
+        period2: 1,
+      },
+      awayScore: {
+        total: 2,
+        period2: 2,
+      },
+      winnerCode: 'away',
+      round: 22,
+    },
+    {
+      id: 48,
+      slug: 'brentford-manchester-united',
+      tournament: {
+        id: 1,
+        name: 'Premier League',
+        slug: 'premier-league',
+        sport: {
+          id: 1,
+          name: 'Football',
+          slug: 'football',
+        },
+        country: {
+          id: 70,
+          name: 'England',
+        },
+      },
+      homeTeam: {
+        id: 18,
+        name: 'Brentford',
+        country: {
+          id: 70,
+          name: 'England',
+        },
+      },
+      awayTeam: {
+        id: 1,
+        name: 'Manchester United',
+        country: {
+          id: 70,
+          name: 'England',
+        },
+      },
+      status: 'notstarted',
+      startDate: '2024-06-12T00:00:00+02:00',
+      homeScore: {
+        total: 1,
+        period2: 1,
+      },
+      awayScore: {
+        total: 0,
+        period2: 0,
+      },
+      winnerCode: 'home',
+      round: 22,
+    },
+    {
+      id: 50,
+      slug: 'sheffield-united-luton-town',
+      tournament: {
+        id: 1,
+        name: 'Premier League',
+        slug: 'premier-league',
+        sport: {
+          id: 1,
+          name: 'Football',
+          slug: 'football',
+        },
+        country: {
+          id: 70,
+          name: 'England',
+        },
+      },
+      homeTeam: {
+        id: 8,
+        name: 'Sheffield United',
+        country: {
+          id: 70,
+          name: 'England',
+        },
+      },
+      awayTeam: {
+        id: 14,
+        name: 'Luton Town',
+        country: {
+          id: 70,
+          name: 'England',
+        },
+      },
+      status: 'notstarted',
+      startDate: '2024-06-13T00:00:00+02:00',
+      homeScore: {
+        total: 2,
+        period2: 2,
+      },
+      awayScore: {
+        total: 1,
+        period2: 1,
+      },
+      winnerCode: 'home',
+      round: 22,
+    },
+  ]
+}

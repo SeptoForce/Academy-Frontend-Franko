@@ -1,6 +1,6 @@
 import { fetchTournamentsFromTeam, fetchTournamentStandings } from '@/api/api'
-import { TournamentStandings, TournamentStandingsRow } from '@/utils/types'
-import { VStack, HStack, Flex, Link, Spacer } from '@kuma-ui/core'
+import { Tournament, TournamentStandings, TournamentStandingsRow } from '@/utils/types'
+import { VStack, HStack, Flex, Link, Spacer, Select } from '@kuma-ui/core'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -8,6 +8,8 @@ export function Standings(props: { objectId: number; objectType: 'tournament' | 
   const { t } = useTranslation()
   const [standings, setStandings] = useState<TournamentStandings>()
   const [standingsTotal, setStandingsTotal] = useState<TournamentStandingsRow[]>()
+  const [tournaments, setTournaments] = useState<Tournament[]>()
+  const [selectedTournament, setSelectedTournament] = useState<number>(0)
 
   useEffect(() => {
     if (props.objectType === 'tournament') {
@@ -18,14 +20,20 @@ export function Standings(props: { objectId: number; objectType: 'tournament' | 
 
     if (props.objectType === 'team') {
       fetchTournamentsFromTeam(props.objectId)
-        .then(tournaments =>
-          fetchTournamentStandings(tournaments[0].id)
-            .then(data => setStandings(data))
-            .catch(error => console.error(error))
-        )
+        .then(tournaments => {
+          setTournaments(tournaments)
+        })
         .catch(error => console.error(error))
     }
   }, [props.objectId, props.objectType])
+
+  useEffect(() => {
+    if (tournaments) {
+      fetchTournamentStandings(tournaments[selectedTournament].id)
+        .then(data => setStandings(data))
+        .catch(error => console.error(error))
+    }
+  }, [tournaments, selectedTournament])
 
   useEffect(() => {
     let _standings = standings?.filter(standing => standing.type === 'total')[0].sortedStandingsRows
@@ -34,6 +42,10 @@ export function Standings(props: { objectId: number; objectType: 'tournament' | 
       setStandingsTotal(_standings)
     }
   }, [standings])
+
+  function handleTournamentChange(event: React.ChangeEvent<HTMLSelectElement>) {
+    setSelectedTournament(parseInt(event.target.value))
+  }
 
   return (
     <VStack
@@ -45,6 +57,30 @@ export function Standings(props: { objectId: number; objectType: 'tournament' | 
       pb={`16px`}
     >
       <VStack minH={`40px`}>
+        <HStack h={`48px`} bg={'colors.surface2'} m={`8px`} borderRadius={`8px`} alignItems={'center'} p={`8px`}>
+          <Select
+            display={'flex'}
+            alignItems={'center'}
+            w={`auto`}
+            px={`12px`}
+            h={`32px`}
+            style={{ appearance: 'none' }}
+            bg={'colors.surface1'}
+            border={`none`}
+            boxShadow={`0 1px 4px 0 rgba(0, 0, 0, 0.08)`}
+            color={'colors.onSurfaceLv1'}
+            borderRadius={`8px`}
+            cursor={'pointer'}
+            onChange={handleTournamentChange}
+            defaultValue={0}
+          >
+            {tournaments?.map((tournament, index) => (
+              <option key={index} value={tournament.id}>
+                {tournament.name}
+              </option>
+            ))}
+          </Select>
+        </HStack>
         <HStack h={`48px`} gap={`8px`} alignItems={'center'}>
           <Flex w={`24px`} mx={`8px`} flexShrink={0} justifyContent={'center'}>
             #

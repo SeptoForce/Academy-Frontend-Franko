@@ -283,3 +283,33 @@ export type EventIncident = {
   time: number
   type: 'card' | 'goal' | 'period'
 }
+
+export type PlayerSearchResult = {
+  id: number
+  name: string
+  slug: string
+  sport: {
+    id: number
+    name: string
+    slug: string
+  }
+  country: {
+    id: number
+    name: string
+  }
+  position: string
+}
+
+export type TeamSearchResult = {
+  id: number
+  name: string
+  sport: {
+    id: number
+    name: string
+    slug: string
+  }
+  country: {
+    id: number
+    name: string
+  }
+}

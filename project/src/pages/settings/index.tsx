@@ -83,7 +83,7 @@ export default function SettingsPage(props: { theme: 'dark' | 'light' }) {
               gap={`16px`}
             >
               <HStack h={`48px`} px={`16px`} alignItems={'center'}>
-                <Text className="Headline-1">Settings</Text>
+                <Text className="Headline-1">{t('settings')}</Text>
               </HStack>
               <VStack bg={'colors.surface2'} w={`100%`} h={`fit-content`} borderRadius={`8px`} p={`16px`}>
                 <HStack w={`100%`} h={`48px`} justifyContent={'space-between'} alignItems={'center'}>
@@ -108,22 +108,13 @@ export default function SettingsPage(props: { theme: 'dark' | 'light' }) {
                     p={`8px`}
                     borderRadius={`8px`}
                     cursor={'pointer'}
+                    defaultValue={i18n.language}
                   >
-                    <option value="en" selected={appContext.language === 'en'}>
-                      English
-                    </option>
-                    <option value="hr" selected={appContext.language === 'hr'}>
-                      Hrvatski
-                    </option>
-                    <option value="fr" selected={appContext.language === 'fr'}>
-                      Français
-                    </option>
-                    <option value="no" selected={appContext.language === 'no'}>
-                      Norsk
-                    </option>
-                    <option value="uwu" selected={appContext.language === 'uwu'}>
-                      uwu
-                    </option>
+                    <option value="en">English</option>
+                    <option value="hr">Hrvatski</option>
+                    <option value="fr">Français</option>
+                    <option value="no">Norsk</option>
+                    <option value="uwu">uwu</option>
                   </Select>
                 </HStack>
               </VStack>

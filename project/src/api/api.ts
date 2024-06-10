@@ -1,4 +1,12 @@
-import { EventMatch, EventIncidents, Player, Team, Tournament, TournamentStandings } from '@/utils/types'
+import {
+  EventMatch,
+  EventIncidents,
+  Player,
+  Team,
+  Tournament,
+  TournamentStandings,
+  TeamSearchResult,
+} from '@/utils/types'
 
 //? Events
 
@@ -102,4 +110,16 @@ export async function fetchTournamentStandings(id: number): Promise<TournamentSt
 
 export function getTournamentImageLink(id: number) {
   return id ? `/api/tournament/${id}/image` : ``
+}
+
+export async function searchTeams(query: string): Promise<TeamSearchResult[]> {
+  const response = await fetch(`/api/search/team/${query}`)
+  const data = await response.json()
+  return data
+}
+
+export async function searchPlayers(query: string): Promise<Player[]> {
+  const response = await fetch(`/api/search/player/${query}`)
+  const data = await response.json()
+  return data
 }

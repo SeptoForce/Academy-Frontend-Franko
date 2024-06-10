@@ -1,7 +1,7 @@
 import { changeLanguage } from 'i18next'
 import { useRouter } from 'next/router'
 import { parseCookies, setCookie } from 'nookies'
-import { createContext, ReactNode, use, useContext, useEffect, useState } from 'react'
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import { isWindowDefined } from 'swr/_internal'
 
 interface AppProviderContext {

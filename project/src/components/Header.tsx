@@ -5,6 +5,7 @@ import IconSettings from './svg/IconSettings'
 import { Navigation } from './navigation/Navigation'
 import Calendar from './navigation/Calendar'
 import IconBookmarkSolid from './svg/IconBookmarkSolid'
+import IconSearch from './svg/IconSearch'
 
 export function Header(props: { noNavigation?: boolean; noCalendar?: boolean }) {
   return (
@@ -38,6 +39,9 @@ export function Header(props: { noNavigation?: boolean; noCalendar?: boolean }) 
           justifyContent="flex-end"
           gap={`24px`}
         >
+          <Link href="/search">
+            <IconSearch />
+          </Link>
           <Link href="/tracked">
             <IconBookmarkSolid />
           </Link>

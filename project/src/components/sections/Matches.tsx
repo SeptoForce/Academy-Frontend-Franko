@@ -6,8 +6,10 @@ import { fetchEventsFromPlayer, fetchEventsFromTeam, fetchEventsFromTournament }
 import { EventMatch } from '@/utils/types'
 import { useEffect, useState } from 'react'
 import EventCell from '../util/EventCell'
+import { useTranslation } from 'react-i18next'
 
 export function Matches(props: { objectId: number; objectType: 'tournament' | 'team' | 'player' }) {
+  const { t } = useTranslation()
   const [events, setEvents] = useState<EventMatch[]>([])
   const [page, setPage] = useState(0)
   const [span, setSpan] = useState<'next' | 'last'>('last')
@@ -91,7 +93,7 @@ export function Matches(props: { objectId: number; objectType: 'tournament' | 't
           <IconChevronLeft color={`var(--color-primary-default)`} />
         </Button>
         <span className="Headline-2" color={`var(--on-surface-on-surface-lv-1)`}>
-          Matches
+          {t('matches')}
         </span>
         <Button
           w={`56px`}
@@ -138,13 +140,14 @@ export function Matches(props: { objectId: number; objectType: 'tournament' | 't
 }
 
 function RoundSection(props: { number: number; events: EventMatch[] }) {
+  const { t } = useTranslation()
   const number = props.number
   const events = props.events
 
   return (
     <VStack w={`100%`} h={`fit-content`} py={`8px`} borderRadius={`16px`}>
       <Text className="Assistive" mx={`16px`} my={`8px`} color={`var(--on-surface-on-surface-lv-1)`}>
-        Round {number}
+        {t('round')} {number}
       </Text>
       <VStack
         w={`100%`}

@@ -1,10 +1,11 @@
-import { Box, Flex, HStack, VStack } from '@kuma-ui/core'
+import { Box, Flex, HStack, Text, VStack } from '@kuma-ui/core'
 import IconFootball from '../svg/IconFootball'
 import IconBasketball from '../svg/IconBasketball'
 import IconAmericanFootball from '../svg/IconAmericanFootball'
 import { useAppContext } from '@/context/AppContext'
 import { useRouter } from 'next/router'
 import { format } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 function NavigationTab(props: { active?: boolean; children: React.ReactNode; redirect?: string }) {
   const router = useRouter()
@@ -47,6 +48,7 @@ function NavigationTab(props: { active?: boolean; children: React.ReactNode; red
 }
 
 export function Navigation() {
+  const { t } = useTranslation()
   const router = useRouter()
   const appContext = useAppContext()
   const currentPath = router.query.slug as string
@@ -63,19 +65,19 @@ export function Navigation() {
       <NavigationTab active={currentPath === `football`} redirect="football">
         <Flex justifyContent={'center'} alignItems={'center'} gap={'4px'} flexDir={['column', 'row']}>
           <IconFootball size="16px" />
-          <span>Football</span>
+          <Text>{t('football')}</Text>
         </Flex>
       </NavigationTab>
       <NavigationTab active={currentPath === `basketball`} redirect="basketball">
         <Flex justifyContent={'center'} alignItems={'center'} gap={'4px'} flexDir={['column', 'row']}>
           <IconBasketball size="16px" />
-          <span>Basketball</span>
+          <Text>{t('basketball')}</Text>
         </Flex>
       </NavigationTab>
       <NavigationTab active={currentPath === `american-football`} redirect="american-football">
         <Flex justifyContent={'center'} alignItems={'center'} gap={'4px'} flexDir={['column', 'row']}>
           <IconAmericanFootball size="16px" />
-          <span>{appContext.isMobile ? `Am. Football` : `American Football`}</span>
+          <Text>{appContext.isMobile ? t('amFootball') : t(`americanFootball`)}</Text>
         </Flex>
       </NavigationTab>
     </HStack>

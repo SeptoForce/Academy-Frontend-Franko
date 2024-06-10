@@ -3,6 +3,7 @@ import IconPointerRight from '../svg/IconPointerRight'
 import { EventMatch, Player, Team, Tournament } from '@/utils/types'
 import { useEffect, useState } from 'react'
 import { fetchTeamDetails, fetchTournamentsFromTeam } from '@/api/api'
+import { useTranslation } from 'react-i18next'
 
 export function HeaderEventBreadcrumbs(props: {
   event?: EventMatch
@@ -10,6 +11,7 @@ export function HeaderEventBreadcrumbs(props: {
   player?: Player
   team?: Team
 }) {
+  const { t } = useTranslation()
   const [event, setEvent] = useState<EventMatch | undefined>(props.event)
   const [tournament, setTournament] = useState<Tournament | undefined>(props.tournament)
   const [player, setPlayer] = useState<Player | undefined>(props.player)
@@ -44,7 +46,12 @@ export function HeaderEventBreadcrumbs(props: {
         visibility={event || tournament || player ? 'visible' : 'hidden'}
       >
         <Link href={`/${event?.tournament.sport.slug || tournament?.sport.slug || player?.sport.slug}`}>
-          {event?.tournament.sport.name || tournament?.sport.name || player?.sport.name}
+          {t(
+            event?.tournament.sport.name.toLowerCase() ||
+              tournament?.sport.name.toLowerCase() ||
+              player?.sport.name.toLowerCase() ||
+              ''
+          )}
         </Link>
         {(event || player || team) && (
           <>

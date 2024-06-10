@@ -5,8 +5,10 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { useAppContext } from '@/context/AppContext'
+import { useTranslation } from 'react-i18next'
 
 export function Calendar(props: { mobile?: boolean }) {
+  const { t } = useTranslation()
   const router = useRouter()
   const [selectedDate, setSelectedDate] = useState<string>(router.query.d as string)
 
@@ -83,6 +85,7 @@ export function Calendar(props: { mobile?: boolean }) {
 export default Calendar
 
 function CalendarUnit(props: { date: Date; active?: boolean }) {
+  const { t } = useTranslation()
   const router = useRouter()
   const appContext = useAppContext()
 
@@ -109,8 +112,8 @@ function CalendarUnit(props: { date: Date; active?: boolean }) {
     >
       <Text>
         {format(props.date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd')
-          ? 'TODAY'
-          : format(props.date, 'E').toUpperCase()}
+          ? t('today').toUpperCase()
+          : t(format(props.date, 'E').toLowerCase()).toUpperCase()}
       </Text>
       <Text>{format(props.date, appContext.dateFormat.slice(0, -5))}</Text>
       {props.active ? (

@@ -7,8 +7,10 @@ import { fetchEventsFromSportAndDate } from '@/api/api'
 import { useAppContext } from '@/context/AppContext'
 import { format } from 'date-fns'
 import LeagueEvents from '../util/LeagueEvents'
+import { useTranslation } from 'react-i18next'
 
 export function LiveSection() {
+  const { t } = useTranslation()
   const router = useRouter()
   const [selectedDate, setSelectedDate] = useState<string>(router.query.d as string)
   const [events, setEvents] = useState<EventMatch[]>()
@@ -64,7 +66,7 @@ export function LiveSection() {
             borderTop={`1px solid var(--on-surface-on-surface-lv-4)`}
             mt={`5px`}
           >
-            No events for this day.
+            {t('noEventsForThisDay')}
           </Flex>
         )}
         <Spacer />

@@ -1,7 +1,10 @@
 import { Text, VStack } from '@kuma-ui/core'
 import IconSofascoreLogo from './svg/IconSofascoreLogo'
+import { useTranslation } from 'react-i18next'
 
 export function Footer() {
+  const { t } = useTranslation()
+
   return (
     <VStack
       as="footer"
@@ -18,7 +21,7 @@ export function Footer() {
     >
       <IconSofascoreLogo color={`var(--on-surface-on-surface-lv-1)`} />
       <Text color={`colors.onSurfaceLv2`} className="Micro">
-        © 2024 Sofascore – All Rights Reserved.
+        © 2024 Sofascore – {t('allRightsReserved')}.
       </Text>
     </VStack>
   )

@@ -24,6 +24,7 @@ import { FlagComponent } from '@/components/FlagComponent'
 import IconTeam from '@/components/svg/IconTeam'
 import LeagueCell from '@/components/util/LeagueCell'
 import EventCell from '@/components/util/EventCell'
+import { useTranslation } from 'react-i18next'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const response = await fetch(`https://academy-backend.sofascore.dev/team/${context.query.id}`)
@@ -148,6 +149,7 @@ function TeamHeader(props: {
   tab: 'details' | 'matches' | 'standings' | 'squad'
   setTab: (tab: 'details' | 'matches' | 'standings' | 'squad') => void
 }) {
+  const { t } = useTranslation()
   const appContext = useAppContext()
 
   return (
@@ -187,14 +189,22 @@ function TeamHeader(props: {
         </VStack>
       </Flex>
       <Flex h={`48px`} flexShrink={0}>
-        <NavigationButton text={`Details`} active={props.tab === 'details'} onClick={() => props.setTab(`details`)} />
-        <NavigationButton text={`Matches`} active={props.tab === 'matches'} onClick={() => props.setTab(`matches`)} />
         <NavigationButton
-          text={`Standings`}
+          text={t('details')}
+          active={props.tab === 'details'}
+          onClick={() => props.setTab(`details`)}
+        />
+        <NavigationButton
+          text={t('matches')}
+          active={props.tab === 'matches'}
+          onClick={() => props.setTab(`matches`)}
+        />
+        <NavigationButton
+          text={t('standings')}
           active={props.tab === 'standings'}
           onClick={() => props.setTab(`standings`)}
         />
-        <NavigationButton text={`Squad`} active={props.tab === 'squad'} onClick={() => props.setTab(`squad`)} />
+        <NavigationButton text={t('squad')} active={props.tab === 'squad'} onClick={() => props.setTab(`squad`)} />
       </Flex>
     </Box>
   )
@@ -230,6 +240,7 @@ function NavigationButton(props: { text: string; active?: boolean; onClick: () =
 
 // ? ADD PIE CHART FOR FOREIGN PLAYERS WITH D3 LIBRARY
 function TeamInfoBox(props: { team?: Team }) {
+  const { t } = useTranslation()
   const [players, setPlayers] = useState<Player[]>([])
   const [numberOfForeignPlayers, setNumberOfForeignPlayers] = useState<number>(0)
   const team = props.team
@@ -262,7 +273,7 @@ function TeamInfoBox(props: { team?: Team }) {
       pb={`28px`}
     >
       <Flex h={`48px`} w={`100%`} justifyContent={'center'} alignItems={'center'}>
-        <Text className="Headline-2">Team Info</Text>
+        <Text className="Headline-2">{t('teamInfo')}</Text>
       </Flex>
       <Flex h={`56px`} w={`100%`} alignItems={'center'} px={`16px`} gap={`16px`}>
         <Image
@@ -271,7 +282,9 @@ function TeamInfoBox(props: { team?: Team }) {
           borderRadius={9999}
           src={'https://www.sofascore.com/static/images/placeholders/player.svg'}
         />
-        <Text>Coach: {team.managerName}</Text>
+        <Text>
+          {t('coach')}: {team.managerName}
+        </Text>
       </Flex>
       <Spacer h={`8px`} borderBottom={`1px solid var(--on-surface-on-surface-lv-4)`} />
       <HStack h={`116px`}>
@@ -281,7 +294,7 @@ function TeamInfoBox(props: { team?: Team }) {
             {players.length}
           </Text>
           <Text color={`colors.onSurfaceLv2`} className="Micro">
-            Team Size
+            {t('teamSize')}
           </Text>
         </VStack>
         <VStack gap={`8px`} justifyContent={'center'} alignItems={'center'} h={`100%`} w={`100%`}>
@@ -290,7 +303,7 @@ function TeamInfoBox(props: { team?: Team }) {
             {numberOfForeignPlayers}
           </Text>
           <Text color={`colors.onSurfaceLv2`} className="Micro">
-            Foreign Players
+            {t('foreignPlayers')}
           </Text>
         </VStack>
       </HStack>
@@ -299,6 +312,7 @@ function TeamInfoBox(props: { team?: Team }) {
 }
 
 function TeamVenueBox(props: { team?: Team }) {
+  const { t } = useTranslation()
   const team = props.team
 
   if (team === undefined || team === null) {
@@ -315,10 +329,10 @@ function TeamVenueBox(props: { team?: Team }) {
       pb={`16px`}
     >
       <Flex h={`48px`} w={`100%`} justifyContent={'center'} alignItems={'center'}>
-        <Text className="Headline-2">Venue</Text>
+        <Text className="Headline-2">{t('venue')}</Text>
       </Flex>
       <Flex h={`32px`} w={`100%`} justifyContent={`space-between`} alignItems={'center'} px={`16px`} gap={`16px`}>
-        <Text>Stadium</Text>
+        <Text>{t('stadium')}</Text>
         <Text>{team.venue}</Text>
       </Flex>
     </VStack>
@@ -326,6 +340,7 @@ function TeamVenueBox(props: { team?: Team }) {
 }
 
 function TeamTournamentsBox(props: { team?: Team }) {
+  const { t } = useTranslation()
   const [tournaments, setTournaments] = useState<Tournament[]>([])
   const team = props.team
 
@@ -351,7 +366,7 @@ function TeamTournamentsBox(props: { team?: Team }) {
       pb={`16px`}
     >
       <Flex h={`48px`} w={`100%`} justifyContent={'center'} alignItems={'center'}>
-        <Text className="Headline-2">Tournaments</Text>
+        <Text className="Headline-2">{t('tournaments')}</Text>
       </Flex>
       <Flex h={`min-content`} w={`100%`} justifyContent={'center'} alignItems={'center'} flexWrap={'wrap'}>
         {tournaments.map((tournament, index) => (
@@ -382,6 +397,7 @@ function TeamTournamentsBox(props: { team?: Team }) {
 }
 
 function TeamNextMatchBox(props: { team?: Team }) {
+  const { t } = useTranslation()
   const [event, setEvent] = useState<EventMatch | undefined>()
   const [tournament, setTournament] = useState<Tournament | undefined>()
   const team = props.team
@@ -412,7 +428,7 @@ function TeamNextMatchBox(props: { team?: Team }) {
       pb={`16px`}
     >
       <Flex h={`48px`} w={`100%`} justifyContent={'center'} alignItems={'center'}>
-        <Text className="Headline-2">Next Match</Text>
+        <Text className="Headline-2">{t('nextMatch')}</Text>
       </Flex>
       {tournament && event && (
         <>
@@ -425,6 +441,7 @@ function TeamNextMatchBox(props: { team?: Team }) {
 }
 
 function TeamSquadSection(props: { team?: Team }) {
+  const { t } = useTranslation()
   const [players, setPlayers] = useState<Player[]>([])
   const team = props.team
 
@@ -446,7 +463,7 @@ function TeamSquadSection(props: { team?: Team }) {
       pb={`16px`}
     >
       <Flex h={`48px`} alignItems={'flex-end'} px={`16px`} pb={`8px`}>
-        <Text className="Assistive">Coach</Text>
+        <Text className="Assistive">{t('coach')}</Text>
       </Flex>
       <HStack h={`56px`} w={`100%`} gap={`16px`} p={`8px`} px={`16px`}>
         <Image
@@ -461,7 +478,7 @@ function TeamSquadSection(props: { team?: Team }) {
       </HStack>
       <Spacer h={`8px`} borderBottom={`1px solid var(--on-surface-on-surface-lv-4)`} />
       <Flex h={`48px`} alignItems={'flex-end'} px={`16px`} pb={`8px`}>
-        <Text className="Assistive">Players</Text>
+        <Text className="Assistive">{t('players')}</Text>
       </Flex>
       {players.map((player, index) => (
         <Fragment key={index}>

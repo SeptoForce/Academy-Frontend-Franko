@@ -19,6 +19,7 @@ import IconBasketball from '@/components/svg/IconBasketball'
 import IconAmericanFootball from '@/components/svg/IconAmericanFootball'
 import LeagueCell from '@/components/util/LeagueCell'
 import { Image } from '@kuma-ui/core'
+import { useTranslation } from 'react-i18next'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -27,6 +28,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 export default function TournamentsPage() {
+  const { t } = useTranslation()
   const [tab, setTab] = useState<'football' | 'basketball' | 'american-football'>('football')
   const [tournaments, setTournaments] = useState<Tournament[]>()
 
@@ -72,7 +74,7 @@ export default function TournamentsPage() {
               h={`min-content`}
               w={`100%`}
               bg={'colors.surface1'}
-              boxShadow={[` 0 2px 16px 0 rgba(0, 0, 0, 0.12)`, `unset`]}
+              boxShadow={[` 0 2px 16px 0 rgba(0, 0, 0, 0.12)`, `0 1px 4px 0 rgba(0, 0, 0, 0.08)`]}
               borderRadius={[`0px`, `16px 16px 0 0 `]}
               pt={`16px`}
               gap={`16px`}
@@ -80,7 +82,7 @@ export default function TournamentsPage() {
               borderBottom={`1px solid #E0E0E0`}
             >
               <HStack className="Headline-1" px={`16px`}>
-                Leagues
+                {t('leagues')}
               </HStack>
               <HStack h={`48px`}>
                 <Button
@@ -93,7 +95,7 @@ export default function TournamentsPage() {
                 >
                   <VStack color={'colors.primaryDefault'} alignItems={'center'} gap={`4px`}>
                     <IconFootball color="currentColor" size="16" />
-                    <Text className="Body">Football</Text>
+                    <Text className="Body">{t('football')}</Text>
                     {tab === 'football' && (
                       <Box
                         position={'absolute'}
@@ -116,7 +118,7 @@ export default function TournamentsPage() {
                 >
                   <VStack color={'colors.primaryDefault'} alignItems={'center'} gap={`4px`}>
                     <IconBasketball color="currentColor" size="16" />
-                    <Text className="Body">Basketball</Text>
+                    <Text className="Body">{t('basketball')}</Text>
                     {tab === 'basketball' && (
                       <Box
                         position={'absolute'}
@@ -139,7 +141,7 @@ export default function TournamentsPage() {
                 >
                   <VStack color={'colors.primaryDefault'} alignItems={'center'} gap={`4px`}>
                     <IconAmericanFootball color="currentColor" size="16" />
-                    <Text className="Body">Am. Football</Text>
+                    <Text className="Body">{t('amFootball')}</Text>
                     {tab === 'american-football' && (
                       <Box
                         position={'absolute'}
@@ -158,7 +160,7 @@ export default function TournamentsPage() {
               h={`fit-content`}
               w={`100%`}
               bg={'colors.surface1'}
-              boxShadow={[` 0 2px 8px 0 rgba(0, 0, 0, 0.05)`, `unset`]}
+              boxShadow={`0 1px 4px 0 rgba(0, 0, 0, 0.08)`}
               borderRadius={[`0px`, `0 0 16px 16px`]}
               py={`32px`}
               px={`12px`}

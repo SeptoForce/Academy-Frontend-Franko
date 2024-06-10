@@ -2,8 +2,10 @@ import { fetchTournamentsFromTeam, fetchTournamentStandings } from '@/api/api'
 import { TournamentStandings, TournamentStandingsRow } from '@/utils/types'
 import { VStack, HStack, Flex, Link, Spacer } from '@kuma-ui/core'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export function Standings(props: { objectId: number; objectType: 'tournament' | 'team' }) {
+  const { t } = useTranslation()
   const [standings, setStandings] = useState<TournamentStandings>()
   const [standingsTotal, setStandingsTotal] = useState<TournamentStandingsRow[]>()
 
@@ -48,26 +50,26 @@ export function Standings(props: { objectId: number; objectType: 'tournament' | 
             #
           </Flex>
           <Flex w={[`104px`, `150px`]} flexShrink={0}>
-            Team
+            {t('team')}
           </Flex>
           <Spacer w={`100%`} />
           <Flex w={`100%`} minW={`24px`} justifyContent={'center'}>
-            P
+            {t('playedShort')}
           </Flex>
           <Flex w={`100%`} minW={`24px`} justifyContent={'center'}>
-            W
+            {t('winsShort')}
           </Flex>
           <Flex w={`100%`} minW={`24px`} justifyContent={'center'}>
-            D
+            {t('drawsShort')}
           </Flex>
           <Flex w={`100%`} minW={`24px`} justifyContent={'center'}>
-            L
+            {t('lossesShort')}
           </Flex>
           <Flex w={`100%`} minW={`32px`} justifyContent={'center'}>
-            Goals
+            {t('goals')}
           </Flex>
           <Flex w={`100%`} minW={`32px`} justifyContent={'center'}>
-            PTS
+            {t('pointsShort')}
           </Flex>
         </HStack>
         {standingsTotal?.map((standingsRow, index) => (

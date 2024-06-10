@@ -1,6 +1,6 @@
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
-import { HStack, VStack, Box, Text, Spacer } from '@kuma-ui/core'
+import { HStack, VStack, Box, Text, Spacer, Select } from '@kuma-ui/core'
 import { useAppContext } from '@/context/AppContext'
 import { useRouter } from 'next/router'
 import { useThemeContext } from '@/context/ThemeContext'
@@ -11,6 +11,8 @@ import { GetServerSidePropsContext } from 'next'
 import { format } from 'date-fns'
 import { parseCookies } from 'nookies'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import i18n from '@/locales/i18n'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { theme } = parseCookies(context)
@@ -23,6 +25,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 export default function SettingsPage(props: { theme: 'dark' | 'light' }) {
+  const { t } = useTranslation()
   const [isDark, setIsDark] = useState(props.theme === 'dark')
 
   const router = useRouter()
@@ -32,6 +35,10 @@ export default function SettingsPage(props: { theme: 'dark' | 'light' }) {
   useEffect(() => {
     setIsDark(themeContext.isDark)
   }, [themeContext.isDark])
+
+  const changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    appContext.setLanguage(e.target.value)
+  }
 
   return (
     <>
@@ -81,7 +88,49 @@ export default function SettingsPage(props: { theme: 'dark' | 'light' }) {
               <VStack bg={'colors.surface2'} w={`100%`} h={`fit-content`} borderRadius={`8px`} p={`16px`}>
                 <HStack w={`100%`} h={`48px`} justifyContent={'space-between'} alignItems={'center'}>
                   <Text color={'colors.primaryDefault'} className="Assistive">
-                    Theme
+                    {t('language')}
+                  </Text>
+                </HStack>
+                <HStack
+                  w={`100%`}
+                  h={`48px`}
+                  justifyContent={'space-between'}
+                  alignItems={'center'}
+                  userSelect={'none'}
+                >
+                  <Select
+                    onChange={changeLanguage}
+                    w={`100%`}
+                    h={`32px`}
+                    style={{ appearance: 'none' }}
+                    bg={'colors.surface1'}
+                    color={'colors.onSurfaceLv1'}
+                    p={`8px`}
+                    borderRadius={`8px`}
+                    cursor={'pointer'}
+                  >
+                    <option value="en" selected={appContext.language === 'en'}>
+                      English
+                    </option>
+                    <option value="hr" selected={appContext.language === 'hr'}>
+                      Hrvatski
+                    </option>
+                    <option value="fr" selected={appContext.language === 'fr'}>
+                      Français
+                    </option>
+                    <option value="no" selected={appContext.language === 'no'}>
+                      Norsk
+                    </option>
+                    <option value="uwu" selected={appContext.language === 'uwu'}>
+                      uwu
+                    </option>
+                  </Select>
+                </HStack>
+              </VStack>
+              <VStack bg={'colors.surface2'} w={`100%`} h={`fit-content`} borderRadius={`8px`} p={`16px`}>
+                <HStack w={`100%`} h={`48px`} justifyContent={'space-between'} alignItems={'center'}>
+                  <Text color={'colors.primaryDefault'} className="Assistive">
+                    {t('theme')}
                   </Text>
                 </HStack>
                 <HStack
@@ -93,7 +142,7 @@ export default function SettingsPage(props: { theme: 'dark' | 'light' }) {
                   cursor={'pointer'}
                   userSelect={'none'}
                 >
-                  <Text>Light</Text>
+                  <Text>{t('light')}</Text>
                   {isDark ? <IconRadioOff /> : <IconRadioOn />}
                 </HStack>
                 <HStack
@@ -105,14 +154,14 @@ export default function SettingsPage(props: { theme: 'dark' | 'light' }) {
                   cursor={'pointer'}
                   userSelect={'none'}
                 >
-                  <Text>Dark</Text>
+                  <Text>{t('dark')}</Text>
                   {isDark ? <IconRadioOn /> : <IconRadioOff />}
                 </HStack>
               </VStack>
               <VStack bg={'colors.surface2'} w={`100%`} h={`fit-content`} borderRadius={`8px`} p={`16px`}>
                 <HStack w={`100%`} h={`48px`} justifyContent={'space-between'} alignItems={'center'}>
                   <Text color={'colors.primaryDefault'} className="Assistive">
-                    Date Format - {format(new Date(), appContext.dateFormat)}
+                    {t('dateFormat')} - {format(new Date(), appContext.dateFormat)}
                   </Text>
                 </HStack>
                 <HStack
@@ -162,28 +211,28 @@ export default function SettingsPage(props: { theme: 'dark' | 'light' }) {
                 gap={`16px`}
               >
                 <VStack w={`100%`}>
-                  <Text className="Headline-1">About</Text>
+                  <Text className="Headline-1">{t('about')}</Text>
                 </VStack>
                 <VStack w={`100%`} gap={`2px`}>
                   <Text className="Headline-2">Sofascore Frontend Academy</Text>
-                  <Text>Class 2024</Text>
+                  <Text>{t('class2024')}</Text>
                 </VStack>
                 <Spacer borderBottom={`1px solid var(--on-surface-on-surface-lv-4)`} />
                 <VStack w={`100%`} gap={`2px`}>
                   <Text className="Assistive" color={'colors.onSurfaceLv2'}>
-                    App Name
+                    {t('appName')}
                   </Text>
                   <Text>Mini Sofascore App</Text>
                 </VStack>
                 <VStack w={`100%`} gap={`2px`}>
                   <Text className="Assistive" color={'colors.onSurfaceLv2'}>
-                    API Credit
+                    {t('apiCredit')}
                   </Text>
                   <Text>Sofascore</Text>
                 </VStack>
                 <VStack w={`100%`} gap={`2px`}>
                   <Text className="Assistive" color={'colors.onSurfaceLv2'}>
-                    Developer
+                    {t('developer')}
                   </Text>
                   <Text>Franko Žarković</Text>
                 </VStack>

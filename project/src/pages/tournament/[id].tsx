@@ -13,6 +13,7 @@ import Matches from '@/components/sections/Matches'
 import { useRouter } from 'next/router'
 import Standings from '@/components/sections/Standings'
 import { FlagComponent } from '@/components/FlagComponent'
+import { useTranslation } from 'react-i18next'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const response = await fetch(`https://academy-backend.sofascore.dev/tournament/${context.query.id}`)
@@ -109,6 +110,7 @@ function TournamentHeader(props: {
   tab: 'matches' | 'standings'
   setTab: (tab: 'matches' | 'standings') => void
 }) {
+  const { t } = useTranslation()
   const appContext = useAppContext()
 
   return (
@@ -147,9 +149,13 @@ function TournamentHeader(props: {
         </VStack>
       </Flex>
       <Flex h={`48px`} flexShrink={0}>
-        <NavigationButton text={`Matches`} active={props.tab === 'matches'} onClick={() => props.setTab(`matches`)} />
         <NavigationButton
-          text={`Standings`}
+          text={t('matches')}
+          active={props.tab === 'matches'}
+          onClick={() => props.setTab(`matches`)}
+        />
+        <NavigationButton
+          text={t('standings')}
           active={props.tab === 'standings'}
           onClick={() => props.setTab(`standings`)}
         />

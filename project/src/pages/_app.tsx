@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app'
 import { SWRConfig } from 'swr'
 import Head from 'next/head'
 import { AppContextProvider } from '@/context/AppContext'
+import '@/locales/i18n'
 
 //@ts-ignore
 export const fetcher = (...args) =>

@@ -23,6 +23,7 @@ import IconBasketballIncident2 from '../svg/IconBasketballIncident2'
 import { format } from 'date-fns'
 import { useAppContext } from '@/context/AppContext'
 import BookmarkButton from '../util/BookmarkButton'
+import { t } from 'i18next'
 
 export function EventDetailsSection(props: { event: EventMatch; noHeader?: boolean }) {
   return (
@@ -47,7 +48,7 @@ export function EventDetailsSection(props: { event: EventMatch; noHeader?: boole
             alignItems={'center'}
             justifyContent={'center'}
           >
-            <Text color={'colors.onSurfaceLv2'}>No results yet.</Text>
+            <Text color={'colors.onSurfaceLv2'}>{t('noResultsYet') + '.'}</Text>
           </Flex>
           <Link href={`/tournament/${props.event.tournament.id}`} color={`colors.primaryDefault`}>
             <Box
@@ -60,7 +61,7 @@ export function EventDetailsSection(props: { event: EventMatch; noHeader?: boole
               className="Action"
               _hover={{ bg: 'var(--color-primary-default)', color: 'white' }}
             >
-              View Tournament Details
+              {t('viewTournamentDetails')}
             </Box>
           </Link>
         </VStack>
@@ -105,10 +106,10 @@ function PeriodCell(props: { incident: EventIncident; live?: boolean }) {
 
   let incidentText = incident.text || ''
   if (incidentText.startsWith('HT')) {
-    incidentText = 'Half Time' + incidentText.slice(2)
+    incidentText = t('halfTime') + incidentText.slice(2)
   }
   if (incidentText.startsWith('FT')) {
-    incidentText = 'Full Time' + incidentText.slice(2)
+    incidentText = t('fullTime') + incidentText.slice(2)
   }
 
   return (
@@ -255,9 +256,9 @@ function IncidentCell(props: { flipped?: boolean; incident: EventIncident; sport
             {incident.player?.name}
           </Text>
           <Text className="Micro" color={`colors.onSurfaceLv2`} flexShrink={0}>
-            {incident.type === IncidentType.CARD ? `Foul` : ``}
-            {incident.goalType === GoalType.OWNGOAL ? `Own Goal` : ``}
-            {incident.goalType === GoalType.PENALTY ? `Penalty` : ``}
+            {incident.type === IncidentType.CARD ? t('foul') : ``}
+            {incident.goalType === GoalType.OWNGOAL ? t('ownGoal') : ``}
+            {incident.goalType === GoalType.PENALTY ? t('penalty') : ``}
           </Text>
         </VStack>
       </Box>
@@ -293,7 +294,7 @@ function Actions(props: { event: EventMatch }) {
         <BookmarkButton event={props.event} />
       </HStack>
       <Link onClick={viewFullPage} className="Action" display={'flex'}>
-        <Text>View Full Page</Text>
+        <Text>{t('viewFullPage')}</Text>
         <IconChevronRight color="var(--color-primary-default)" />
       </Link>
     </Box>
@@ -375,7 +376,7 @@ function Score(props: { event: EventMatch }) {
         {event.status === EventStatus.LIVE
           ? `${Math.floor((new Date().getTime() - new Date(event.startDate).getTime()) / (1000 * 60))}'`
           : ``}
-        {event.status === EventStatus.FINISHED ? `Full Time` : ``}
+        {event.status === EventStatus.FINISHED ? t('fullTime') : ``}
       </Text>
     </VStack>
   )

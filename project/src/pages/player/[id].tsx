@@ -13,6 +13,7 @@ import { useRouter } from 'next/router'
 import { EventMatch, Player, Positions, Tournament } from '@/utils/types'
 import { FlagComponent } from '@/components/FlagComponent'
 import { format } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const response = await fetch(`https://academy-backend.sofascore.dev/player/${context.query.id}`)
@@ -95,6 +96,7 @@ export default function PlayerPage(props: { currentPlayer: Player; tournaments: 
 }
 
 function PlayerHeader(props: { player?: Player }) {
+  const { t } = useTranslation()
   const appContext = useAppContext()
 
   const date = props.player?.dateOfBirth ? new Date(props.player?.dateOfBirth) : undefined
@@ -154,7 +156,7 @@ function PlayerHeader(props: { player?: Player }) {
           gap={`4px`}
         >
           <Text color={'colors.onSurfaceLv2'} className="Assistive">
-            Nationality
+            {t('nationality')}
           </Text>
           <HStack gap={`4px`}>
             <FlagComponent countryName={props.player?.country.name || ''} />
@@ -173,7 +175,7 @@ function PlayerHeader(props: { player?: Player }) {
           gap={`4px`}
         >
           <Text color={'colors.onSurfaceLv2'} className="Assistive">
-            Position
+            {t('position')}
           </Text>
           <Text className="Headline-3">{Positions[props.player?.position as keyof typeof Positions] || 'Unknown'}</Text>
         </Flex>
@@ -192,7 +194,7 @@ function PlayerHeader(props: { player?: Player }) {
             <Text color={'colors.onSurfaceLv2'} className="Assistive">
               {format(date, 'dd.MM.yyyy')}
             </Text>
-            <Text className="Headline-3">{`${new Date().getFullYear() - date.getFullYear()} Yrs`}</Text>
+            <Text className="Headline-3">{`${new Date().getFullYear() - date.getFullYear()} ${t('yearsShort')}`}</Text>
           </Flex>
         )}
       </HStack>

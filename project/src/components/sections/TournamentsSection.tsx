@@ -3,8 +3,10 @@ import { Tournament } from '@/utils/types'
 import { Box, Flex, HStack, Image, Link, Spacer, Text } from '@kuma-ui/core'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export function TournamentsSection(props: { tournaments?: Tournament[] }) {
+  const { t } = useTranslation()
   const router = useRouter()
   const slug = router.query.slug as string
   const [tournaments, setTournaments] = useState<Tournament[] | undefined>(props.tournaments)
@@ -27,14 +29,14 @@ export function TournamentsSection(props: { tournaments?: Tournament[] }) {
       boxShadow={`0 1px 4px 0 rgba(0, 0, 0, 0.08)`}
     >
       <Flex w={`100%`} h={`48px`} mx={`8px`} alignItems={'center'}>
-        <Text className="Headline-1">{router.query.slug === `football` ? `Leagues` : `Tournaments`}</Text>
+        <Text className="Headline-1">{router.query.slug === `football` ? t('leagues') : t('tournaments')}</Text>
       </Flex>
       {tournaments?.map(tournament => (
         <TournamentCell key={tournament.id} id={tournament.id} />
       ))}
       <Spacer h={`24px`} />
       <Link href="/tournament" mx={`8px`} className="Action">
-        View more
+        {t('viewMore')}
       </Link>
     </Box>
   )

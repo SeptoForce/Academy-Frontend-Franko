@@ -1,6 +1,6 @@
-import { Event, EventIncidents, Player, Team, Tournament, TournamentStandings } from '@/utils/types'
+import { EventMatch, EventIncidents, Player, Team, Tournament, TournamentStandings } from '@/utils/types'
 
-export function getExampleEvent(): Event {
+export function getExampleEvent(): EventMatch {
   return {
     id: 1,
     slug: 'fulham-manchester-united',
@@ -51,7 +51,7 @@ export function getExampleEvent(): Event {
   }
 }
 
-export function getExampleEventsFromSportAndDate(): Event[] {
+export function getExampleEventsFromSportAndDate(): EventMatch[] {
   return [
     {
       id: 1,
@@ -1779,7 +1779,7 @@ export function getExampleStandings(): TournamentStandings {
   ]
 }
 
-export function getExampleEventsFromTournament(): Event[] {
+export function getExampleEventsFromTournament(): EventMatch[] {
   return [
     {
       id: 40,
@@ -2230,7 +2230,7 @@ export function getExampleEventsFromTournament(): Event[] {
   ]
 }
 
-export function getExampleTrackedEvents(): Event[] {
+export function getExampleTrackedEvents(): EventMatch[] {
   return [
     {
       id: 40,

@@ -4,7 +4,7 @@ import EventDetailsSection from '@/components/sections/EventDetailsSection'
 import TournamentsSection from '@/components/sections/TournamentsSection'
 import { HStack, VStack, Box } from '@kuma-ui/core'
 import HeaderEventBreadcrumbs from '@/components/navigation/HeaderEventBreadcrumbs'
-import { Event, Tournament } from '@/utils/types'
+import { EventMatch, Tournament } from '@/utils/types'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { fetchEventDetails } from '@/api/api'
@@ -26,9 +26,9 @@ export async function getServerSideProps(context: any) {
   }
 }
 
-export default function EventPage(props: { eventDetails: Event; tournaments: Tournament[] }) {
+export default function EventPage(props: { eventDetails: EventMatch; tournaments: Tournament[] }) {
   const router = useRouter()
-  const [event, setEvent] = useState<Event>(props.eventDetails)
+  const [event, setEvent] = useState<EventMatch>(props.eventDetails)
 
   useEffect(() => {
     if (router.query.e && event?.id !== Number(router.query.e)) {
@@ -65,7 +65,7 @@ export default function EventPage(props: { eventDetails: Event; tournaments: Tou
           px={`12px`}
           display={[`none`, `flex`]}
         >
-          <HeaderEventBreadcrumbs event={event as Event} />
+          <HeaderEventBreadcrumbs event={event as EventMatch} />
         </HStack>
 
         <HStack w={`100%`} h={`100%`} justifyContent={'center'} gap={`24px`}>

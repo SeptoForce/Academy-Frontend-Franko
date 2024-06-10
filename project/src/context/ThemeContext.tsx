@@ -1,8 +1,7 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import { parseCookies, setCookie } from 'nookies'
-import { parse } from 'path'
 
-export function getInitialTheme() {
+function getInitialTheme() {
   const cookies = parseCookies()
   return cookies.theme || 'light'
 }

@@ -83,7 +83,7 @@ export enum StandingsType {
   AWAY = 'away',
 }
 
-export type Event = {
+export type EventMatch = {
   id: number
   slug: string
   tournament: {

@@ -4,14 +4,14 @@ import Header from '@/components/Header'
 import HeaderEventBreadcrumbs from '@/components/navigation/HeaderEventBreadcrumbs'
 import EventDetailsSection from '@/components/sections/EventDetailsSection'
 import TournamentsSection from '@/components/sections/TournamentsSection'
+import LeagueEvents from '@/components/util/LeagueEvents'
 import { useAppContext } from '@/context/AppContext'
-import { Event, EventStatus, Tournament } from '@/utils/types'
+import { EventMatch, EventStatus, Tournament } from '@/utils/types'
 import { HStack, VStack, Box } from '@kuma-ui/core'
 import { GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { isWindowDefined } from 'swr/_internal'
-import { EventCell, LeagueEvents } from '@/components/sections/LiveSection'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const response = await fetch(`https://academy-backend.sofascore.dev/sport/football/tournaments`)
@@ -25,7 +25,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 export default function TrackedPage(props: { tournaments: Tournament[] }) {
-  const [event, setEvent] = useState<Event>()
+  const [event, setEvent] = useState<EventMatch>()
   const appContext = useAppContext()
   const router = useRouter()
 
@@ -56,7 +56,7 @@ export default function TrackedPage(props: { tournaments: Tournament[] }) {
         {appContext.isMobile ? (
           <Box w={`100%`} h={`48px`} display={['none', 'flex']} />
         ) : (
-          <HeaderEventBreadcrumbs event={event as Event} />
+          <HeaderEventBreadcrumbs event={event as EventMatch} />
         )}
 
         <HStack w={`100%`} h={`100%`} justifyContent={'center'} gap={`24px`}>
@@ -85,11 +85,11 @@ export default function TrackedPage(props: { tournaments: Tournament[] }) {
 type SortedTrackedEvents = {
   category: 'previous' | 'current' | 'upcoming'
   tournament: Tournament
-  events: Event[]
+  events: EventMatch[]
 }[]
 
 function TrackedEvents() {
-  const [trackedEvents, setTrackedEvents] = useState<Event[]>([])
+  const [trackedEvents, setTrackedEvents] = useState<EventMatch[]>([])
   const [sortedTrackedEvents, setSortedTrackedEvents] = useState<SortedTrackedEvents>([])
 
   useEffect(() => {
@@ -99,7 +99,7 @@ function TrackedEvents() {
     if (isWindowDefined) {
       const trackedEvents = localStorage.getItem('trackedEvents')
       if (trackedEvents) {
-        const _trackedEvents = JSON.parse(trackedEvents) as Event[]
+        const _trackedEvents = JSON.parse(trackedEvents) as EventMatch[]
         setTrackedEvents(
           _trackedEvents.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
         )

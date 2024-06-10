@@ -6,7 +6,7 @@ import EventDetailsSection from '@/components/sections/EventDetailsSection'
 import TournamentsSection from '@/components/sections/TournamentsSection'
 import LiveSection from '@/components/sections/LiveSection'
 import { useAppContext } from '@/context/AppContext'
-import { Event, Tournament } from '@/utils/types'
+import { EventMatch, Tournament } from '@/utils/types'
 import { HStack, VStack, Box } from '@kuma-ui/core'
 import { GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
@@ -48,7 +48,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 export default function HomePage(props: { tournaments: Tournament[] }) {
   const appContext = useAppContext()
   const router = useRouter()
-  const [event, setEvent] = useState<Event>()
+  const [event, setEvent] = useState<EventMatch>()
 
   useEffect(() => {
     if (router.query.e) {
@@ -76,7 +76,7 @@ export default function HomePage(props: { tournaments: Tournament[] }) {
         {appContext.isMobile ? (
           <Box w={`100%`} h={`48px`} display={['none', 'flex']} />
         ) : (
-          <HeaderEventBreadcrumbs event={event as Event} />
+          <HeaderEventBreadcrumbs event={event as EventMatch} />
         )}
 
         <HStack w={`100%`} h={`100%`} justifyContent={'center'} gap={`24px`}>

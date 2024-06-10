@@ -6,11 +6,11 @@ import HeaderEventBreadcrumbs from '@/components/navigation/HeaderEventBreadcrum
 import TournamentsSection from '@/components/sections/TournamentsSection'
 import { GetServerSidePropsContext } from 'next'
 import { useAppContext } from '@/context/AppContext'
-import { fetchEventDetails, getPlayerImageLink, getTeamImageLink, getTournamentImageLink } from '@/api/api'
+import { fetchEventDetails, getPlayerImageLink, getTeamImageLink } from '@/api/api'
 import { useEffect, useState } from 'react'
 import Matches from '@/components/sections/Matches'
 import { useRouter } from 'next/router'
-import { Event, Player, Positions, Tournament } from '@/utils/types'
+import { EventMatch, Player, Positions, Tournament } from '@/utils/types'
 import { FlagComponent } from '@/components/FlagComponent'
 import { format } from 'date-fns'
 
@@ -32,7 +32,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 export default function PlayerPage(props: { currentPlayer: Player; tournaments: Tournament[] }) {
   const router = useRouter()
   const appContext = useAppContext()
-  const [event, setEvent] = useState<Event>()
+  const [event, setEvent] = useState<EventMatch>()
 
   useEffect(() => {
     if (router.query.e) {

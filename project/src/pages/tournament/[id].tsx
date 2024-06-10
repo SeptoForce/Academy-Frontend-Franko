@@ -3,7 +3,7 @@ import Header from '@/components/Header'
 import EventDetailsSection from '@/components/sections/EventDetailsSection'
 import { HStack, VStack, Box, Flex, Image, Text } from '@kuma-ui/core'
 import HeaderEventBreadcrumbs from '@/components/navigation/HeaderEventBreadcrumbs'
-import { Event, Tournament } from '@/utils/types'
+import { EventMatch, Tournament } from '@/utils/types'
 import TournamentsSection from '@/components/sections/TournamentsSection'
 import { GetServerSidePropsContext } from 'next'
 import { useAppContext } from '@/context/AppContext'
@@ -35,7 +35,7 @@ export default function TournamentPage(props: { currentTournament: Tournament; t
   const router = useRouter()
   const appContext = useAppContext()
   const [tab, setTab] = useState<'matches' | 'standings'>('matches')
-  const [event, setEvent] = useState<Event>()
+  const [event, setEvent] = useState<EventMatch>()
 
   useEffect(() => {
     if (router.query.e) {

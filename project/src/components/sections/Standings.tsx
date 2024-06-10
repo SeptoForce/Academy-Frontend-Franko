@@ -1,7 +1,6 @@
 import { fetchTournamentsFromTeam, fetchTournamentStandings } from '@/api/api'
-import { getExampleStandings } from '@/api/exampleObjects'
 import { TournamentStandings, TournamentStandingsRow } from '@/utils/types'
-import { Box, VStack, HStack, Grid, Flex, Link, Spacer } from '@kuma-ui/core'
+import { VStack, HStack, Flex, Link, Spacer } from '@kuma-ui/core'
 import { useEffect, useState } from 'react'
 
 export function Standings(props: { objectId: number; objectType: 'tournament' | 'team' }) {

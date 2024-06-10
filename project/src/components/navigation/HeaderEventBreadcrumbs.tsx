@@ -1,22 +1,16 @@
 import { HStack, Link, Text } from '@kuma-ui/core'
 import IconPointerRight from '../svg/IconPointerRight'
-import { Event, Player, Team, Tournament } from '@/utils/types'
+import { EventMatch, Player, Team, Tournament } from '@/utils/types'
 import { useEffect, useState } from 'react'
-import {
-  fetchEventDetails,
-  fetchPlayerDetails,
-  fetchTeamDetails,
-  fetchTournamentDetails,
-  fetchTournamentsFromTeam,
-} from '@/api/api'
+import { fetchTeamDetails, fetchTournamentsFromTeam } from '@/api/api'
 
 export function HeaderEventBreadcrumbs(props: {
-  event?: Event
+  event?: EventMatch
   tournament?: Tournament
   player?: Player
   team?: Team
 }) {
-  const [event, setEvent] = useState<Event | undefined>(props.event)
+  const [event, setEvent] = useState<EventMatch | undefined>(props.event)
   const [tournament, setTournament] = useState<Tournament | undefined>(props.tournament)
   const [player, setPlayer] = useState<Player | undefined>(props.player)
   const [team, setTeam] = useState<Team | undefined>(props.team)

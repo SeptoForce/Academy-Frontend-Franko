@@ -5,8 +5,6 @@ import IconSettings from './svg/IconSettings'
 import { Navigation } from './navigation/Navigation'
 import Calendar from './navigation/Calendar'
 import IconBookmarkSolid from './svg/IconBookmarkSolid'
-import IconBookmark from './svg/IconBookmark'
-import IconBookmarkRemove from './svg/IconBookmarkRemove'
 
 export function Header(props: { noNavigation?: boolean; noCalendar?: boolean }) {
   return (
@@ -44,7 +42,7 @@ export function Header(props: { noNavigation?: boolean; noCalendar?: boolean }) 
             <IconBookmarkSolid />
           </Link>
           <Flex display={[`flex`, `none`]}>
-            <Link>
+            <Link href="/tournament">
               <IconTrophy />
             </Link>
           </Flex>

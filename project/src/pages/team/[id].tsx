@@ -19,11 +19,11 @@ import { Fragment, useEffect, useState } from 'react'
 import Matches from '@/components/sections/Matches'
 import { useRouter } from 'next/router'
 import Standings from '@/components/sections/Standings'
-import { Event, Player, Team, Tournament } from '@/utils/types'
+import { EventMatch, Player, Team, Tournament } from '@/utils/types'
 import { FlagComponent } from '@/components/FlagComponent'
 import IconTeam from '@/components/svg/IconTeam'
-import { EventCell, LeagueCell } from '@/components/sections/LiveSection'
-import { getExamplePlayer } from '@/api/exampleObjects'
+import LeagueCell from '@/components/util/LeagueCell'
+import EventCell from '@/components/util/EventCell'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const response = await fetch(`https://academy-backend.sofascore.dev/team/${context.query.id}`)
@@ -44,7 +44,7 @@ export default function TeamPage(props: { currentTeam: Team; tournaments: Tourna
   const router = useRouter()
   const appContext = useAppContext()
   const [tab, setTab] = useState<'details' | 'matches' | 'standings' | 'squad'>('details')
-  const [event, setEvent] = useState<Event>()
+  const [event, setEvent] = useState<EventMatch>()
 
   useEffect(() => {
     if (router.query.e) {
@@ -382,7 +382,7 @@ function TeamTournamentsBox(props: { team?: Team }) {
 }
 
 function TeamNextMatchBox(props: { team?: Team }) {
-  const [event, setEvent] = useState<Event | undefined>()
+  const [event, setEvent] = useState<EventMatch | undefined>()
   const [tournament, setTournament] = useState<Tournament | undefined>()
   const team = props.team
 

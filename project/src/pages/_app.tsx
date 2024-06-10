@@ -3,8 +3,7 @@ import { ThemeContextProvider, useThemeContext } from '@/context/ThemeContext'
 import type { AppProps } from 'next/app'
 import { SWRConfig } from 'swr'
 import Head from 'next/head'
-import { AppContextProvider, useAppContext } from '@/context/AppContext'
-import { isWindowDefined } from 'swr/_internal'
+import { AppContextProvider } from '@/context/AppContext'
 
 //@ts-ignore
 export const fetcher = (...args) =>

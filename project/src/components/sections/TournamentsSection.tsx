@@ -33,7 +33,7 @@ export function TournamentsSection(props: { tournaments?: Tournament[] }) {
         <TournamentCell key={tournament.id} id={tournament.id} />
       ))}
       <Spacer h={`24px`} />
-      <Link href="#" mx={`8px`} className="Action">
+      <Link href="/tournament" mx={`8px`} className="Action">
         View more
       </Link>
     </Box>

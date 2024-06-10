@@ -1,14 +1,14 @@
 import { Box, Button, HStack, VStack } from '@kuma-ui/core'
 import IconChevronLeft from '../svg/IconChevronLeft'
 import IconChevronRight from '../svg/IconChevronRight'
-import { EventCell } from './LiveSection'
 import { Text } from '@kuma-ui/core'
 import { fetchEventsFromPlayer, fetchEventsFromTeam, fetchEventsFromTournament } from '@/api/api'
-import { Event } from '@/utils/types'
+import { EventMatch } from '@/utils/types'
 import { useEffect, useState } from 'react'
+import EventCell from '../util/EventCell'
 
 export function Matches(props: { objectId: number; objectType: 'tournament' | 'team' | 'player' }) {
-  const [events, setEvents] = useState<Event[]>([])
+  const [events, setEvents] = useState<EventMatch[]>([])
   const [page, setPage] = useState(0)
   const [span, setSpan] = useState<'next' | 'last'>('last')
 
@@ -57,7 +57,7 @@ export function Matches(props: { objectId: number; objectType: 'tournament' | 't
   }
 
   const eventsPerRound = events.reduce<{
-    [round: number]: Event[]
+    [round: number]: EventMatch[]
   }>((acc, event) => {
     const round = event.round
     if (acc[round]) {
@@ -137,7 +137,7 @@ export function Matches(props: { objectId: number; objectType: 'tournament' | 't
   )
 }
 
-function RoundSection(props: { number: number; events: Event[] }) {
+function RoundSection(props: { number: number; events: EventMatch[] }) {
   const number = props.number
   const events = props.events
 

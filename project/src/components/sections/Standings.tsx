@@ -57,30 +57,34 @@ export function Standings(props: { objectId: number; objectType: 'tournament' | 
       pb={`16px`}
     >
       <VStack minH={`40px`}>
-        <HStack h={`48px`} bg={'colors.surface2'} m={`8px`} borderRadius={`8px`} alignItems={'center'} p={`8px`}>
-          <Select
-            display={'flex'}
-            alignItems={'center'}
-            w={`auto`}
-            px={`12px`}
-            h={`32px`}
-            style={{ appearance: 'none' }}
-            bg={'colors.surface1'}
-            border={`none`}
-            boxShadow={`0 1px 4px 0 rgba(0, 0, 0, 0.08)`}
-            color={'colors.onSurfaceLv1'}
-            borderRadius={`8px`}
-            cursor={'pointer'}
-            onChange={handleTournamentChange}
-            defaultValue={0}
-          >
-            {tournaments?.map((tournament, index) => (
-              <option key={index} value={tournament.id}>
-                {tournament.name}
-              </option>
-            ))}
-          </Select>
-        </HStack>
+        {props.objectType === 'team' ? (
+          <HStack h={`48px`} bg={'colors.surface2'} m={`8px`} borderRadius={`8px`} alignItems={'center'} p={`8px`}>
+            <Select
+              display={'flex'}
+              alignItems={'center'}
+              w={`auto`}
+              px={`12px`}
+              h={`32px`}
+              style={{ appearance: 'none' }}
+              bg={'colors.surface1'}
+              border={`none`}
+              boxShadow={`0 1px 4px 0 rgba(0, 0, 0, 0.08)`}
+              color={'colors.onSurfaceLv1'}
+              borderRadius={`8px`}
+              cursor={'pointer'}
+              onChange={handleTournamentChange}
+              defaultValue={0}
+            >
+              {tournaments?.map((tournament, index) => (
+                <option key={index} value={tournament.id}>
+                  {tournament.name}
+                </option>
+              ))}
+            </Select>
+          </HStack>
+        ) : (
+          <></>
+        )}
         <HStack h={`48px`} gap={`8px`} alignItems={'center'}>
           <Flex w={`24px`} mx={`8px`} flexShrink={0} justifyContent={'center'}>
             #

@@ -25,6 +25,7 @@ import IconTeam from '@/components/svg/IconTeam'
 import LeagueCell from '@/components/util/LeagueCell'
 import EventCell from '@/components/util/EventCell'
 import { useTranslation } from 'react-i18next'
+import { DonutChart } from '@/components/util/DonutChart'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const response = await fetch(`https://academy-backend.sofascore.dev/team/${context.query.id}`)
@@ -298,7 +299,7 @@ function TeamInfoBox(props: { team?: Team }) {
           </Text>
         </VStack>
         <VStack gap={`8px`} justifyContent={'center'} alignItems={'center'} h={`100%`} w={`100%`}>
-          <IconTeam color="var(--color-primary-default)" size="40px" />
+          <DonutChart wholeNumber={players.length} partNumber={numberOfForeignPlayers} />
           <Text color={`colors.primaryDefault`} className="Headline-3">
             {numberOfForeignPlayers}
           </Text>

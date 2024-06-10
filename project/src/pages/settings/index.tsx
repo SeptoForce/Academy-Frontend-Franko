@@ -2,7 +2,6 @@ import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import { HStack, VStack, Box, Text, Spacer, Select } from '@kuma-ui/core'
 import { useAppContext } from '@/context/AppContext'
-import { useRouter } from 'next/router'
 import { useThemeContext } from '@/context/ThemeContext'
 import IconRadioOn from '../../components/svg/IconRadioOn'
 import IconRadioOff from '@/components/svg/IconRadioOff'
@@ -28,7 +27,6 @@ export default function SettingsPage(props: { theme: 'dark' | 'light' }) {
   const { t } = useTranslation()
   const [isDark, setIsDark] = useState(props.theme === 'dark')
 
-  const router = useRouter()
   const appContext = useAppContext()
   const themeContext = useThemeContext()
 
@@ -108,7 +106,7 @@ export default function SettingsPage(props: { theme: 'dark' | 'light' }) {
                     p={`8px`}
                     borderRadius={`8px`}
                     cursor={'pointer'}
-                    defaultValue={i18n.language}
+                    value={i18n.language}
                   >
                     <option value="en">English</option>
                     <option value="hr">Hrvatski</option>

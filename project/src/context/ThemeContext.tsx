@@ -1,19 +1,34 @@
-import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useEffect, useState } from 'react'
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
+import { parseCookies, setCookie } from 'nookies'
+
+function getInitialTheme() {
+  const cookies = parseCookies()
+  return cookies.theme || 'light'
+}
 
 interface ContextValue {
   isDark: boolean
-  setIsDark: Dispatch<SetStateAction<boolean>>
+  setTheme: (theme: 'dark' | 'light') => void
 }
 
 const ThemeContext = createContext<ContextValue>({} as ContextValue)
 
-export const ThemeContextProvider = ({ children }: PropsWithChildren) => {
-  const [isDark, setIsDark] = useState(false)
+export const ThemeContextProvider = (props: { children: ReactNode }) => {
+  const [isDark, setIsDark] = useState(getInitialTheme() === 'dark')
+
+  const setTheme = (theme: 'dark' | 'light') => {
+    if (theme === 'dark') {
+      setCookie(null, 'theme', 'dark', { maxAge: 365 * 24 * 60 * 60, path: '/' })
+      setIsDark(true)
+    } else {
+      setCookie(null, 'theme', 'light', { maxAge: 365 * 24 * 60 * 60, path: '/' })
+      setIsDark(false)
+    }
+  }
 
   useEffect(() => {
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setIsDark(true)
-    }
+    const theme = parseCookies().theme
+    setIsDark(theme === 'dark')
   }, [])
 
   useEffect(() => {
@@ -24,7 +39,7 @@ export const ThemeContextProvider = ({ children }: PropsWithChildren) => {
     }
   }, [isDark])
 
-  return <ThemeContext.Provider value={{ isDark, setIsDark }}>{children}</ThemeContext.Provider>
+  return <ThemeContext.Provider value={{ isDark, setTheme }}>{props.children}</ThemeContext.Provider>
 }
 
 export const useThemeContext = () => useContext(ThemeContext)

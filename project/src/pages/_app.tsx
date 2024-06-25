@@ -1,12 +1,15 @@
 import '@/styles/globals.css'
-import { ThemeContextProvider } from '@/context/ThemeContext'
+import { ThemeContextProvider, useThemeContext } from '@/context/ThemeContext'
 import type { AppProps } from 'next/app'
 import { SWRConfig } from 'swr'
+import Head from 'next/head'
+import { AppContextProvider } from '@/context/AppContext'
+import '@/locales/i18n'
 
 //@ts-ignore
 export const fetcher = (...args) =>
   //@ts-ignore
-  fetch(...args).then((res) => {
+  fetch(...args).then(res => {
     if (res.ok) {
       return res.json()
     } else {
@@ -15,11 +18,23 @@ export const fetcher = (...args) =>
   })
 
 export default function App({ Component, pageProps }: AppProps) {
+  const themeContext = useThemeContext()
+
   return (
     <SWRConfig value={{ fetcher }}>
-      <ThemeContextProvider>
-        <Component {...pageProps} />
-      </ThemeContextProvider>
+      <AppContextProvider>
+        <ThemeContextProvider>
+          <Head>
+            <title>Mini Sofascore</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta
+              name="description"
+              content="Final project for Sofascore Academy. Simpler version of Sofascore website."
+            />
+          </Head>
+          <Component {...pageProps} />
+        </ThemeContextProvider>
+      </AppContextProvider>
     </SWRConfig>
   )
 }
